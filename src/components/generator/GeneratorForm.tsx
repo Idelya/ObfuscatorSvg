@@ -1,13 +1,11 @@
 import { Typography } from '@mui/material';
-import GeneratorSvg from './generator/GeneratorSvg';
 
-function Obfuscator() {
+function GeneratorForm() {
   return (
     <>
       <Typography variant="h3">Obfuscator svg</Typography>
-      <GeneratorSvg />
     </>
   );
 }
 
-export default Obfuscator;
+export default GeneratorForm;
