@@ -1,4 +1,4 @@
-export const shapes = ['circle', 'rect'];
+export const shapes = ["circle", "rect"];
 
 export type FormSchemaSvgGenerator = {
   shape: (typeof shapes)[number];
@@ -7,7 +7,7 @@ export type FormSchemaSvgGenerator = {
 };
 
 export const svgGeneratorInit: FormSchemaSvgGenerator = {
-  shape: 'circle',
-  shapeColor: '#000',
-  backgroundColor: '#fff'
+  shape: "circle",
+  shapeColor: "#000",
+  backgroundColor: "#fff",
 };

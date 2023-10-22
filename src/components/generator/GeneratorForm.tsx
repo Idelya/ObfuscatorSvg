@@ -1,7 +1,11 @@
-import { Box, Button, FormControl, MenuItem, TextField } from '@mui/material';
-import { useFormik } from 'formik';
-import { FormSchemaSvgGenerator, shapes, svgGeneratorInit } from '../../constant';
-import { MuiColorInput } from 'mui-color-input';
+import { Box, Button, FormControl, MenuItem, TextField } from "@mui/material";
+import { useFormik } from "formik";
+import {
+  FormSchemaSvgGenerator,
+  shapes,
+  svgGeneratorInit,
+} from "../../constant";
+import { MuiColorInput } from "mui-color-input";
 
 interface GeneratorFormProps {
   onSave: (formInputs: FormSchemaSvgGenerator) => void;
@@ -12,12 +16,19 @@ function GeneratorForm({ onSave }: GeneratorFormProps) {
     initialValues: svgGeneratorInit,
     onSubmit: (values) => {
       onSave(values);
-    }
+    },
   });
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '16px' }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: "16px",
+        }}
+      >
         <FormControl fullWidth>
           <TextField
             select
@@ -25,7 +36,8 @@ function GeneratorForm({ onSave }: GeneratorFormProps) {
             name="shape"
             value={formik.values.shape}
             label="Select shape"
-            onChange={formik.handleChange}>
+            onChange={formik.handleChange}
+          >
             {shapes.map((shape) => (
               <MenuItem value={shape} key={shape}>
                 {shape}
@@ -38,7 +50,7 @@ function GeneratorForm({ onSave }: GeneratorFormProps) {
           fullWidth
           name="shapeColor"
           label="Select color"
-          onChange={(value) => formik.setFieldValue('shapeColor', value)}
+          onChange={(value) => formik.setFieldValue("shapeColor", value)}
           value={formik.values.shapeColor}
         />
         <Button type="submit" variant="contained">
