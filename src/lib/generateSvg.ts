@@ -1,4 +1,4 @@
-import { FormSchemaSvgGenerator } from "../constant";
+import { FormSchemaSvgGenerator, propsByShape } from "../constant";
 
 export const generateSvg = (formInputs: FormSchemaSvgGenerator): SVGElement => {
   console.log(formInputs);
@@ -11,9 +11,13 @@ export const generateSvg = (formInputs: FormSchemaSvgGenerator): SVGElement => {
     "http://www.w3.org/2000/svg",
     formInputs.shape,
   );
-  shape.setAttribute("cx", "20");
-  shape.setAttribute("cy", "20");
-  shape.setAttribute("r", "20");
+
+  propsByShape[formInputs.shape as keyof typeof propsByShape].size.forEach(
+    (attr) => {
+      shape.setAttribute(attr, formInputs.size.toString());
+    },
+  );
+  shape.setAttribute("fill", formInputs.shapeColor);
   svg.appendChild(shape);
 
   return svg;

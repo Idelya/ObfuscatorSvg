@@ -45,6 +45,16 @@ function GeneratorForm({ onSave }: GeneratorFormProps) {
             ))}
           </TextField>
         </FormControl>
+        <FormControl fullWidth>
+          <TextField
+            id="size"
+            name="size"
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+            value={formik.values.size}
+            label="Select size"
+            onChange={formik.handleChange}
+          />
+        </FormControl>
         <MuiColorInput
           id="shapeColor"
           fullWidth
