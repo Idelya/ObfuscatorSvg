@@ -1,12 +1,14 @@
-import { Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import GeneratorSvg from './generator/GeneratorSvg';
 
 function Obfuscator() {
   return (
-    <>
-      <Typography variant="h3">Obfuscator svg</Typography>
+    <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <Typography variant="h3" sx={{ textAlign: 'center' }}>
+        Obfuscator svg
+      </Typography>
       <GeneratorSvg />
-    </>
+    </Container>
   );
 }
 
