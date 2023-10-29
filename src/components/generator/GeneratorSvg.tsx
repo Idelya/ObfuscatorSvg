@@ -1,13 +1,29 @@
 import { Grid, Typography } from "@mui/material";
 import GeneratorForm from "./GeneratorForm";
-import GeneratorResult from "./GeneratorResult";
-import { useState } from "react";
+import GeneratorResult from "../SvgResult";
+import { useEffect, useState } from "react";
 import { FormSchemaSvgGenerator, svgGeneratorInit } from "../../constant";
 import { generateSvg } from "../../lib/generateSvg";
 
-function GeneratorSvg() {
-  const [formInput, setFormInput] =
-    useState<FormSchemaSvgGenerator>(svgGeneratorInit);
+interface GeneratorSvgProps {
+  onSubmit: (svg: string) => void;
+  svg?: string;
+}
+
+function GeneratorSvg({ onSubmit, svg }: GeneratorSvgProps) {
+  const [init, setInit] = useState(true);
+
+  const handleSave = (newFormInputs: FormSchemaSvgGenerator) => {
+    const svgAsString = generateSvg(newFormInputs);
+    onSubmit(svgAsString);
+  };
+
+  useEffect(() => {
+    if (init) {
+      onSubmit(generateSvg(svgGeneratorInit));
+      setInit(false);
+    }
+  }, [init, onSubmit]);
 
   return (
     <>
@@ -16,7 +32,7 @@ function GeneratorSvg() {
           <Typography variant="h4" sx={{ marginBottom: "16px" }}>
             Generate svg
           </Typography>
-          <GeneratorForm onSave={setFormInput} />
+          <GeneratorForm onSave={handleSave} />
         </Grid>
         <Grid
           item
@@ -24,7 +40,11 @@ function GeneratorSvg() {
           md={6}
           sx={{ display: "flex", justifyContent: "center" }}
         >
-          <GeneratorResult svgElement={generateSvg(formInput)} />
+          {svg ? (
+            <GeneratorResult svg={svg} name="before" />
+          ) : (
+            <Typography>Generate element</Typography>
+          )}
         </Grid>
       </Grid>
     </>

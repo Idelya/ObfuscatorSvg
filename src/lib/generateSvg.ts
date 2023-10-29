@@ -1,7 +1,6 @@
 import { FormSchemaSvgGenerator, propsByShape } from "../constant";
 
-export const generateSvg = (formInputs: FormSchemaSvgGenerator): SVGElement => {
-  console.log(formInputs);
+export const generateSvg = (formInputs: FormSchemaSvgGenerator): string => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
   svg.setAttribute("height", "300");
@@ -19,6 +18,6 @@ export const generateSvg = (formInputs: FormSchemaSvgGenerator): SVGElement => {
   );
   shape.setAttribute("fill", formInputs.shapeColor);
   svg.appendChild(shape);
-
-  return svg;
+  const svgAsStr = new XMLSerializer().serializeToString(svg);
+  return svgAsStr;
 };

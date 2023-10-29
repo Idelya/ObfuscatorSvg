@@ -5,32 +5,31 @@ import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import parser from "prettier/plugins/html";
 import prettier from "prettier/standalone";
 
-interface GeneratorResultProps {
-  svgElement: SVGElement;
+interface SvgResultProps {
+  svg: string;
+  name: string;
 }
 
-function GeneratorResult({ svgElement }: GeneratorResultProps) {
+function SvgResult({ svg, name }: SvgResultProps) {
   const [showCode, setShowCode] = useState(false);
   const [svgString, setSvgString] = useState("");
 
   useEffect(() => {
-    const svgAsStr = new XMLSerializer().serializeToString(svgElement);
-
     if (showCode) {
       prettier
-        .format(svgAsStr, {
+        .format(svg, {
           parser: "html",
           printWidth: 20,
           plugins: [parser],
         })
         .then((code) => setSvgString(code));
     } else {
-      const box = document.getElementById("displayBox");
+      const box = document.getElementById(name);
       if (!box) return;
 
-      box.innerHTML = svgAsStr;
+      box.innerHTML = svg;
     }
-  }, [svgElement, showCode]);
+  }, [svg, showCode, name]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -43,7 +42,7 @@ function GeneratorResult({ svgElement }: GeneratorResultProps) {
       />
       {!showCode ? (
         <Box
-          id="displayBox"
+          id={name}
           sx={{
             backgroundColor: "#fff",
             boxShadow: "0px 0px 43px 0px rgba(7, 7, 7, 1)",
@@ -58,4 +57,4 @@ function GeneratorResult({ svgElement }: GeneratorResultProps) {
   );
 }
 
-export default GeneratorResult;
+export default SvgResult;
