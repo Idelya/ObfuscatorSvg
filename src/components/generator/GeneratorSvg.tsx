@@ -11,11 +11,11 @@ function GeneratorSvg() {
 
   return (
     <>
-      <Typography variant="h4" sx={{ marginBottom: "16px" }}>
-        Generate svg
-      </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
+          <Typography variant="h4" sx={{ marginBottom: "16px" }}>
+            Generate svg
+          </Typography>
           <GeneratorForm onSave={setFormInput} />
         </Grid>
         <Grid
