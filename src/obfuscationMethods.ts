@@ -17,14 +17,52 @@ export const obfuscate = (
   return svgAsStr;
 };
 
-//TODO: Add methods
 export const obfuscationMethods: { [key: string]: ObfuscationMethod } = {
-  "method 1": (svg: SVGElement) => {
+  "divide into parts": (svg: SVGElement) => {
+    svg.childNodes.forEach((elem, _) => {
+      const svgChild = elem as SVGElement;
+      if (svgChild.tagName === "circle"){
+        divideCircle(svgChild);
+      }
+      else if (svgChild.tagName === "rect"){
+        divideRect(svgChild);
+      }
+      else if (svgChild.tagName === "polygon"){
+        dividePolygon(svgChild);
+      }
+      else {
+        throw elem;
+      }
+    });
     svg.setAttribute("method", "method 1");
     return svg;
   },
-  "method 2": (svg: SVGElement) => {
+  "randomize": (svg: SVGElement) => {
     svg.setAttribute("method", "method 2");
     return svg;
   },
+  "change specific elements into paths": (svg: SVGElement) => {
+    svg.setAttribute("method", "method 3");
+    return svg;
+  },
 };
+
+const divideCircle = (circleSvg: SVGElement) => {
+  const r = circleSvg.getAttribute("r");
+  const cx = circleSvg.getAttribute("cx");
+  const cy = circleSvg.getAttribute("cy");
+  const fill = circleSvg.getAttribute("fill");
+
+  console.log(r, cx, cy, fill);
+}
+
+const divideRect = (rectSvg: SVGElement) => {
+  const width = rectSvg.getAttribute("width");
+  const height = rectSvg.getAttribute("height");
+  const fill = rectSvg.getAttribute("fill");
+
+  console.log(width, height, fill);
+}
+
+const dividePolygon = (polygonSvg: SVGElement) => {
+}
