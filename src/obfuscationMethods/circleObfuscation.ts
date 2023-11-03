@@ -29,7 +29,7 @@ const getDividedCircleElements = (radius: number, cx: number, cy: number, fill: 
     const angle = 360 / partsCount;
     const paths = [];
     for (let i = 0; i < partsCount; i++){
-        paths.push(`<path d="${getSectorPath(diameter, cx, cy, i*angle, (i+1)*angle)}" fill="${fill}" />`);
+        paths.push(`<path d="${getSectorPath(diameter, cx, cy, i*angle, (i+1)*angle)}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
     }
     shuffle(paths);
     return paths;

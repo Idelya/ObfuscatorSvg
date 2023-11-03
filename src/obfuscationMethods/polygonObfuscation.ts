@@ -33,10 +33,10 @@ const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit
         getDividedIntoReversedPaths(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, paths, fill);
     }
     else {
-        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" />`);
-        paths.push(`<path d="M${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2+height} ${xInit/2+width/2},${+yInit/2+height} Z" fill="${fill}" />`);
-        paths.push(`<path d="M${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width},${+yInit/2+height} Z" fill="${fill}" />`);
-        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" />`);
+        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        paths.push(`<path d="M${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2+height} ${xInit/2+width/2},${+yInit/2+height} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        paths.push(`<path d="M${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width},${+yInit/2+height} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
     }
   }
 
@@ -50,10 +50,10 @@ const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit
         getDividedIntoReversedPaths(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, paths, fill);
     }
     else {
-        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" />`);
-        paths.push(`<path d="M${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2} ${xInit/2+width/2},${+yInit/2} Z" fill="${fill}" />`);
-        paths.push(`<path d="M${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2} ${xInit/2+width},${+yInit/2} Z" fill="${fill}" />`);
-        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" />`);
+        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        paths.push(`<path d="M${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2} ${xInit/2+width/2},${+yInit/2} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        paths.push(`<path d="M${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2} ${xInit/2+width},${+yInit/2} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
     }
   }
 
@@ -67,10 +67,10 @@ const getDividedIntoPolygons = (width: number, height: number, xInit: number, yI
         getDividedIntoReversedPolygons(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, polygons, fill);
     }
     else {
-        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" />`);
-        polygons.push(`<polygon points="${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2+height} ${xInit/2+width/2},${+yInit/2+height}" fill="${fill}" />`);
-        polygons.push(`<polygon points="${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width},${+yInit/2+height}" fill="${fill}" />`);
-        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" />`);  
+        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        polygons.push(`<polygon points="${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2+height} ${xInit/2+width/2},${+yInit/2+height}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        polygons.push(`<polygon points="${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width},${+yInit/2+height}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);  
     }
   }
 
@@ -84,9 +84,9 @@ const getDividedIntoPolygons = (width: number, height: number, xInit: number, yI
         getDividedIntoReversedPolygons(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, polygons, fill);
     }
     else {
-        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" />`);
-        polygons.push(`<polygon points="${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2} ${xInit/2+width/2},${+yInit/2}" fill="${fill}" />`);
-        polygons.push(`<polygon points="${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2} ${xInit/2+width},${+yInit/2}" fill="${fill}" />`);
-        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" />`);
+        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        polygons.push(`<polygon points="${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2} ${xInit/2+width/2},${+yInit/2}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        polygons.push(`<polygon points="${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2} ${xInit/2+width},${+yInit/2}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
     }
   }
