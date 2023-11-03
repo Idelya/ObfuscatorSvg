@@ -1,6 +1,7 @@
 import { shuffle } from "./utils";
 
 const POLYGON_DIVISION_DEPTH = 5;
+const STROKE_WIDTH = 1;
 
 export const dividePolygon = (polygonSvg: SVGElement) => {
     const width = parseInt(polygonSvg.getAttribute("width")!);
@@ -33,10 +34,10 @@ const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit
         getDividedIntoReversedPaths(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, paths, fill);
     }
     else {
-        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
-        paths.push(`<path d="M${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2+height} ${xInit/2+width/2},${+yInit/2+height} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
-        paths.push(`<path d="M${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width},${+yInit/2+height} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
-        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        paths.push(createPath(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        paths.push(createPath(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2+height}, {x: xInit/2+width/2, y: yInit/2+height}));
+        paths.push(createPath(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width, y: yInit/2+height}));
+        paths.push(createPath(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
     }
   }
 
@@ -50,12 +51,16 @@ const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit
         getDividedIntoReversedPaths(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, paths, fill);
     }
     else {
-        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
-        paths.push(`<path d="M${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2} ${xInit/2+width/2},${+yInit/2} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
-        paths.push(`<path d="M${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2} ${xInit/2+width},${+yInit/2} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
-        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        paths.push(createPath(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        paths.push(createPath(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2}, {x: xInit/2+width/2, y: yInit/2}));
+        paths.push(createPath(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width, y: yInit/2}));
+        paths.push(createPath(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
     }
   }
+
+const createPath = (fill: string, point1: Point, point2: Point, point3: Point) => {
+    return `<path d="M${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y} Z" fill="${fill}" stroke="${fill}" stroke-width="${STROKE_WIDTH}" />`;
+}
 
 const getDividedIntoPolygons = (width: number, height: number, xInit: number, yInit: number, depth: number, polygons: string[], fill: string) => {
     xInit = +xInit;
@@ -67,10 +72,10 @@ const getDividedIntoPolygons = (width: number, height: number, xInit: number, yI
         getDividedIntoReversedPolygons(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, polygons, fill);
     }
     else {
-        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
-        polygons.push(`<polygon points="${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2+height} ${xInit/2+width/2},${+yInit/2+height}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
-        polygons.push(`<polygon points="${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width},${+yInit/2+height}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
-        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);  
+        polygons.push(createPolygon(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        polygons.push(createPolygon(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2+height}, {x: xInit/2+width/2, y: yInit/2+height}));
+        polygons.push(createPolygon(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width, y: yInit/2+height}));
+        polygons.push(createPolygon(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
     }
   }
 
@@ -84,9 +89,13 @@ const getDividedIntoPolygons = (width: number, height: number, xInit: number, yI
         getDividedIntoReversedPolygons(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, polygons, fill);
     }
     else {
-        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
-        polygons.push(`<polygon points="${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2} ${xInit/2+width/2},${+yInit/2}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
-        polygons.push(`<polygon points="${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2} ${xInit/2+width},${+yInit/2}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
-        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        polygons.push(createPolygon(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        polygons.push(createPolygon(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2}, {x: xInit/2+width/2, y: yInit/2}));
+        polygons.push(createPolygon(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width, y: yInit/2}));
+        polygons.push(createPolygon(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
     }
   }
+
+const createPolygon = (fill: string, point1: Point, point2: Point, point3: Point) => {
+    return `<polygon points="${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y}" fill="${fill}" stroke="${fill}" stroke-width="${STROKE_WIDTH}" />`;
+}

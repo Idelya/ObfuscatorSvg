@@ -1,6 +1,7 @@
 import { shuffle } from "./utils";
 
 const PARTS_COUNT = 360;
+const STROKE_WIDTH = 1;
 
 export const divideCircle = (circleSvg: SVGElement) => {
     const r = parseInt(circleSvg.getAttribute("r")!);
@@ -29,7 +30,7 @@ const getDividedCircleElements = (radius: number, cx: number, cy: number, fill: 
     const angle = 360 / partsCount;
     const paths = [];
     for (let i = 0; i < partsCount; i++){
-        paths.push(`<path d="${getSectorPath(diameter, cx, cy, i*angle, (i+1)*angle)}" fill="${fill}" stroke="${fill}" stroke-width="1" />`);
+        paths.push(`<path d="${getSectorPath(diameter, cx, cy, i*angle, (i+1)*angle)}" fill="${fill}" stroke="${fill}" stroke-width="${STROKE_WIDTH}" />`);
     }
     shuffle(paths);
     return paths;

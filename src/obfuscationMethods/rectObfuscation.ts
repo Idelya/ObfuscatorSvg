@@ -1,6 +1,7 @@
 import { shuffle } from "./utils";
 
 const RECT_DIVISION_DEPTH = 5;
+const STROKE_WIDTH = 1;
 
 export const divideRect = (rectSvg: SVGElement) => {
     const width = parseInt(rectSvg.getAttribute("width")!);
@@ -38,7 +39,7 @@ const getDividedRects = (width: number, height: number, xInit: number, yInit: nu
 }
 
 const createRect = (fill: string, x: number, y: number, width: number, height: number) => {
-    return `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${fill}" stroke="${fill}" stroke-width="1"></rect>`;
+    return `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${fill}" stroke="${fill}" stroke-width="${STROKE_WIDTH}"></rect>`;
 }
 
 const getDividedPaths = (width: number, height: number, xInit: number, yInit: number, fill: string, depth: number, paths: string[]) => {
@@ -56,5 +57,5 @@ const getDividedPaths = (width: number, height: number, xInit: number, yInit: nu
 }
 
 const createPath = (fill: string, poin1: Point, point2: Point, point3: Point, point4: Point) => {
-    return `<path d="M ${poin1.x} ${poin1.y} L ${point2.x} ${point2.y} L ${point3.x} ${point3.y} L ${point4.x} ${point4.y} Z" fill="${fill}" stroke="${fill}" stroke-width="1"></path>`;
+    return `<path d="M ${poin1.x} ${poin1.y} L ${point2.x} ${point2.y} L ${point3.x} ${point3.y} L ${point4.x} ${point4.y} Z" fill="${fill}" stroke="${fill}" stroke-width="${STROKE_WIDTH}"></path>`;
 }
