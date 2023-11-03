@@ -28,7 +28,7 @@ export const obfuscationMethods: { [key: string]: ObfuscationMethod } = {
       if (svgChild.tagName === "circle"){
         divideCircle(svgChild);
       } else if (svgChild.tagName === "rect") {
-        divideRect(svgChild, svg);
+        divideRect(svgChild);
       } else if (svgChild.tagName === "polygon") {
         dividePolygon(svgChild);
       } else {
