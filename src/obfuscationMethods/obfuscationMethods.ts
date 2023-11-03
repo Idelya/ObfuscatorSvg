@@ -1,3 +1,5 @@
+import { divideCircle } from "./circleObfuscation";
+import { dividePolygon } from "./polygonObfuscation";
 import { divideRect } from "./rectObfuscation";
 
 type ObfuscationMethod = (svg: SVGElement) => SVGElement;
@@ -36,16 +38,3 @@ export const obfuscationMethods: { [key: string]: ObfuscationMethod } = {
     return svg;
   }
 };
-
-const divideCircle = (circleSvg: SVGElement) => {
-  const r = circleSvg.getAttribute("r");
-  const cx = circleSvg.getAttribute("cx");
-  const cy = circleSvg.getAttribute("cy");
-  const fill = circleSvg.getAttribute("fill");
-
-  console.log(r, cx, cy, fill);
-}
-
-const dividePolygon = (polygonSvg: SVGElement) => {
-  console.log(polygonSvg);
-}

@@ -1,6 +1,6 @@
 import { shuffle } from "./utils";
 
-const RECT_DIVISION_DEPTH = 4;
+const RECT_DIVISION_DEPTH = 5;
 
 export const divideRect = (rectSvg: SVGElement, parentSvg: SVGAElement) => {
     const width = parseInt(rectSvg.getAttribute("width")!);
@@ -9,10 +9,8 @@ export const divideRect = (rectSvg: SVGElement, parentSvg: SVGAElement) => {
 
     const rectanglePaths = getRectanglePaths(width, height, RECT_DIVISION_DEPTH, true, fill);
 
-    parentSvg.innerHTML = "";
-    rectanglePaths.forEach(p => {
-        parentSvg.innerHTML += p
-    });
+    const newSvgContent = rectanglePaths.join("");
+    parentSvg.innerHTML = newSvgContent;
 }
 
 const getRectanglePaths = (width: number, height: number, divisionDepth: number, changeToPaths: boolean, fill: string) => {
