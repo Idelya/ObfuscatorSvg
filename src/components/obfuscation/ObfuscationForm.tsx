@@ -6,7 +6,7 @@ import {
   FormLabel,
   Box,
 } from "@mui/material";
-import { obfuscate, obfuscationMethods } from "../../obfuscationMethods";
+import { obfuscate, obfuscationMethods } from "../../obfuscationMethods/obfuscationMethods";
 import { useFormik } from "formik";
 import { useEffect } from "react";
 
