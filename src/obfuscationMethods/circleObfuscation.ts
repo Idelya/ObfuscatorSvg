@@ -10,12 +10,7 @@ export const divideCircle = (circleSvg: SVGElement) => {
 
     const circleElements = getDividedCircleElements(r, cx, cy, fill, PARTS_COUNT);
 
-    const newSvgContent = circleElements.join("");
-
-    let devidedCircleSvg = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    devidedCircleSvg.innerHTML = newSvgContent;
-
-    circleSvg.parentNode?.replaceChild(devidedCircleSvg, circleSvg);
+    return circleElements.join("");
 }
 
 const getSectorPath = (outerDiameter: number, x: number, y: number, angleStart: number, angleEnd: number) => {

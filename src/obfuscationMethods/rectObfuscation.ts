@@ -9,12 +9,7 @@ export const divideRect = (rectSvg: SVGElement) => {
 
     const changeToPaths = true;
     const rectangleElements = getDividedRectangleElements(width, height, fill, RECT_DIVISION_DEPTH, changeToPaths);
-    const newSvgContent = rectangleElements.join("");
-
-    let devidedRectSvg = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    devidedRectSvg.innerHTML = newSvgContent;
-
-    rectSvg.parentNode?.replaceChild(devidedRectSvg, rectSvg);
+    return rectangleElements.join("");
 }
 
 const getDividedRectangleElements = (width: number, height: number, fill: string, divisionDepth: number, changeToPaths: boolean) => {

@@ -26,11 +26,11 @@ export const obfuscationMethods: { [key: string]: ObfuscationMethod } = {
     svg.childNodes.forEach((elem, _) => {
       const svgChild = elem as SVGElement;
       if (svgChild.tagName === "circle"){
-        divideCircle(svgChild);
+        replaceFigure(svgChild, divideCircle);
       } else if (svgChild.tagName === "rect") {
-        divideRect(svgChild);
+        replaceFigure(svgChild, divideRect);
       } else if (svgChild.tagName === "polygon") {
-        dividePolygon(svgChild);
+        replaceFigure(svgChild, dividePolygon);
       } else {
         throw elem;
       }
@@ -38,3 +38,10 @@ export const obfuscationMethods: { [key: string]: ObfuscationMethod } = {
     return svg;
   }
 };
+
+const replaceFigure = (svgElement: SVGElement, obfuscation: Function) => {
+  const devidedSvg = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  devidedSvg.innerHTML = obfuscation(svgElement);
+
+  svgElement.parentNode?.replaceChild(devidedSvg, svgElement);
+}

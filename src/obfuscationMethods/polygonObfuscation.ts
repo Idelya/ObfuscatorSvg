@@ -9,12 +9,7 @@ export const dividePolygon = (polygonSvg: SVGElement) => {
 
     const changeToPaths = true;
     const polygonElements = getDividedPolygonElements(width, height, fill, POLYGON_DIVISION_DEPTH, changeToPaths);
-    const newSvgContent = polygonElements.join("");
-
-    let devidedPolygonSvg = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    devidedPolygonSvg.innerHTML = newSvgContent;
-
-    polygonSvg.parentNode?.replaceChild(devidedPolygonSvg, polygonSvg);
+    return polygonElements.join("");
 }
 
 const getDividedPolygonElements = (width: null, height: number, fill: string, divisionDepth: number, changeToPaths: boolean) => {
@@ -28,70 +23,70 @@ const getDividedPolygonElements = (width: null, height: number, fill: string, di
     return innerElements;
   }
 
-const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit: number, depth: number, accum: string[], fill: string) => {
+const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit: number, depth: number, paths: string[], fill: string) => {
     xInit = +xInit;
     yInit = +yInit;
     if (depth > 1){
-        getDividedIntoPaths(width/2, height/2, +xInit +width/2, +yInit, depth - 1, accum, fill);
-        getDividedIntoPaths(width/2, height/2, +xInit, +yInit + height, depth - 1, accum, fill);
-        getDividedIntoPaths(width/2, height/2, +xInit + width, +yInit + height, depth - 1, accum, fill);
-        getDividedIntoReversedPaths(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, accum, fill);
+        getDividedIntoPaths(width/2, height/2, +xInit +width/2, +yInit, depth - 1, paths, fill);
+        getDividedIntoPaths(width/2, height/2, +xInit, +yInit + height, depth - 1, paths, fill);
+        getDividedIntoPaths(width/2, height/2, +xInit + width, +yInit + height, depth - 1, paths, fill);
+        getDividedIntoReversedPaths(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, paths, fill);
     }
     else {
-        accum.push(`<path d="M${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" />`);
-        accum.push(`<path d="M${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2+height} ${xInit/2+width/2},${+yInit/2+height} Z" fill="${fill}" />`);
-        accum.push(`<path d="M${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width},${+yInit/2+height} Z" fill="${fill}" />`);
-        accum.push(`<path d="M${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" />`);
+        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" />`);
+        paths.push(`<path d="M${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2+height} ${xInit/2+width/2},${+yInit/2+height} Z" fill="${fill}" />`);
+        paths.push(`<path d="M${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width},${+yInit/2+height} Z" fill="${fill}" />`);
+        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" />`);
     }
   }
 
-const getDividedIntoPolygons = (width: number, height: number, xInit: number, yInit: number, depth: number, accum: string[], fill: string) => {
+  const getDividedIntoReversedPaths = (width: number, height: number, xInit: number, yInit: number, depth: number, paths: string[], fill: string) => {
     xInit = +xInit;
     yInit = +yInit;
     if (depth > 1){
-        getDividedIntoPolygons(width/2, height/2, +xInit +width/2, +yInit, depth - 1, accum, fill);
-        getDividedIntoPolygons(width/2, height/2, +xInit, +yInit + height, depth - 1, accum, fill);
-        getDividedIntoPolygons(width/2, height/2, +xInit + width, +yInit + height, depth - 1, accum, fill);
-        getDividedIntoReversedPolygons(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, accum, fill);
+        getDividedIntoPaths(width/2, height/2, +xInit +width/2, +yInit, depth - 1, paths, fill);
+        getDividedIntoReversedPaths(width/2, height/2, +xInit, +yInit, depth - 1, paths, fill);
+        getDividedIntoReversedPaths(width/2, height/2, +xInit + width, +yInit, depth - 1, paths, fill);
+        getDividedIntoReversedPaths(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, paths, fill);
     }
     else {
-        accum.push(`<polygon points="${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" />`);
-        accum.push(`<polygon points="${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2+height} ${xInit/2+width/2},${+yInit/2+height}" fill="${fill}" />`);
-        accum.push(`<polygon points="${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width},${+yInit/2+height}" fill="${fill}" />`);
-        accum.push(`<polygon points="${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" />`);  
+        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" />`);
+        paths.push(`<path d="M${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2} ${xInit/2+width/2},${+yInit/2} Z" fill="${fill}" />`);
+        paths.push(`<path d="M${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2} ${xInit/2+width},${+yInit/2} Z" fill="${fill}" />`);
+        paths.push(`<path d="M${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" />`);
     }
   }
 
-  const getDividedIntoReversedPaths = (width: number, height: number, xInit: number, yInit: number, depth: number, accum: string[], fill: string) => {
+const getDividedIntoPolygons = (width: number, height: number, xInit: number, yInit: number, depth: number, polygons: string[], fill: string) => {
     xInit = +xInit;
     yInit = +yInit;
     if (depth > 1){
-        getDividedIntoPaths(width/2, height/2, +xInit +width/2, +yInit, depth - 1, accum, fill);
-        getDividedIntoReversedPaths(width/2, height/2, +xInit, +yInit, depth - 1, accum, fill);
-        getDividedIntoReversedPaths(width/2, height/2, +xInit + width, +yInit, depth - 1, accum, fill);
-        getDividedIntoReversedPaths(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, accum, fill);
+        getDividedIntoPolygons(width/2, height/2, +xInit +width/2, +yInit, depth - 1, polygons, fill);
+        getDividedIntoPolygons(width/2, height/2, +xInit, +yInit + height, depth - 1, polygons, fill);
+        getDividedIntoPolygons(width/2, height/2, +xInit + width, +yInit + height, depth - 1, polygons, fill);
+        getDividedIntoReversedPolygons(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, polygons, fill);
     }
     else {
-        accum.push(`<path d="M${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" />`);
-        accum.push(`<path d="M${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2} ${xInit/2+width/2},${+yInit/2} Z" fill="${fill}" />`);
-        accum.push(`<path d="M${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2} ${xInit/2+width},${+yInit/2} Z" fill="${fill}" />`);
-        accum.push(`<path d="M${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2} Z" fill="${fill}" />`);
+        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" />`);
+        polygons.push(`<polygon points="${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2+height} ${xInit/2+width/2},${+yInit/2+height}" fill="${fill}" />`);
+        polygons.push(`<polygon points="${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width},${+yInit/2+height}" fill="${fill}" />`);
+        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" />`);  
     }
   }
 
-  const getDividedIntoReversedPolygons = (width: number, height: number, xInit: number, yInit: number, depth: number, accum: string[], fill: string) => {
+  const getDividedIntoReversedPolygons = (width: number, height: number, xInit: number, yInit: number, depth: number, polygons: string[], fill: string) => {
     xInit = +xInit;
     yInit = +yInit;
     if (depth > 1){
-        getDividedIntoPolygons(width/2, height/2, +xInit +width/2, +yInit, depth - 1, accum, fill);
-        getDividedIntoReversedPolygons(width/2, height/2, +xInit, +yInit, depth - 1, accum, fill);
-        getDividedIntoReversedPolygons(width/2, height/2, +xInit + width, +yInit, depth - 1, accum, fill);
-        getDividedIntoReversedPolygons(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, accum, fill);
+        getDividedIntoPolygons(width/2, height/2, +xInit +width/2, +yInit, depth - 1, polygons, fill);
+        getDividedIntoReversedPolygons(width/2, height/2, +xInit, +yInit, depth - 1, polygons, fill);
+        getDividedIntoReversedPolygons(width/2, height/2, +xInit + width, +yInit, depth - 1, polygons, fill);
+        getDividedIntoReversedPolygons(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, polygons, fill);
     }
     else {
-        accum.push(`<polygon points="${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" />`);
-        accum.push(`<polygon points="${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2} ${xInit/2+width/2},${+yInit/2}" fill="${fill}" />`);
-        accum.push(`<polygon points="${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2} ${xInit/2+width},${+yInit/2}" fill="${fill}" />`);
-        accum.push(`<polygon points="${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" />`);
+        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2+height} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" />`);
+        polygons.push(`<polygon points="${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2},${+yInit/2} ${xInit/2+width/2},${+yInit/2}" fill="${fill}" />`);
+        polygons.push(`<polygon points="${xInit/2+3*width/4},${+yInit/2+height/2} ${xInit/2+width/2},${+yInit/2} ${xInit/2+width},${+yInit/2}" fill="${fill}" />`);
+        polygons.push(`<polygon points="${xInit/2+width/2},${+yInit/2} ${xInit/2+width/4},${+yInit/2+height/2} ${xInit/2+3*width/4},${+yInit/2+height/2}" fill="${fill}" />`);
     }
   }
