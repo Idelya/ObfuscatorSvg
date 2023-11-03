@@ -11,7 +11,7 @@ export const divideRect = (rectSvg: SVGElement) => {
     const rectangleElements = getDividedRectangleElements(width, height, fill, RECT_DIVISION_DEPTH, changeToPaths);
     const newSvgContent = rectangleElements.join("");
 
-    var devidedRectSvg = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    let devidedRectSvg = document.createElementNS("http://www.w3.org/2000/svg", "g");
     devidedRectSvg.innerHTML = newSvgContent;
 
     rectSvg.parentNode?.replaceChild(devidedRectSvg, rectSvg);
