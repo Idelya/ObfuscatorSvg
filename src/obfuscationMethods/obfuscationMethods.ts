@@ -41,7 +41,8 @@ export const obfuscationMethods: { [key: string]: ObfuscationMethod } = {
 
 const replaceFigure = (svgElement: SVGElement, obfuscation: Function) => {
   const devidedSvg = document.createElementNS("http://www.w3.org/2000/svg", "g");
-  devidedSvg.innerHTML = obfuscation(svgElement);
+  const childNodes = obfuscation(svgElement);
+  devidedSvg.innerHTML = childNodes.map(element => element.outerHTML).join('');
 
   svgElement.parentNode?.replaceChild(devidedSvg, svgElement);
 }

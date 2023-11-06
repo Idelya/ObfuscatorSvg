@@ -11,7 +11,7 @@ export const divideCircle = (circleSvg: SVGElement) => {
 
     const circleElements = getDividedCircleElements(r, cx, cy, fill, PARTS_COUNT);
 
-    return circleElements.join("");
+    return circleElements;
 }
 
 const getSectorPath = (outerDiameter: number, x: number, y: number, angleStart: number, angleEnd: number) => {
@@ -28,9 +28,14 @@ const getSectorPath = (outerDiameter: number, x: number, y: number, angleStart: 
 const getDividedCircleElements = (radius: number, cx: number, cy: number, fill: string, partsCount: number) => {
     const diameter = radius * 2;
     const angle = 360 / partsCount;
-    const paths = [];
+    const paths: SVGElement[] = [];
     for (let i = 0; i < partsCount; i++){
-        paths.push(`<path d="${getSectorPath(diameter, cx, cy, i*angle, (i+1)*angle)}" fill="${fill}" stroke="${fill}" stroke-width="${STROKE_WIDTH}" />`);
+        var pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        pathElement.setAttribute("d", getSectorPath(diameter, cx, cy, i*angle, (i+1)*angle));
+        pathElement.setAttribute("fill", fill);
+        pathElement.setAttribute("stroke", fill);
+        pathElement.setAttribute("stroke-width", STROKE_WIDTH);
+        paths.push(pathElement);
     }
     shuffle(paths);
     return paths;

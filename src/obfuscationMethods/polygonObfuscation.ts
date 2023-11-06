@@ -10,7 +10,7 @@ export const dividePolygon = (polygonSvg: SVGElement) => {
 
     const changeToPaths = true;
     const polygonElements = getDividedPolygonElements(width, height, fill, POLYGON_DIVISION_DEPTH, changeToPaths);
-    return polygonElements.join("");
+    return polygonElements;
 }
 
 const getDividedPolygonElements = (width: null, height: number, fill: string, divisionDepth: number, changeToPaths: boolean) => {
@@ -24,7 +24,7 @@ const getDividedPolygonElements = (width: null, height: number, fill: string, di
     return innerElements;
   }
 
-const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit: number, depth: number, paths: string[], fill: string) => {
+const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit: number, depth: number, paths: SVGElement[], fill: string) => {
     xInit = +xInit;
     yInit = +yInit;
     if (depth > 1){
@@ -41,7 +41,7 @@ const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit
     }
   }
 
-  const getDividedIntoReversedPaths = (width: number, height: number, xInit: number, yInit: number, depth: number, paths: string[], fill: string) => {
+  const getDividedIntoReversedPaths = (width: number, height: number, xInit: number, yInit: number, depth: number, paths: SVGElement[], fill: string) => {
     xInit = +xInit;
     yInit = +yInit;
     if (depth > 1){
@@ -59,10 +59,15 @@ const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit
   }
 
 const createPath = (fill: string, point1: Point, point2: Point, point3: Point) => {
-    return `<path d="M${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y} Z" fill="${fill}" stroke="${fill}" stroke-width="${STROKE_WIDTH}" />`;
+    var pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    pathElement.setAttribute("d", `M${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y} Z`);
+    pathElement.setAttribute("fill", fill);
+    pathElement.setAttribute("stroke", fill);
+    pathElement.setAttribute("stroke-width", STROKE_WIDTH);
+    return pathElement;
 }
 
-const getDividedIntoPolygons = (width: number, height: number, xInit: number, yInit: number, depth: number, polygons: string[], fill: string) => {
+const getDividedIntoPolygons = (width: number, height: number, xInit: number, yInit: number, depth: number, polygons: SVGElement[], fill: string) => {
     xInit = +xInit;
     yInit = +yInit;
     if (depth > 1){
@@ -79,7 +84,7 @@ const getDividedIntoPolygons = (width: number, height: number, xInit: number, yI
     }
   }
 
-  const getDividedIntoReversedPolygons = (width: number, height: number, xInit: number, yInit: number, depth: number, polygons: string[], fill: string) => {
+  const getDividedIntoReversedPolygons = (width: number, height: number, xInit: number, yInit: number, depth: number, polygons: SVGElement[], fill: string) => {
     xInit = +xInit;
     yInit = +yInit;
     if (depth > 1){
@@ -97,5 +102,10 @@ const getDividedIntoPolygons = (width: number, height: number, xInit: number, yI
   }
 
 const createPolygon = (fill: string, point1: Point, point2: Point, point3: Point) => {
-    return `<polygon points="${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y}" fill="${fill}" stroke="${fill}" stroke-width="${STROKE_WIDTH}" />`;
+    var polygonElement = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    polygonElement.setAttribute("points", `${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y}`);
+    polygonElement.setAttribute("fill", fill);
+    polygonElement.setAttribute("stroke", fill);
+    polygonElement.setAttribute("stroke-width", STROKE_WIDTH);
+    return polygonElement;
 }

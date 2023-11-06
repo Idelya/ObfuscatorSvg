@@ -10,11 +10,11 @@ export const divideRect = (rectSvg: SVGElement) => {
 
     const changeToPaths = true;
     const rectangleElements = getDividedRectangleElements(width, height, fill, RECT_DIVISION_DEPTH, changeToPaths);
-    return rectangleElements.join("");
+    return rectangleElements;
 }
 
 const getDividedRectangleElements = (width: number, height: number, fill: string, divisionDepth: number, changeToPaths: boolean) => {
-    const innerElements: string[] = [];
+    const innerElements: SVGElement[] = [];
     if (changeToPaths){
         getDividedPaths(width, height, 0, 0, fill, divisionDepth, innerElements);
     } else {
@@ -24,7 +24,7 @@ const getDividedRectangleElements = (width: number, height: number, fill: string
     return innerElements;
 }
 
-const getDividedRects = (width: number, height: number, xInit: number, yInit: number, fill: string, depth: number, rects: string[]) => {
+const getDividedRects = (width: number, height: number, xInit: number, yInit: number, fill: string, depth: number, rects: SVGElement[]) => {
     if (depth > 1){
         getDividedRects(width/2, height/2, xInit, yInit, fill, depth - 1, rects);
         getDividedRects(width/2, height/2, xInit + width/2, yInit, fill, depth - 1, rects);
@@ -39,10 +39,18 @@ const getDividedRects = (width: number, height: number, xInit: number, yInit: nu
 }
 
 const createRect = (fill: string, x: number, y: number, width: number, height: number) => {
-    return `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${fill}" stroke="${fill}" stroke-width="${STROKE_WIDTH}"></rect>`;
+    var rectElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rectElement.setAttribute("x", x);
+    rectElement.setAttribute("y", y);
+    rectElement.setAttribute("width", width);
+    rectElement.setAttribute("height", height);
+    rectElement.setAttribute("fill", fill);
+    rectElement.setAttribute("stroke", fill);
+    rectElement.setAttribute("stroke-width", STROKE_WIDTH);
+    return rectElement;
 }
 
-const getDividedPaths = (width: number, height: number, xInit: number, yInit: number, fill: string, depth: number, paths: string[]) => {
+const getDividedPaths = (width: number, height: number, xInit: number, yInit: number, fill: string, depth: number, paths: SVGElement[]) => {
     if (depth > 1){
         getDividedPaths(width/2,height/2,xInit,yInit, fill, depth - 1, paths);
         getDividedPaths(width/2,height/2,xInit + width/2,yInit, fill, depth - 1, paths);
@@ -57,5 +65,10 @@ const getDividedPaths = (width: number, height: number, xInit: number, yInit: nu
 }
 
 const createPath = (fill: string, poin1: Point, point2: Point, point3: Point, point4: Point) => {
-    return `<path d="M ${poin1.x} ${poin1.y} L ${point2.x} ${point2.y} L ${point3.x} ${point3.y} L ${point4.x} ${point4.y} Z" fill="${fill}" stroke="${fill}" stroke-width="${STROKE_WIDTH}"></path>`;
+    var pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    pathElement.setAttribute("d", `M ${poin1.x} ${poin1.y} L ${point2.x} ${point2.y} L ${point3.x} ${point3.y} L ${point4.x} ${point4.y} Z`);
+    pathElement.setAttribute("fill", fill);
+    pathElement.setAttribute("stroke", fill);
+    pathElement.setAttribute("stroke-width", STROKE_WIDTH);
+    return pathElement;
 }
