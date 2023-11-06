@@ -34,10 +34,25 @@ const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit
         getDividedIntoReversedPaths(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, paths, fill);
     }
     else {
-        paths.push(createPath(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
-        paths.push(createPath(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2+height}, {x: xInit/2+width/2, y: yInit/2+height}));
-        paths.push(createPath(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width, y: yInit/2+height}));
-        paths.push(createPath(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        let opacity = getRandomInt(1, 100);
+        let leftOpacity = (100-opacity);
+        paths.push(createPath(fill, opacity/50 > 1 ? 1 : opacity/50, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        paths.push(createPath(fill, leftOpacity/50 > 1 ? 1 : leftOpacity/50, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        
+        opacity = getRandomInt(1, 100);
+        leftOpacity = (100-opacity);
+        paths.push(createPath(fill, opacity/50 > 1 ? 1 : opacity/50, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2+height}, {x: xInit/2+width/2, y: yInit/2+height}));
+        paths.push(createPath(fill, leftOpacity/50 > 1 ? 1 : leftOpacity/50, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2+height}, {x: xInit/2+width/2, y: yInit/2+height}));
+        
+        opacity = getRandomInt(1, 100);
+        leftOpacity = (100-opacity);
+        paths.push(createPath(fill, opacity/50 > 1 ? 1 : opacity/50, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width, y: yInit/2+height}));
+        paths.push(createPath(fill, leftOpacity/50 > 1 ? 1 : leftOpacity/50, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width, y: yInit/2+height}));
+        
+        opacity = getRandomInt(1, 100);
+        leftOpacity = (100-opacity);
+        paths.push(createPath(fill, opacity/50 > 1 ? 1 : opacity/50, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        paths.push(createPath(fill, leftOpacity/50 > 1 ? 1 : leftOpacity/50, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
     }
   }
 
@@ -51,14 +66,29 @@ const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit
         getDividedIntoReversedPaths(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, paths, fill);
     }
     else {
-        paths.push(createPath(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
-        paths.push(createPath(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2}, {x: xInit/2+width/2, y: yInit/2}));
-        paths.push(createPath(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width, y: yInit/2}));
-        paths.push(createPath(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        let opacity = getRandomInt(1, 100);
+        let leftOpacity = (100-opacity);
+        paths.push(createPath(fill, opacity/50 > 1 ? 1 : opacity/50, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        paths.push(createPath(fill, leftOpacity/50 > 1 ? 1 : leftOpacity/50, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        
+        opacity = getRandomInt(1, 100);
+        leftOpacity = (100-opacity);
+        paths.push(createPath(fill, opacity/50 > 1 ? 1 : opacity/50, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2}, {x: xInit/2+width/2, y: yInit/2}));
+        paths.push(createPath(fill, leftOpacity/50 > 1 ? 1 : leftOpacity/50, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2}, {x: xInit/2+width/2, y: yInit/2}));
+        
+        opacity = getRandomInt(1, 100);
+        leftOpacity = (100-opacity);
+        paths.push(createPath(fill, opacity/50 > 1 ? 1 : opacity/50, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width, y: yInit/2}));
+        paths.push(createPath(fill, leftOpacity/50 > 1 ? 1 : leftOpacity/50, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width, y: yInit/2}));
+        
+        opacity = getRandomInt(1, 100);
+        leftOpacity = (100-opacity);
+        paths.push(createPath(fill, opacity/50 > 1 ? 1 : opacity/50, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        paths.push(createPath(fill, leftOpacity/50 > 1 ? 1 : leftOpacity/50, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
     }
   }
 
-const createPath = (fill: string, point1: Point, point2: Point, point3: Point) => {
+const createPath = (fill: string, opacity: number, point1: Point, point2: Point, point3: Point) => {
     const fakeWidth = getRandomInt(1, point1.x);
     const fakeHeight = getRandomInt(1, point1.y);
     const pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -68,6 +98,7 @@ const createPath = (fill: string, point1: Point, point2: Point, point3: Point) =
     pathElement.setAttribute("fill", fill);
     pathElement.setAttribute("stroke", fill);
     pathElement.setAttribute("stroke-width", STROKE_WIDTH);
+    pathElement.setAttribute("opacity", opacity);
     return pathElement;
 }
 
@@ -81,10 +112,10 @@ const getDividedIntoPolygons = (width: number, height: number, xInit: number, yI
         getDividedIntoReversedPolygons(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, polygons, fill);
     }
     else {
-        polygons.push(createPolygon(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
-        polygons.push(createPolygon(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2+height}, {x: xInit/2+width/2, y: yInit/2+height}));
-        polygons.push(createPolygon(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width, y: yInit/2+height}));
-        polygons.push(createPolygon(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        polygons.push(createPolygon(fill, 1, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        polygons.push(createPolygon(fill, 1, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2+height}, {x: xInit/2+width/2, y: yInit/2+height}));
+        polygons.push(createPolygon(fill, 1, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width, y: yInit/2+height}));
+        polygons.push(createPolygon(fill, 1, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
     }
   }
 
@@ -98,14 +129,14 @@ const getDividedIntoPolygons = (width: number, height: number, xInit: number, yI
         getDividedIntoReversedPolygons(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, polygons, fill);
     }
     else {
-        polygons.push(createPolygon(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
-        polygons.push(createPolygon(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2}, {x: xInit/2+width/2, y: yInit/2}));
-        polygons.push(createPolygon(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width, y: yInit/2}));
-        polygons.push(createPolygon(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        polygons.push(createPolygon(fill, 1, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        polygons.push(createPolygon(fill, 1, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2}, {x: xInit/2+width/2, y: yInit/2}));
+        polygons.push(createPolygon(fill, 1, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width, y: yInit/2}));
+        polygons.push(createPolygon(fill, 1, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
     }
   }
 
-const createPolygon = (fill: string, point1: Point, point2: Point, point3: Point) => {
+const createPolygon = (fill: string, opacity: number, point1: Point, point2: Point, point3: Point) => {
     const fakeWidth = getRandomInt(1, point1.x);
     const fakeHeight = getRandomInt(1, point1.y);
     var polygonElement = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
@@ -115,5 +146,6 @@ const createPolygon = (fill: string, point1: Point, point2: Point, point3: Point
     polygonElement.setAttribute("fill", fill);
     polygonElement.setAttribute("stroke", fill);
     polygonElement.setAttribute("stroke-width", STROKE_WIDTH);
+    polygonElement.setAttribute("opacity", opacity);
     return polygonElement;
 }

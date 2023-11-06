@@ -31,14 +31,29 @@ const getDividedRects = (width: number, height: number, xInit: number, yInit: nu
         getDividedRects(width/2, height/2, xInit, yInit + height/2, fill, depth - 1, rects);
         getDividedRects(width/2, height/2, xInit + width/2, yInit + height/2, fill, depth - 1, rects);
     } else {
-        rects.push(createRect(fill, xInit, yInit, width/2, height/2));
-        rects.push(createRect(fill, xInit + width/2, yInit, width/2, height/2));
-        rects.push(createRect(fill, xInit, yInit + height/2, width/2, height/2));
-        rects.push(createRect(fill, xInit + width/2, yInit + height/2, width/2, height/2));
+        let opacity = getRandomInt(1, 100);
+        let leftOpacity = (100-opacity);
+        rects.push(createRect(fill, xInit, yInit, width/2, height/2, opacity/50 > 1 ? 1 : opacity/50));
+        rects.push(createRect(fill, xInit, yInit, width/2, height/2, leftOpacity/50 > 1 ? 1 : leftOpacity/50));
+
+        opacity = getRandomInt(1, 100);
+        leftOpacity = (100-opacity);
+        rects.push(createRect(fill, xInit + width/2, yInit, width/2, height/2, opacity/50 > 1 ? 1 : opacity/50));
+        rects.push(createRect(fill, xInit + width/2, yInit, width/2, height/2, leftOpacity/50 > 1 ? 1 : leftOpacity/50));
+        
+        opacity = getRandomInt(1, 100);
+        leftOpacity = (100-opacity);
+        rects.push(createRect(fill, xInit, yInit + height/2, width/2, height/2, opacity/50 > 1 ? 1 : opacity/50));
+        rects.push(createRect(fill, xInit, yInit + height/2, width/2, height/2, leftOpacity/50 > 1 ? 1 : leftOpacity/50));
+        
+        opacity = getRandomInt(1, 100);
+        leftOpacity = (100-opacity);
+        rects.push(createRect(fill, xInit + width/2, yInit + height/2, width/2, height/2, opacity/50 > 1 ? 1 : opacity/50));
+        rects.push(createRect(fill, xInit + width/2, yInit + height/2, width/2, height/2, leftOpacity/50 > 1 ? 1 : leftOpacity/50));
     }
 }
 
-const createRect = (fill: string, x: number, y: number, width: number, height: number) => {
+const createRect = (fill: string, x: number, y: number, width: number, height: number, opacity: number) => {
     const fakeWidth = getRandomInt(1, x);
     const fakeHeight = getRandomInt(1, y);
     var rectElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -51,6 +66,7 @@ const createRect = (fill: string, x: number, y: number, width: number, height: n
     rectElement.setAttribute("width", width);
     rectElement.setAttribute("height", height);
     rectElement.setAttribute("stroke-width", STROKE_WIDTH);
+    rectElement.setAttribute("opacity", opacity);
     return rectElement;
 }
 
