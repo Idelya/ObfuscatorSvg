@@ -1,6 +1,6 @@
 import { getRandomInt, shuffle } from "./utils";
 
-const POLYGON_DIVISION_DEPTH = 5;
+const POLYGON_DIVISION_DEPTH = 3;
 const STROKE_WIDTH = 1;
 
 export const dividePolygon = (polygonSvg: SVGElement) => {

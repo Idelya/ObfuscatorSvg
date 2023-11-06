@@ -29,18 +29,26 @@ const getDividedCircleElements = (radius: number, cx: number, cy: number, fill: 
     const diameter = radius * 2;
     const angle = 360 / partsCount;
     const paths: SVGElement[] = [];
-    const fakeWidth = getRandomInt(1, radius);
-    const fakeHeight = getRandomInt(1, radius);
     for (let i = 0; i < partsCount; i++){
-        var pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        pathElement.setAttribute("width", fakeWidth);
-        pathElement.setAttribute("height", fakeHeight);
-        pathElement.setAttribute("d", getSectorPath(diameter, cx, cy, i*angle, (i+1)*angle));
-        pathElement.setAttribute("fill", fill);
-        pathElement.setAttribute("stroke", fill);
-        pathElement.setAttribute("stroke-width", STROKE_WIDTH);
-        paths.push(pathElement);
+        const opacity = getRandomInt(1, 100);
+        const leftOpacity = (100-opacity);
+        paths.push(createCircleSector(diameter, cx, cy, i*angle, (i+1)*angle, fill, opacity/50 > 1 ? 1 : opacity/50));
+        paths.push(createCircleSector(diameter, cx, cy, i*angle, (i+1)*angle, fill, leftOpacity/50 > 1 ? 1 : leftOpacity/50));
     }
     shuffle(paths);
     return paths;
+}
+
+const createCircleSector = (diameter: number, cx: number, cy: number, angleStart: number, angleEnd: number, fill: string, opacity: number) => {
+    const fakeWidth = getRandomInt(1, diameter);
+    const fakeHeight = getRandomInt(1, diameter);
+    const pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    pathElement.setAttribute("width", fakeWidth);
+    pathElement.setAttribute("height", fakeHeight);
+    pathElement.setAttribute("d", getSectorPath(diameter, cx, cy, angleStart, angleEnd));
+    pathElement.setAttribute("fill", fill);
+    pathElement.setAttribute("stroke", fill);
+    pathElement.setAttribute("stroke-width", STROKE_WIDTH);
+    pathElement.setAttribute("opacity", opacity);
+    return pathElement;
 }
