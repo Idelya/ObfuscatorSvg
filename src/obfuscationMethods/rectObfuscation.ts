@@ -1,4 +1,4 @@
-import { shuffle } from "./utils";
+import { getRandomInt, shuffle } from "./utils";
 
 const RECT_DIVISION_DEPTH = 5;
 const STROKE_WIDTH = 1;
@@ -39,13 +39,17 @@ const getDividedRects = (width: number, height: number, xInit: number, yInit: nu
 }
 
 const createRect = (fill: string, x: number, y: number, width: number, height: number) => {
+    const fakeWidth = getRandomInt(1, x);
+    const fakeHeight = getRandomInt(1, y);
     var rectElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rectElement.setAttribute("widht", fakeWidth);
+    rectElement.setAttribute("heigth", fakeHeight);
     rectElement.setAttribute("x", x);
     rectElement.setAttribute("y", y);
-    rectElement.setAttribute("width", width);
-    rectElement.setAttribute("height", height);
     rectElement.setAttribute("fill", fill);
     rectElement.setAttribute("stroke", fill);
+    rectElement.setAttribute("width", width);
+    rectElement.setAttribute("height", height);
     rectElement.setAttribute("stroke-width", STROKE_WIDTH);
     return rectElement;
 }
@@ -64,9 +68,13 @@ const getDividedPaths = (width: number, height: number, xInit: number, yInit: nu
     }
 }
 
-const createPath = (fill: string, poin1: Point, point2: Point, point3: Point, point4: Point) => {
+const createPath = (fill: string, point1: Point, point2: Point, point3: Point, point4: Point) => {
+    const fakeWidth = getRandomInt(1, point1.x);
+    const fakeHeight = getRandomInt(1, point1.y);
     var pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    pathElement.setAttribute("d", `M ${poin1.x} ${poin1.y} L ${point2.x} ${point2.y} L ${point3.x} ${point3.y} L ${point4.x} ${point4.y} Z`);
+    pathElement.setAttribute("d", `M ${point1.x} ${point1.y} L ${point2.x} ${point2.y} L ${point3.x} ${point3.y} L ${point4.x} ${point4.y} Z`);
+    pathElement.setAttribute("width", fakeWidth);
+    pathElement.setAttribute("height", fakeHeight);
     pathElement.setAttribute("fill", fill);
     pathElement.setAttribute("stroke", fill);
     pathElement.setAttribute("stroke-width", STROKE_WIDTH);

@@ -1,4 +1,4 @@
-import { shuffle } from "./utils";
+import { getRandomInt, shuffle } from "./utils";
 
 const POLYGON_DIVISION_DEPTH = 5;
 const STROKE_WIDTH = 1;
@@ -59,7 +59,11 @@ const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit
   }
 
 const createPath = (fill: string, point1: Point, point2: Point, point3: Point) => {
-    var pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const fakeWidth = getRandomInt(1, point1.x);
+    const fakeHeight = getRandomInt(1, point1.y);
+    const pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    pathElement.setAttribute("widht", fakeWidth);
+    pathElement.setAttribute("heigth", fakeHeight);
     pathElement.setAttribute("d", `M${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y} Z`);
     pathElement.setAttribute("fill", fill);
     pathElement.setAttribute("stroke", fill);
@@ -102,7 +106,11 @@ const getDividedIntoPolygons = (width: number, height: number, xInit: number, yI
   }
 
 const createPolygon = (fill: string, point1: Point, point2: Point, point3: Point) => {
+    const fakeWidth = getRandomInt(1, point1.x);
+    const fakeHeight = getRandomInt(1, point1.y);
     var polygonElement = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    polygonElement.setAttribute("widht", fakeWidth);
+    polygonElement.setAttribute("heigth", fakeHeight);
     polygonElement.setAttribute("points", `${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y}`);
     polygonElement.setAttribute("fill", fill);
     polygonElement.setAttribute("stroke", fill);

@@ -1,4 +1,4 @@
-import { shuffle } from "./utils";
+import { getRandomInt, shuffle } from "./utils";
 
 const PARTS_COUNT = 360;
 const STROKE_WIDTH = 1;
@@ -29,8 +29,12 @@ const getDividedCircleElements = (radius: number, cx: number, cy: number, fill: 
     const diameter = radius * 2;
     const angle = 360 / partsCount;
     const paths: SVGElement[] = [];
+    const fakeWidth = getRandomInt(1, radius);
+    const fakeHeight = getRandomInt(1, radius);
     for (let i = 0; i < partsCount; i++){
         var pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        pathElement.setAttribute("width", fakeWidth);
+        pathElement.setAttribute("height", fakeHeight);
         pathElement.setAttribute("d", getSectorPath(diameter, cx, cy, i*angle, (i+1)*angle));
         pathElement.setAttribute("fill", fill);
         pathElement.setAttribute("stroke", fill);

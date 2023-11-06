@@ -15,3 +15,7 @@ export const shuffle = (array: any[]) => {
 
   return array;
 }
+
+export const getRandomInt = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min) + min);
+}
