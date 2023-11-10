@@ -17,6 +17,8 @@ export const generateSvg = (formInputs: FormSchemaSvgGenerator): string => {
     },
   );
   shape.setAttribute("fill", formInputs.shapeColor);
+  shape.setAttribute("stroke", formInputs.shapeColor);
+  shape.setAttribute("stroke-width", "1");
   svg.appendChild(shape);
   const svgAsStr = new XMLSerializer().serializeToString(svg);
   return svgAsStr;
