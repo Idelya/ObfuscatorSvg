@@ -19,3 +19,7 @@ export const shuffle = (array: any[]) => {
 export const getRandomInt = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min) + min);
 }
+
+export const ceilTo1 = (value: number) => {
+  return value > 1 ? 1 : value;
+}

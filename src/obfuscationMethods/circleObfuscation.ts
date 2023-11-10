@@ -1,4 +1,4 @@
-import { getRandomInt, shuffle } from "./utils";
+import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const PARTS_COUNT = 360;
 const STROKE_WIDTH = 1;
@@ -28,18 +28,22 @@ const getSectorPath = (outerDiameter: number, x: number, y: number, angleStart: 
 const getDividedCircleElements = (radius: number, cx: number, cy: number, fill: string, partsCount: number) => {
     const diameter = radius * 2;
     const angle = 360 / partsCount;
-    const paths: SVGElement[] = [];
+    let paths: SVGElement[] = [];
     for (let i = 0; i < partsCount; i++){
-        const opacity = getRandomInt(1, 100);
-        const leftOpacity = (100-opacity);
-        paths.push(createCircleSector(diameter, cx, cy, i*angle, (i+1)*angle, fill, opacity/50 > 1 ? 1 : opacity/50));
-        paths.push(createCircleSector(diameter, cx, cy, i*angle, (i+1)*angle, fill, leftOpacity/50 > 1 ? 1 : leftOpacity/50));
+        paths = paths.concat(createCompletedCircleSector(diameter, cx, cy, i, angle, fill));
     }
     shuffle(paths);
     return paths;
 }
 
-const createCircleSector = (diameter: number, cx: number, cy: number, angleStart: number, angleEnd: number, fill: string, opacity: number) => {
+const createCompletedCircleSector = (diameter: number, cx: number, cy: number, i: number, angle: number, fill: string) => {
+    const opacity = getRandomInt(1, 100)/50;
+    const leftOpacity = (2-opacity);
+    return [createPartialCircleSector(diameter, cx, cy, i*angle, (i+1)*angle, fill, ceilTo1(opacity)), 
+        createPartialCircleSector(diameter, cx, cy, i*angle, (i+1)*angle, fill, ceilTo1(leftOpacity))];
+}
+
+const createPartialCircleSector = (diameter: number, cx: number, cy: number, angleStart: number, angleEnd: number, fill: string, opacity: number) => {
     const fakeWidth = getRandomInt(1, diameter);
     const fakeHeight = getRandomInt(1, diameter);
     const pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -52,3 +56,4 @@ const createCircleSector = (diameter: number, cx: number, cy: number, angleStart
     pathElement.setAttribute("opacity", opacity);
     return pathElement;
 }
+
