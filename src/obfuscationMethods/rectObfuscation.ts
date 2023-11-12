@@ -1,6 +1,6 @@
-import { getRandomFigure, shuffle } from "./utils";
+import { ceilTo1, getRandomInt, getRandomFigure, shuffle } from "./utils";
 
-const RECT_DIVISION_DEPTH = 5;
+const RECT_DIVISION_DEPTH = 3;
 const STROKE_WIDTH = 1;
 
 export const divideRect = (rectSvg: SVGElement) => {
@@ -36,22 +36,36 @@ const getDividedRects = (width: number, height: number, xInit: number, yInit: nu
         getDividedRects(width/2, height/2, xInit, yInit + height/2, fill, depth - 1, rects);
         getDividedRects(width/2, height/2, xInit + width/2, yInit + height/2, fill, depth - 1, rects);
     } else {
-        rects.push(createRect(fill, xInit, yInit, width/2, height/2));
-        rects.push(createRect(fill, xInit + width/2, yInit, width/2, height/2));
-        rects.push(createRect(fill, xInit, yInit + height/2, width/2, height/2));
-        rects.push(createRect(fill, xInit + width/2, yInit + height/2, width/2, height/2));
+        createCompletedRect(fill, xInit, yInit, width/2, height/2).forEach(r => rects.push(r));
+        createCompletedRect(fill, xInit + width/2, yInit, width/2, height/2).forEach(r => rects.push(r));
+        createCompletedRect(fill, xInit, yInit + height/2, width/2, height/2).forEach(r => rects.push(r));
+        createCompletedRect(fill, xInit + width/2, yInit + height/2, width/2, height/2).forEach(r => rects.push(r));
     }
 }
 
-const createRect = (fill: string, x: number, y: number, width: number, height: number) => {
+const createCompletedRect = (fill: string, x: number, y: number, width: number, height: number) => {
+    const opacity = getRandomInt(1, 100)/50;
+    const leftOpacity = (2-opacity);
+    return [
+        createPartialRect(fill, x, y, width, height, ceilTo1(opacity)),
+        createPartialRect(fill, x, y, width, height, ceilTo1(leftOpacity))
+    ];
+} 
+
+const createPartialRect = (fill: string, x: number, y: number, width: number, height: number, opacity: number) => {
+    const fakeWidth = getRandomInt(1, x);
+    const fakeHeight = getRandomInt(1, y);
     var rectElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rectElement.setAttribute("widht", fakeWidth);
+    rectElement.setAttribute("heigth", fakeHeight);
     rectElement.setAttribute("x", x);
     rectElement.setAttribute("y", y);
-    rectElement.setAttribute("width", width);
-    rectElement.setAttribute("height", height);
     rectElement.setAttribute("fill", fill);
     rectElement.setAttribute("stroke", fill);
+    rectElement.setAttribute("width", width);
+    rectElement.setAttribute("height", height);
     rectElement.setAttribute("stroke-width", STROKE_WIDTH);
+    rectElement.setAttribute("opacity", opacity);
     return rectElement;
 }
 
@@ -62,18 +76,32 @@ const getDividedPaths = (width: number, height: number, xInit: number, yInit: nu
         getDividedPaths(width/2,height/2,xInit,yInit + height/2, fill, depth - 1, paths);
         getDividedPaths(width/2,height/2,xInit + width/2,yInit + height/2, fill, depth - 1, paths);
     } else {
-        paths.push(createPath(fill, {x: xInit, y: yInit}, {x: xInit + width/2, y: yInit}, {x: xInit + width/2, y: yInit + height/2}, {x: xInit, y: yInit + height/2}));
-        paths.push(createPath(fill, {x: xInit + width/2, y: yInit}, {x: xInit + width, y: yInit}, {x: xInit + width, y: yInit + height/2}, {x: xInit + width/2, y: yInit + height/2}));
-        paths.push(createPath(fill, {x: xInit, y: yInit + height/2}, {x: xInit + width/2, y: yInit + height/2}, {x: xInit + width/2, y: yInit + height}, {x: xInit, y: yInit + height}));
-        paths.push(createPath(fill, {x: xInit + width/2, y: yInit + height/2}, {x: xInit + width, y: yInit + height/2}, {x: xInit + width, y: yInit + height}, {x: xInit + width/2, y: yInit + height}));
+        createCompletedPath(fill, {x: xInit, y: yInit}, {x: xInit + width/2, y: yInit}, {x: xInit + width/2, y: yInit + height/2}, {x: xInit, y: yInit + height/2}).forEach(p => paths.push(p));
+        createCompletedPath(fill, {x: xInit + width/2, y: yInit}, {x: xInit + width, y: yInit}, {x: xInit + width, y: yInit + height/2}, {x: xInit + width/2, y: yInit + height/2}).forEach(p => paths.push(p));
+        createCompletedPath(fill, {x: xInit, y: yInit + height/2}, {x: xInit + width/2, y: yInit + height/2}, {x: xInit + width/2, y: yInit + height}, {x: xInit, y: yInit + height}).forEach(p => paths.push(p));
+        createCompletedPath(fill, {x: xInit + width/2, y: yInit + height/2}, {x: xInit + width, y: yInit + height/2}, {x: xInit + width, y: yInit + height}, {x: xInit + width/2, y: yInit + height}).forEach(p => paths.push(p));
     }
 }
 
-const createPath = (fill: string, poin1: Point, point2: Point, point3: Point, point4: Point) => {
+const createCompletedPath = (fill: string, point1: Point, point2: Point, point3: Point, point4: Point) => {
+    const opacity = getRandomInt(1, 100)/50;
+    const leftOpacity = (2-opacity);
+    return [
+        createPartialPath(fill, ceilTo1(opacity), point1, point2, point3, point4),
+        createPartialPath(fill, ceilTo1(leftOpacity), point1, point2, point3, point4)
+    ];
+} 
+
+const createPartialPath = (fill: string, opacity: number, point1: Point, point2: Point, point3: Point, point4: Point) => {
+    const fakeWidth = getRandomInt(1, point1.x);
+    const fakeHeight = getRandomInt(1, point1.y);
     var pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    pathElement.setAttribute("d", `M ${poin1.x} ${poin1.y} L ${point2.x} ${point2.y} L ${point3.x} ${point3.y} L ${point4.x} ${point4.y} Z`);
+    pathElement.setAttribute("d", `M ${point1.x} ${point1.y} L ${point2.x} ${point2.y} L ${point3.x} ${point3.y} L ${point4.x} ${point4.y} Z`);
+    pathElement.setAttribute("width", fakeWidth);
+    pathElement.setAttribute("height", fakeHeight);
     pathElement.setAttribute("fill", fill);
     pathElement.setAttribute("stroke", fill);
     pathElement.setAttribute("stroke-width", STROKE_WIDTH);
+    pathElement.setAttribute("opacity", opacity);
     return pathElement;
 }

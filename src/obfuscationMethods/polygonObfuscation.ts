@@ -1,6 +1,6 @@
-import { shuffle } from "./utils";
+import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
-const POLYGON_DIVISION_DEPTH = 5;
+const POLYGON_DIVISION_DEPTH = 3;
 const STROKE_WIDTH = 1;
 
 export const dividePolygon = (polygonSvg: SVGElement) => {
@@ -39,10 +39,10 @@ const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit
         getDividedIntoReversedPaths(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, paths, fill);
     }
     else {
-        paths.push(createPath(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
-        paths.push(createPath(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2+height}, {x: xInit/2+width/2, y: yInit/2+height}));
-        paths.push(createPath(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width, y: yInit/2+height}));
-        paths.push(createPath(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        createCompletedPath(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}).forEach(p => paths.push(p));
+        createCompletedPath(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2+height}, {x: xInit/2+width/2, y: yInit/2+height}).forEach(p => paths.push(p));
+        createCompletedPath(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width, y: yInit/2+height}).forEach(p => paths.push(p));
+        createCompletedPath(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}).forEach(p => paths.push(p));
     }
   }
 
@@ -56,19 +56,33 @@ const getDividedIntoPaths = (width: number, height: number, xInit: number, yInit
         getDividedIntoReversedPaths(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, paths, fill);
     }
     else {
-        paths.push(createPath(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
-        paths.push(createPath(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2}, {x: xInit/2+width/2, y: yInit/2}));
-        paths.push(createPath(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width, y: yInit/2}));
-        paths.push(createPath(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        createCompletedPath(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}).forEach(p => paths.push(p));
+        createCompletedPath(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2}, {x: xInit/2+width/2, y: yInit/2}).forEach(p => paths.push(p));
+        createCompletedPath(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width, y: yInit/2}).forEach(p => paths.push(p));
+        createCompletedPath(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}).forEach(p => paths.push(p));
     }
   }
 
-const createPath = (fill: string, point1: Point, point2: Point, point3: Point) => {
-    var pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+const createCompletedPath = (fill: string, point1: Point, point2: Point, point3: Point) => {
+    const opacity = getRandomInt(1, 100)/50;
+    const leftOpacity = (2-opacity);
+    return [
+        createPartialPath(fill, ceilTo1(opacity), point1, point2, point3),
+        createPartialPath(fill, ceilTo1(leftOpacity), point1, point2, point3)
+    ];
+} 
+
+const createPartialPath = (fill: string, opacity: number, point1: Point, point2: Point, point3: Point) => {
+    const fakeWidth = getRandomInt(1, point1.x);
+    const fakeHeight = getRandomInt(1, point1.y);
+    const pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    pathElement.setAttribute("widht", fakeWidth);
+    pathElement.setAttribute("heigth", fakeHeight);
     pathElement.setAttribute("d", `M${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y} Z`);
     pathElement.setAttribute("fill", fill);
     pathElement.setAttribute("stroke", fill);
     pathElement.setAttribute("stroke-width", STROKE_WIDTH);
+    pathElement.setAttribute("opacity", opacity);
     return pathElement;
 }
 
@@ -82,10 +96,10 @@ const getDividedIntoPolygons = (width: number, height: number, xInit: number, yI
         getDividedIntoReversedPolygons(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, polygons, fill);
     }
     else {
-        polygons.push(createPolygon(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
-        polygons.push(createPolygon(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2+height}, {x: xInit/2+width/2, y: yInit/2+height}));
-        polygons.push(createPolygon(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width, y: yInit/2+height}));
-        polygons.push(createPolygon(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        createCompletedPolygon(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}).forEach(p => polygons.push(p));
+        createCompletedPolygon(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2+height}, {x: xInit/2+width/2, y: yInit/2+height}).forEach(p => polygons.push(p));
+        createCompletedPolygon(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width, y: yInit/2+height}).forEach(p => polygons.push(p));
+        createCompletedPolygon(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}).forEach(p => polygons.push(p));
     }
   }
 
@@ -99,18 +113,32 @@ const getDividedIntoPolygons = (width: number, height: number, xInit: number, yI
         getDividedIntoReversedPolygons(width/2, height/2, +xInit + width/2, +yInit + height, depth - 1, polygons, fill);
     }
     else {
-        polygons.push(createPolygon(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
-        polygons.push(createPolygon(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2}, {x: xInit/2+width/2, y: yInit/2}));
-        polygons.push(createPolygon(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width, y: yInit/2}));
-        polygons.push(createPolygon(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}));
+        createCompletedPolygon(fill, {x: xInit/2+width/2, y: yInit/2+height}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}).forEach(p => polygons.push(p));
+        createCompletedPolygon(fill, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2, y: yInit/2}, {x: xInit/2+width/2, y: yInit/2}).forEach(p => polygons.push(p));
+        createCompletedPolygon(fill, {x: xInit/2+3*width/4, y: yInit/2+height/2}, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width, y: yInit/2}).forEach(p => polygons.push(p));
+        createCompletedPolygon(fill, {x: xInit/2+width/2, y: yInit/2}, {x: xInit/2+width/4, y: yInit/2+height/2}, {x: xInit/2+3*width/4, y: yInit/2+height/2}).forEach(p => polygons.push(p));
     }
   }
 
-const createPolygon = (fill: string, point1: Point, point2: Point, point3: Point) => {
+const createCompletedPolygon = (fill: string, point1: Point, point2: Point, point3: Point) => {
+    const opacity = getRandomInt(1, 100)/50;
+    const leftOpacity = (2-opacity);
+    return [
+        createPartialPolygon(fill, ceilTo1(opacity), point1, point2, point3),
+        createPartialPolygon(fill, ceilTo1(leftOpacity), point1, point2, point3)
+    ];
+} 
+
+const createPartialPolygon = (fill: string, opacity: number, point1: Point, point2: Point, point3: Point) => {
+    const fakeWidth = getRandomInt(1, point1.x);
+    const fakeHeight = getRandomInt(1, point1.y);
     var polygonElement = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    polygonElement.setAttribute("widht", fakeWidth);
+    polygonElement.setAttribute("heigth", fakeHeight);
     polygonElement.setAttribute("points", `${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y}`);
     polygonElement.setAttribute("fill", fill);
     polygonElement.setAttribute("stroke", fill);
     polygonElement.setAttribute("stroke-width", STROKE_WIDTH);
+    polygonElement.setAttribute("opacity", opacity);
     return polygonElement;
 }
