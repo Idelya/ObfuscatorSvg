@@ -1,4 +1,4 @@
-import { shuffle } from "./utils";
+import { getRandomFigure, shuffle } from "./utils";
 
 const RECT_DIVISION_DEPTH = 5;
 const STROKE_WIDTH = 1;
@@ -10,6 +10,11 @@ export const divideRect = (rectSvg: SVGElement) => {
 
     const changeToPaths = true;
     const rectangleElements = getDividedRectangleElements(width, height, fill, RECT_DIVISION_DEPTH, changeToPaths);
+
+    // TODO: Add elements in the middle
+    rectangleElements.unshift(getRandomFigure(0, 0, width, width, height, height));
+    rectangleElements.push(getRandomFigure(0, 0, width, width, height, height));
+
     return rectangleElements;
 }
 

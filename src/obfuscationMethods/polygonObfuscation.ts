@@ -10,6 +10,11 @@ export const dividePolygon = (polygonSvg: SVGElement) => {
 
     const changeToPaths = true;
     const polygonElements = getDividedPolygonElements(width, height, fill, POLYGON_DIVISION_DEPTH, changeToPaths);
+
+    // TODO: Add elements in the middle
+    polygonElements.unshift(getRandomFigure(0, 0, width, width, height, height));
+    polygonElements.push(getRandomFigure(0, 0, width, width, height, height));
+
     return polygonElements;
 }
 

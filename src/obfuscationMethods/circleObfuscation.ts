@@ -1,4 +1,4 @@
-import { shuffle } from "./utils";
+import { shuffle, getRandomFigure } from "./utils";
 
 const PARTS_COUNT = 360;
 const STROKE_WIDTH = 1;
@@ -10,6 +10,10 @@ export const divideCircle = (circleSvg: SVGElement) => {
     const fill = circleSvg.getAttribute("fill");
 
     const circleElements = getDividedCircleElements(r, cx, cy, fill, PARTS_COUNT);
+
+    // TODO: Add elements in the middle
+    circleElements.unshift(getRandomFigure(cx-r, cy-r, 2*r, 2*r, 2*r, 2*r));
+    circleElements.push(getRandomFigure(cx-r, cy-r, 2*r, 2*r, 2*r, 2*r));
 
     return circleElements;
 }
