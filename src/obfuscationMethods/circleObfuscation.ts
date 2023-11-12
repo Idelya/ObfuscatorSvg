@@ -11,9 +11,19 @@ export const divideCircle = (circleSvg: SVGElement) => {
 
     const circleElements = getDividedCircleElements(r, cx, cy, fill, PARTS_COUNT);
 
-    // TODO: Add elements in the middle
+    const irrelevantFigures: SVGElement[] = [];
+    for (let i = 0; i < circleElements.length; i++){
+        const figX = Math.random() * cx;
+        const figY =Math.random() * cy;
+        irrelevantFigures.push(getRandomFigure(figX, figY, 0, 2*r, 0, 2*r));
+    }
+    irrelevantFigures.forEach(f => circleElements.push(f));
+
+    shuffle(circleElements);
+
     circleElements.unshift(getRandomFigure(cx-r, cy-r, 2*r, 2*r, 2*r, 2*r));
     circleElements.push(getRandomFigure(cx-r, cy-r, 2*r, 2*r, 2*r, 2*r));
+
 
     return circleElements;
 }
@@ -36,7 +46,6 @@ const getDividedCircleElements = (radius: number, cx: number, cy: number, fill: 
     for (let i = 0; i < partsCount; i++){
         paths = paths.concat(createCompletedCircleSector(diameter, cx, cy, i, angle, fill));
     }
-    shuffle(paths);
     return paths;
 }
 
