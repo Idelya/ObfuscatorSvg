@@ -1,4 +1,4 @@
-import { Box, FormControl, MenuItem, TextField } from "@mui/material";
+import { Box, Button, FormControl, MenuItem, TextField } from "@mui/material";
 import { FormSchemaSvgGenerator, shapes } from "../../constant";
 import { MuiColorInput } from "mui-color-input";
 
@@ -7,6 +7,7 @@ interface GeneratorFormProps {
   index: number;
   onChange: (e: React.ChangeEvent) => void;
   setFieldValue: (name: string, value: string) => void;
+  deleteElement: () => void;
 }
 
 function GeneratorForm({
@@ -14,6 +15,7 @@ function GeneratorForm({
   index,
   onChange,
   setFieldValue,
+  deleteElement,
 }: GeneratorFormProps) {
   return (
     <Box
@@ -60,6 +62,7 @@ function GeneratorForm({
         }
         value={values.shapeColor}
       />
+      <Button onClick={deleteElement}>Delete</Button>
     </Box>
   );
 }

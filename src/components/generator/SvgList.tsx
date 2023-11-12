@@ -5,6 +5,7 @@ import {
   List,
   ListItem,
   ListItemButton,
+  Typography,
 } from "@mui/material";
 import { useFormik } from "formik";
 import {
@@ -20,7 +21,7 @@ interface SvgListProps {
 }
 
 function SvgList({ onSave }: SvgListProps) {
-  const [visibleId, setVisibleId] = useState(0);
+  const [visibleId, setVisibleId] = useState<number | null>(0);
   const formik = useFormik({
     initialValues: svgGeneratorInit,
     onSubmit: (values) => {
@@ -31,32 +32,57 @@ function SvgList({ onSave }: SvgListProps) {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box>
-        <Grid container spacing={1}>
-          <Grid item xs={6}>
-            <List>
-              {formik.values.elements.map((_, index) => (
-                <ListItem
-                  key={index}
-                  disablePadding
-                  sx={{
-                    border: index === visibleId ? "solid 1px #eee" : "none",
-                  }}
-                >
-                  <ListItemButton
-                    onClick={() => setVisibleId(index)}
-                  >{`Element ${index}`}</ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
-          <Grid item xs={6}>
-            <GeneratorForm
-              onChange={formik.handleChange}
-              setFieldValue={formik.setFieldValue}
-              values={formik.values.elements[visibleId]}
-              index={visibleId}
-            />
-          </Grid>
+        <Grid container spacing={1} sx={{ minHeight: "300px" }}>
+          {formik.values.elements.length ? (
+            <>
+              <Grid item xs={6}>
+                <List>
+                  {formik.values.elements.map((_, index) => (
+                    <ListItem
+                      key={index}
+                      disablePadding
+                      sx={{
+                        border: index === visibleId ? "solid 1px #eee" : "none",
+                      }}
+                    >
+                      <ListItemButton
+                        onClick={() => setVisibleId(index)}
+                      >{`Element ${index}`}</ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </Grid>
+              <Grid item xs={6}>
+                {visibleId !== null ? (
+                  <GeneratorForm
+                    onChange={formik.handleChange}
+                    setFieldValue={formik.setFieldValue}
+                    values={formik.values.elements[visibleId]}
+                    index={visibleId}
+                    deleteElement={() => {
+                      setVisibleId(null);
+                      formik.setFieldValue(
+                        "elements",
+                        formik.values.elements.filter(
+                          (_, id) => id !== visibleId,
+                        ),
+                      );
+                    }}
+                  />
+                ) : (
+                  <Typography>
+                    {formik.values.elements.length
+                      ? `Select element`
+                      : "Add element"}
+                  </Typography>
+                )}
+              </Grid>{" "}
+            </>
+          ) : (
+            <Grid>
+              <Typography>Add element</Typography>
+            </Grid>
+          )}
         </Grid>
         <Box sx={{ display: "flex", marginTop: "16px", gap: "16px" }}>
           <Button
