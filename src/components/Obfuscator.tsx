@@ -1,4 +1,4 @@
-import { Container, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import GeneratorSvg from "./generator/GeneratorSvg";
 import ObfuscationForm from "./obfuscation/ObfuscationForm";
 import SvgResult from "./SvgResult";
@@ -14,11 +14,12 @@ function Obfuscator() {
   };
 
   return (
-    <Container
+    <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
+        margin: "16px",
       }}
     >
       <Grid container spacing={3}>
@@ -36,7 +37,7 @@ function Obfuscator() {
             }}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           {svgForObfuscation && (
             <ObfuscationForm
               generatedSvg={svgForObfuscation}
@@ -45,13 +46,13 @@ function Obfuscator() {
             />
           )}
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={8}>
           {svgAfterObfuscation && (
             <SvgResult svg={svgAfterObfuscation} name="after" />
           )}
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 }
 

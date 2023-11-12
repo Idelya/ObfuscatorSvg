@@ -28,7 +28,7 @@ function GeneratorSvg({ onSubmit, svg }: GeneratorSvgProps) {
   return (
     <>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Typography variant="h4" sx={{ marginBottom: "16px" }}>
             Generate svg
           </Typography>
@@ -37,7 +37,7 @@ function GeneratorSvg({ onSubmit, svg }: GeneratorSvgProps) {
         <Grid
           item
           xs={12}
-          md={6}
+          md={8}
           sx={{ display: "flex", justifyContent: "center" }}
         >
           {svg ? (
