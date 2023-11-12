@@ -54,22 +54,10 @@ export const getRandomFigure = (x: number, y: number, minWidth: number, maxWidth
   }
 
   element?.setAttribute("fill", getRandomHexColor());
-  // TODO: Maybe some class with style opcity = 0?
   element?.setAttribute("opacity", 0);
 
   return element;
 }
-
-const getSectorPath = (outerDiameter: number, x: number, y: number, angleStart: number, angleEnd: number) => {
-  const degreesToRadiansRatio = Math.PI / 180;
-  const cr = outerDiameter / 2;
-  const cx1 = Math.cos(degreesToRadiansRatio * angleEnd) * cr + x;
-  const cy1 = -Math.sin(degreesToRadiansRatio * angleEnd) * cr + y;
-  const cx2 = Math.cos(degreesToRadiansRatio * angleStart) * cr + x;
-  const cy2 = -Math.sin(degreesToRadiansRatio * angleStart) * cr + y;
-
-  return `M${x} ${y} ${cx1} ${cy1} A${cr} ${cr} 0 0 1 ${cx2} ${cy2}Z`;
-};  
 
 function getRandomHexColor(): string {
   const color = Math.floor(Math.random()*16777215).toString(16);
