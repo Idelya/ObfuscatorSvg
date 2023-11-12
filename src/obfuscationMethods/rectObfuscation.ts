@@ -11,7 +11,17 @@ export const divideRect = (rectSvg: SVGElement) => {
     const changeToPaths = true;
     const rectangleElements = getDividedRectangleElements(width, height, fill, RECT_DIVISION_DEPTH, changeToPaths);
 
-    // TODO: Add elements in the middle
+    // TODO: Common function
+    const irrelevantFigures: SVGElement[] = [];
+    for (let i = 0; i < rectangleElements.length; i++){
+        const figX = Math.random() * width/2;
+        const figY = Math.random() * height/2;
+        irrelevantFigures.push(getRandomFigure(figX, figY, 0, width, 0, height));
+    }
+    irrelevantFigures.forEach(f => rectangleElements.push(f));
+
+    shuffle(rectangleElements);
+
     rectangleElements.unshift(getRandomFigure(0, 0, width, width, height, height));
     rectangleElements.push(getRandomFigure(0, 0, width, width, height, height));
 
@@ -25,7 +35,6 @@ const getDividedRectangleElements = (width: number, height: number, fill: string
     } else {
         getDividedRects(width, height, 0, 0, fill, divisionDepth, innerElements);
     }
-    shuffle(innerElements);
     return innerElements;
 }
 
