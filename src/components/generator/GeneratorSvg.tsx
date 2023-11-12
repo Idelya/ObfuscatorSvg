@@ -1,9 +1,9 @@
 import { Grid, Typography } from "@mui/material";
-import GeneratorForm from "./GeneratorForm";
 import GeneratorResult from "../SvgResult";
 import { useEffect, useState } from "react";
 import { FormSchemaSvgGenerator, svgGeneratorInit } from "../../constant";
 import { generateSvg } from "../../lib/generateSvg";
+import SvgList from "./SvgList";
 
 interface GeneratorSvgProps {
   onSubmit: (svg: string) => void;
@@ -13,7 +13,9 @@ interface GeneratorSvgProps {
 function GeneratorSvg({ onSubmit, svg }: GeneratorSvgProps) {
   const [init, setInit] = useState(true);
 
-  const handleSave = (newFormInputs: FormSchemaSvgGenerator) => {
+  const handleSave = (newFormInputs: {
+    elements: FormSchemaSvgGenerator[];
+  }) => {
     const svgAsString = generateSvg(newFormInputs);
     onSubmit(svgAsString);
   };
@@ -32,7 +34,7 @@ function GeneratorSvg({ onSubmit, svg }: GeneratorSvgProps) {
           <Typography variant="h4" sx={{ marginBottom: "16px" }}>
             Generate svg
           </Typography>
-          <GeneratorForm onSave={handleSave} />
+          <SvgList onSave={handleSave} />
         </Grid>
         <Grid
           item

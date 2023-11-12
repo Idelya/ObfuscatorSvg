@@ -16,9 +16,17 @@ export const propsByShape = {
   },
 };
 
-export const svgGeneratorInit: FormSchemaSvgGenerator = {
+export const initElement = {
   shape: "circle",
   shapeColor: "#000",
   size: 20,
   backgroundColor: "#fff",
+};
+
+export const svgGeneratorInit: { elements: FormSchemaSvgGenerator[] } = {
+  elements: [
+    {
+      ...initElement,
+    },
+  ],
 };
