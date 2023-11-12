@@ -19,7 +19,7 @@ function SvgResult({ svg, name }: SvgResultProps) {
       prettier
         .format(svg, {
           parser: "html",
-          printWidth: 100,
+          printWidth: 150,
           plugins: [parser],
         })
         .then((code) => setSvgString(code));

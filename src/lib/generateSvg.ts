@@ -19,6 +19,13 @@ export const generateSvg = (formInputs: {
         shape.setAttribute(attr, element.size.toString());
       },
     );
+
+    const generatePoints =
+      propsByShape[element.shape as keyof typeof propsByShape].points;
+    if (generatePoints) {
+      shape.setAttribute("points", generatePoints(element.size));
+    }
+
     shape.setAttribute("fill", element.shapeColor);
     shape.setAttribute("stroke", element.shapeColor);
     shape.setAttribute("stroke-width", "1");

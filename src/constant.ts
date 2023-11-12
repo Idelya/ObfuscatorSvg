@@ -1,4 +1,4 @@
-export const shapes = ["circle", "rect"];
+export const shapes = ["circle", "rect", "polygon"];
 
 export type FormSchemaSvgGenerator = {
   shape: (typeof shapes)[number];
@@ -10,9 +10,15 @@ export type FormSchemaSvgGenerator = {
 export const propsByShape = {
   circle: {
     size: ["r", "cx", "cy"],
+    points: null,
   },
   rect: {
     size: ["width", "height"],
+    points: null,
+  },
+  polygon: {
+    size: ["width", "height"],
+    points: (size: number) => `${size / 2},0 0,${size} ${size},${size}`,
   },
 };
 
