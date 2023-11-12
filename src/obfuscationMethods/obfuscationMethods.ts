@@ -22,7 +22,7 @@ export const obfuscate = (
 };
 
 export const obfuscationMethods: { [key: string]: ObfuscationMethod } = {
-  "divide into parts, randomize, change to paths": (svg: SVGElement) => {
+  "obfuscate": (svg: SVGElement) => {
     svg.childNodes.forEach((elem, _) => {
       const svgChild = elem as SVGElement;
       if (svgChild.tagName === "circle"){
