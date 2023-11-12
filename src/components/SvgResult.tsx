@@ -1,4 +1,4 @@
-import { Box, FormControlLabel, Switch } from "@mui/material";
+import { Box, FormControlLabel, Switch, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -19,7 +19,7 @@ function SvgResult({ svg, name }: SvgResultProps) {
       prettier
         .format(svg, {
           parser: "html",
-          printWidth: 20,
+          printWidth: 100,
           plugins: [parser],
         })
         .then((code) => setSvgString(code));
@@ -33,26 +33,49 @@ function SvgResult({ svg, name }: SvgResultProps) {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
-      <FormControlLabel
-        value="showCode"
-        control={<Switch color="primary" />}
-        label="Show code"
-        labelPlacement="end"
-        onChange={() => setShowCode(!showCode)}
-      />
-      {!showCode ? (
-        <Box
-          id={name}
-          sx={{
-            backgroundColor: "#fff",
-            boxShadow: "0px 0px 43px 0px rgba(7, 7, 7, 1)",
-          }}
-        ></Box>
-      ) : (
-        <SyntaxHighlighter language="javascript" style={materialDark}>
-          {svgString}
-        </SyntaxHighlighter>
-      )}
+      <Box sx={{ display: "flex", textAlign: "center", alignItems: "center" }}>
+        <FormControlLabel
+          value="showCode"
+          control={<Switch color="primary" />}
+          label="Show code"
+          labelPlacement="end"
+          onChange={() => setShowCode(!showCode)}
+        />
+        {showCode && <Typography>Chars: {svgString.length}</Typography>}
+      </Box>
+      <Box
+        sx={{
+          maxHeight: "80vh",
+          overflowY: "scroll",
+        }}
+      >
+        {!showCode ? (
+          <Box
+            id={name}
+            sx={{
+              backgroundColor: "#fff",
+              boxShadow: "0px 0px 43px 0px rgba(7, 7, 7, 1)",
+            }}
+          ></Box>
+        ) : (
+          <SyntaxHighlighter
+            language="javascript"
+            style={materialDark}
+            wrapLongLines
+            customStyle={{
+              fontSize: "12px",
+            }}
+            codeTagProps={{
+              style: {
+                lineHeight: "inherit",
+                fontSize: "inherit",
+              },
+            }}
+          >
+            {svgString}
+          </SyntaxHighlighter>
+        )}
+      </Box>
     </Box>
   );
 }

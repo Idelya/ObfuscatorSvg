@@ -7,11 +7,6 @@ import { useState } from "react";
 function Obfuscator() {
   const [svgForObfuscation, setSvgForObfuscation] = useState<string>();
   const [svgAfterObfuscation, setSvgAfterObfuscation] = useState<string>();
-  const [trigger, setTrigger] = useState<number>(0);
-
-  const triggerReload = () => {
-    setTrigger(trigger + 1);
-  };
 
   return (
     <Box
@@ -32,7 +27,6 @@ function Obfuscator() {
           <GeneratorSvg
             svg={svgForObfuscation}
             onSubmit={(svg) => {
-              triggerReload();
               setSvgForObfuscation(svg);
             }}
           />
@@ -42,7 +36,6 @@ function Obfuscator() {
             <ObfuscationForm
               generatedSvg={svgForObfuscation}
               onObfuscate={(svg) => setSvgAfterObfuscation(svg)}
-              trigger={trigger}
             />
           )}
         </Grid>
