@@ -32,11 +32,8 @@ const getDividedRects = (width: number, height: number, xInit: number, yInit: nu
         getDividedRects(width/2, height/2, xInit + width/2, yInit + height/2, fill, depth - 1, rects);
     } else {
         createCompletedRect(fill, xInit, yInit, width/2, height/2).forEach(r => rects.push(r));
-
         createCompletedRect(fill, xInit + width/2, yInit, width/2, height/2).forEach(r => rects.push(r));
-        
         createCompletedRect(fill, xInit, yInit + height/2, width/2, height/2).forEach(r => rects.push(r));
-
         createCompletedRect(fill, xInit + width/2, yInit + height/2, width/2, height/2).forEach(r => rects.push(r));
     }
 }
@@ -75,11 +72,8 @@ const getDividedPaths = (width: number, height: number, xInit: number, yInit: nu
         getDividedPaths(width/2,height/2,xInit + width/2,yInit + height/2, fill, depth - 1, paths);
     } else {
         createCompletedPath(fill, {x: xInit, y: yInit}, {x: xInit + width/2, y: yInit}, {x: xInit + width/2, y: yInit + height/2}, {x: xInit, y: yInit + height/2}).forEach(p => paths.push(p));
-
         createCompletedPath(fill, {x: xInit + width/2, y: yInit}, {x: xInit + width, y: yInit}, {x: xInit + width, y: yInit + height/2}, {x: xInit + width/2, y: yInit + height/2}).forEach(p => paths.push(p));
-        
         createCompletedPath(fill, {x: xInit, y: yInit + height/2}, {x: xInit + width/2, y: yInit + height/2}, {x: xInit + width/2, y: yInit + height}, {x: xInit, y: yInit + height}).forEach(p => paths.push(p));
-        
         createCompletedPath(fill, {x: xInit + width/2, y: yInit + height/2}, {x: xInit + width, y: yInit + height/2}, {x: xInit + width, y: yInit + height}, {x: xInit + width/2, y: yInit + height}).forEach(p => paths.push(p));
     }
 }
