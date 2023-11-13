@@ -1,4 +1,5 @@
-import { ceilTo1, getRandomFigure, getRandomInt, shuffle } from "./utils";
+import { addIrrelevantFiguresTo, getRandomFigure } from "./sharedObfuscation";
+import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const POLYGON_DIVISION_DEPTH = 3;
 const STROKE_WIDTH = 1;
@@ -11,14 +12,7 @@ export const dividePolygon = (polygonSvg: SVGElement) => {
     const changeToPaths = true;
     const polygonElements = getDividedPolygonElements(width, height, fill, POLYGON_DIVISION_DEPTH, changeToPaths);
 
-    const irrelevantFigures: SVGElement[] = [];
-    for (let i = 0; i < polygonElements.length; i++){
-        const figX = Math.random() * width/2;
-        const figY = Math.random() * height/2;
-        irrelevantFigures.push(getRandomFigure(figX, figY, 0, width, 0, height));
-    }
-    irrelevantFigures.forEach(f => polygonElements.push(f));
-
+    addIrrelevantFiguresTo(polygonElements, width/2, height/2, width/2, height/2);
     shuffle(polygonElements);
 
     polygonElements.unshift(getRandomFigure(0, 0, width, width, height, height));

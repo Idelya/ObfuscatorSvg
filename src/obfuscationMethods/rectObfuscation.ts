@@ -1,4 +1,5 @@
-import { ceilTo1, getRandomInt, getRandomFigure, shuffle } from "./utils";
+import { addIrrelevantFiguresTo, getRandomFigure } from "./sharedObfuscation";
+import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const RECT_DIVISION_DEPTH = 3;
 const STROKE_WIDTH = 1;
@@ -11,15 +12,7 @@ export const divideRect = (rectSvg: SVGElement) => {
     const changeToPaths = true;
     const rectangleElements = getDividedRectangleElements(width, height, fill, RECT_DIVISION_DEPTH, changeToPaths);
 
-    // TODO: Common function
-    const irrelevantFigures: SVGElement[] = [];
-    for (let i = 0; i < rectangleElements.length; i++){
-        const figX = Math.random() * width/2;
-        const figY = Math.random() * height/2;
-        irrelevantFigures.push(getRandomFigure(figX, figY, 0, width, 0, height));
-    }
-    irrelevantFigures.forEach(f => rectangleElements.push(f));
-
+    addIrrelevantFiguresTo(rectangleElements, width/2, height/2, width/2, height/2);
     shuffle(rectangleElements);
 
     rectangleElements.unshift(getRandomFigure(0, 0, width, width, height, height));
