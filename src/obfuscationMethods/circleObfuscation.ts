@@ -1,3 +1,4 @@
+import { addIrrelevantFiguresTo, getRandomFigure } from "./sharedObfuscation";
 import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const PARTS_COUNT = 360;
@@ -10,6 +11,12 @@ export const divideCircle = (circleSvg: SVGElement) => {
     const fill = circleSvg.getAttribute("fill");
 
     const circleElements = getDividedCircleElements(r, cx, cy, fill, PARTS_COUNT);
+
+    addIrrelevantFiguresTo(circleElements, cx, cy, r, r);
+    shuffle(circleElements);
+
+    circleElements.unshift(getRandomFigure(cx-r, cy-r, 2*r, 2*r, 2*r, 2*r));
+    circleElements.push(getRandomFigure(cx-r, cy-r, 2*r, 2*r, 2*r, 2*r));
 
     return circleElements;
 }
@@ -32,7 +39,6 @@ const getDividedCircleElements = (radius: number, cx: number, cy: number, fill: 
     for (let i = 0; i < partsCount; i++){
         paths = paths.concat(createCompletedCircleSector(diameter, cx, cy, i, angle, fill));
     }
-    shuffle(paths);
     return paths;
 }
 
