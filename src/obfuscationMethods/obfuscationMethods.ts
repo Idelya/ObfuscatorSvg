@@ -25,16 +25,34 @@ export const obfuscate = (svgElement: string) => {
 
 const replaceFigure = (
   svgElement: SVGElement,
-  obfuscation: (element: SVGElement) => SVGElement[],
+  obfuscation: (element: SVGElement) => SVGElement[]
 ) => {
-  const devidedSvg = document.createElementNS(
+  const dividedSvg = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "g",
   );
+
   const childNodes = obfuscation(svgElement);
-  devidedSvg.innerHTML = childNodes
+  dividedSvg.innerHTML = childNodes
     .map((element) => element.outerHTML)
     .join("");
 
-  svgElement.parentNode?.replaceChild(devidedSvg, svgElement);
+  dividedSvg.appendChild(getObfuscatedSvgStyleTag());
+
+  svgElement.parentNode?.replaceChild(dividedSvg, svgElement);
 };
+
+const getObfuscatedSvgStyleTag = () => {
+  const styleElement = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "style",
+  );
+
+  styleElement.textContent = `
+    .red {
+      display: none;
+    }
+  `;
+
+  return styleElement;
+}

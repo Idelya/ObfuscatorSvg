@@ -65,7 +65,7 @@ export const getRandomFigure = (
 };
 
 const hideElement = (element: SVGElement) => {
-  const distinctHidingMethods = 2;
+  const distinctHidingMethods = 3;
   const hidingMethodDiscriminator = Math.floor(
     Math.random() * distinctHidingMethods,
   );
@@ -78,6 +78,10 @@ const hideElement = (element: SVGElement) => {
     case 1:
       // fill
       element.setAttribute("fill", element.getAttribute("fill") + "00");
+      break;
+    case 2:
+      // className
+      element.classList.add("red");
       break;
   }
 };
