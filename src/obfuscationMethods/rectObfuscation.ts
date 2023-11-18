@@ -1,25 +1,56 @@
+import { ObfuscationParams } from "./obfuscationParams";
 import { addIrrelevantFiguresTo, getRandomFigure } from "./sharedObfuscation";
 import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
-const RECT_DIVISION_DEPTH = 3;
 const STROKE_WIDTH = 1;
 
 export const divideRect = (rectSvg: SVGElement) => {
-    const width = parseInt(rectSvg.getAttribute("width")!);
-    const height = parseInt(rectSvg.getAttribute("height")!);
-    const fill = rectSvg.getAttribute("fill")!;
+  // TODO: Add to parameter list
+  const params: ObfuscationParams = {
+    divisionStrength: 3,
+    elementTag: "path",
+    addIrrelevantFigures: true,
+    addIrrelevantAttributes: true,
+    randomizeElements: true,
+    figureSplitBy: "opacity",
+    fill: "original",
+  };
 
-    const changeToPaths = true;
-    const rectangleElements = getDividedRectangleElements(width, height, fill, RECT_DIVISION_DEPTH, changeToPaths);
+  const width = parseInt(rectSvg.getAttribute("width")!);
+  const height = parseInt(rectSvg.getAttribute("height")!);
+  const originalFill = rectSvg.getAttribute("fill")!;
 
-    addIrrelevantFiguresTo(rectangleElements, width/2, height/2, width/2, height/2);
+  const rectangleElements = getDividedRectangleElements(
+    width,
+    height,
+    originalFill,
+    params.divisionStrength,
+    params.elementTag === "path",
+  );
+
+  if (params.addIrrelevantFigures) {
+    addIrrelevantFiguresTo(
+      rectangleElements,
+      width / 2,
+      height / 2,
+      width / 2,
+      height / 2,
+    );
+  }
+
+  if (params.randomizeElements) {
     shuffle(rectangleElements);
+  }
 
-    rectangleElements.unshift(getRandomFigure(0, 0, width, width, height, height));
+  if (params.addIrrelevantFigures) {
+    rectangleElements.unshift(
+      getRandomFigure(0, 0, width, width, height, height),
+    );
     rectangleElements.push(getRandomFigure(0, 0, width, width, height, height));
+  }
 
-    return rectangleElements;
-}
+  return rectangleElements;
+};
 
 const getDividedRectangleElements = (width: number, height: number, fill: string, divisionDepth: number, changeToPaths: boolean) => {
     const innerElements: SVGElement[] = [];
