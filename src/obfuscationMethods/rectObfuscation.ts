@@ -1,4 +1,5 @@
 import { ObfuscationParams } from "./obfuscationParams";
+import { Point } from "./point";
 import { addIrrelevantFiguresTo, getRandomFigure } from "./sharedObfuscation";
 import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
@@ -48,7 +49,16 @@ const getDividedRectangleElements = (width: number, height: number, fill: string
   return innerElements;
 };
 
-const getDividedRects = (width: number, height: number, xInit: number, yInit: number, fill: string, depth: number, rects: SVGElement[], params: ObfuscationParams) => {
+const getDividedRects = (
+  width: number,
+  height: number,
+  xInit: number,
+  yInit: number,
+  fill: string,
+  depth: number,
+  rects: SVGElement[],
+  params: ObfuscationParams,
+) => {
   if (depth > 1) {
     getDividedRects(width / 2, height / 2, xInit, yInit, fill, depth - 1, rects, params);
     getDividedRects(width / 2, height / 2, xInit + width / 2, yInit, fill, depth - 1, rects, params);
@@ -66,7 +76,10 @@ const createCompletedRect = (fill: string, x: number, y: number, width: number, 
   if (params.figureSplitBy === "opacity") {
     const opacity = getRandomInt(1, 100) / 50;
     const leftOpacity = 2 - opacity;
-    return [createPartialRect(fill, x, y, width, height, ceilTo1(opacity), params), createPartialRect(fill, x, y, width, height, ceilTo1(leftOpacity), params)];
+    return [
+      createPartialRect(fill, x, y, width, height, ceilTo1(opacity), params),
+      createPartialRect(fill, x, y, width, height, ceilTo1(leftOpacity), params),
+    ];
   }
   return [createPartialRect(fill, x, y, width, height, 1, params)];
 };
@@ -90,17 +103,54 @@ const createPartialRect = (fill: string, x: number, y: number, width: number, he
   return rectElement;
 };
 
-const getDividedPaths = (width: number, height: number, xInit: number, yInit: number, fill: string, depth: number, paths: SVGElement[], params: ObfuscationParams) => {
+const getDividedPaths = (
+  width: number,
+  height: number,
+  xInit: number,
+  yInit: number,
+  fill: string,
+  depth: number,
+  paths: SVGElement[],
+  params: ObfuscationParams,
+) => {
   if (depth > 1) {
     getDividedPaths(width / 2, height / 2, xInit, yInit, fill, depth - 1, paths, params);
     getDividedPaths(width / 2, height / 2, xInit + width / 2, yInit, fill, depth - 1, paths, params);
     getDividedPaths(width / 2, height / 2, xInit, yInit + height / 2, fill, depth - 1, paths, params);
     getDividedPaths(width / 2, height / 2, xInit + width / 2, yInit + height / 2, fill, depth - 1, paths, params);
   } else {
-    createCompletedPath(fill, { x: xInit, y: yInit }, { x: xInit + width / 2, y: yInit }, { x: xInit + width / 2, y: yInit + height / 2 }, { x: xInit, y: yInit + height / 2 }, params).forEach((p) => paths.push(p));
-    createCompletedPath(fill, { x: xInit + width / 2, y: yInit }, { x: xInit + width, y: yInit }, { x: xInit + width, y: yInit + height / 2 }, { x: xInit + width / 2, y: yInit + height / 2 }, params).forEach((p) => paths.push(p));
-    createCompletedPath(fill, { x: xInit, y: yInit + height / 2 }, { x: xInit + width / 2, y: yInit + height / 2 }, { x: xInit + width / 2, y: yInit + height }, { x: xInit, y: yInit + height }, params).forEach((p) => paths.push(p));
-    createCompletedPath(fill, { x: xInit + width / 2, y: yInit + height / 2 }, { x: xInit + width, y: yInit + height / 2 }, { x: xInit + width, y: yInit + height }, { x: xInit + width / 2, y: yInit + height }, params).forEach((p) => paths.push(p));
+    createCompletedPath(
+      fill,
+      { x: xInit, y: yInit },
+      { x: xInit + width / 2, y: yInit },
+      { x: xInit + width / 2, y: yInit + height / 2 },
+      { x: xInit, y: yInit + height / 2 },
+      params,
+    ).forEach((p) => paths.push(p));
+    createCompletedPath(
+      fill,
+      { x: xInit + width / 2, y: yInit },
+      { x: xInit + width, y: yInit },
+      { x: xInit + width, y: yInit + height / 2 },
+      { x: xInit + width / 2, y: yInit + height / 2 },
+      params,
+    ).forEach((p) => paths.push(p));
+    createCompletedPath(
+      fill,
+      { x: xInit, y: yInit + height / 2 },
+      { x: xInit + width / 2, y: yInit + height / 2 },
+      { x: xInit + width / 2, y: yInit + height },
+      { x: xInit, y: yInit + height },
+      params,
+    ).forEach((p) => paths.push(p));
+    createCompletedPath(
+      fill,
+      { x: xInit + width / 2, y: yInit + height / 2 },
+      { x: xInit + width, y: yInit + height / 2 },
+      { x: xInit + width, y: yInit + height },
+      { x: xInit + width / 2, y: yInit + height },
+      params,
+    ).forEach((p) => paths.push(p));
   }
 };
 
@@ -108,7 +158,10 @@ const createCompletedPath = (fill: string, point1: Point, point2: Point, point3:
   if (params.figureSplitBy === "opacity") {
     const opacity = getRandomInt(1, 100) / 50;
     const leftOpacity = 2 - opacity;
-    return [createPartialPath(fill, ceilTo1(opacity), point1, point2, point3, point4, params), createPartialPath(fill, ceilTo1(leftOpacity), point1, point2, point3, point4, params)];
+    return [
+      createPartialPath(fill, ceilTo1(opacity), point1, point2, point3, point4, params),
+      createPartialPath(fill, ceilTo1(leftOpacity), point1, point2, point3, point4, params),
+    ];
   }
   return [createPartialPath(fill, 1, point1, point2, point3, point4, params)];
 };

@@ -3,8 +3,7 @@ import { dividePolygon } from "./polygonObfuscation";
 import { divideRect } from "./rectObfuscation";
 
 export const obfuscate = (svgElement: string) => {
-  const resultSvg = new DOMParser().parseFromString(svgElement, "image/svg+xml")
-    .documentElement as unknown as SVGElement;
+  const resultSvg = new DOMParser().parseFromString(svgElement, "image/svg+xml").documentElement as unknown as SVGElement;
 
   resultSvg.childNodes.forEach((elem) => {
     const svgChild = elem as SVGElement;
@@ -23,19 +22,11 @@ export const obfuscate = (svgElement: string) => {
   return svgAsStr;
 };
 
-const replaceFigure = (
-  svgElement: SVGElement,
-  obfuscation: (element: SVGElement) => SVGElement[]
-) => {
-  const dividedSvg = document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "g",
-  );
+const replaceFigure = (svgElement: SVGElement, obfuscation: (element: SVGElement) => SVGElement[]) => {
+  const dividedSvg = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
   const childNodes = obfuscation(svgElement);
-  dividedSvg.innerHTML = childNodes
-    .map((element) => element.outerHTML)
-    .join("");
+  dividedSvg.innerHTML = childNodes.map((element) => element.outerHTML).join("");
 
   dividedSvg.appendChild(getObfuscatedSvgStyleTag());
 
@@ -43,10 +34,7 @@ const replaceFigure = (
 };
 
 const getObfuscatedSvgStyleTag = () => {
-  const styleElement = document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "style",
-  );
+  const styleElement = document.createElementNS("http://www.w3.org/2000/svg", "style");
 
   styleElement.textContent = `
     .red {
@@ -55,4 +43,4 @@ const getObfuscatedSvgStyleTag = () => {
   `;
 
   return styleElement;
-}
+};
