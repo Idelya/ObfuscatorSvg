@@ -5,5 +5,5 @@ export interface ObfuscationParams {
   addIrrelevantAttributes: boolean;
   randomizeElements: boolean;
   figureSplitBy: "no" | "opacity";
-  fill: "original" | "random" | "highContrast";
+  fillType: "original" | "random" | "highContrast";
 }
