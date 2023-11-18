@@ -5,21 +5,10 @@ import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const STROKE_WIDTH = 1;
 
-export const divideRect = (rectSvg: SVGElement) => {
-  // TODO: Add to parameter list
+export const divideRect = (rectSvg: SVGElement, params: ObfuscationParams) => {
   // TODO: Extended params
   // TODO: Colors
   // TODO: Style inside g if add irrelevant
-  const params: ObfuscationParams = {
-    divisionStrength: 3,
-    elementTag: "path",
-    addIrrelevantFigures: true,
-    addIrrelevantAttributes: true,
-    randomizeElements: true,
-    figureSplitBy: "opacity",
-    fillType: "original",
-  };
-
   const width = parseInt(rectSvg.getAttribute("width")!);
   const height = parseInt(rectSvg.getAttribute("height")!);
   const originalFill = rectSvg.getAttribute("fill")!;

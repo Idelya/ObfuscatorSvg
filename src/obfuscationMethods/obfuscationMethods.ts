@@ -1,4 +1,5 @@
 import { divideCircle } from "./circleObfuscation";
+import { ObfuscationParams } from "./obfuscationParams";
 import { dividePolygon } from "./polygonObfuscation";
 import { divideRect } from "./rectObfuscation";
 
@@ -22,10 +23,19 @@ export const obfuscate = (svgElement: string) => {
   return svgAsStr;
 };
 
-const replaceFigure = (svgElement: SVGElement, obfuscation: (element: SVGElement) => SVGElement[]) => {
+const replaceFigure = (svgElement: SVGElement, obfuscation: (element: SVGElement, params: ObfuscationParams) => SVGElement[]) => {
   const dividedSvg = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
-  const childNodes = obfuscation(svgElement);
+  const params: ObfuscationParams = {
+    divisionStrength: svgElement.tagName === "circle" ? 360 : 3,
+    elementTag: "path",
+    addIrrelevantFigures: true,
+    addIrrelevantAttributes: true,
+    randomizeElements: true,
+    figureSplitBy: "opacity",
+    fillType: "original",
+  };
+  const childNodes = obfuscation(svgElement, params);
   dividedSvg.innerHTML = childNodes.map((element) => element.outerHTML).join("");
 
   dividedSvg.appendChild(getObfuscatedSvgStyleTag());

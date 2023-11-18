@@ -4,20 +4,10 @@ import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const STROKE_WIDTH = 1;
 
-export const divideCircle = (circleSvg: SVGElement) => {
-  // TODO: Add to parameter list
+export const divideCircle = (circleSvg: SVGElement, params: ObfuscationParams) => {
   // TODO: Extended params
   // TODO: Colors
   // TODO: Style inside g if add irrelevant
-  const params: ObfuscationParams = {
-    divisionStrength: 360,
-    elementTag: "path",
-    addIrrelevantFigures: true,
-    addIrrelevantAttributes: true,
-    randomizeElements: true,
-    figureSplitBy: "opacity",
-    fillType: "original",
-  };
   const r = parseInt(circleSvg.getAttribute("r")!);
   const cx = parseInt(circleSvg.getAttribute("cx")!);
   const cy = parseInt(circleSvg.getAttribute("cy")!);

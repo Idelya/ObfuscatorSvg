@@ -5,20 +5,10 @@ import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const STROKE_WIDTH = 1;
 
-export const dividePolygon = (polygonSvg: SVGElement) => {
-  // TODO: Add to parameter list
+export const dividePolygon = (polygonSvg: SVGElement, params: ObfuscationParams) => {
   // TODO: Extended params
   // TODO: Colors
   // TODO: Style inside g if add irrelevant
-  const params: ObfuscationParams = {
-    divisionStrength: 3,
-    elementTag: "path",
-    addIrrelevantFigures: true,
-    addIrrelevantAttributes: true,
-    randomizeElements: true,
-    figureSplitBy: "opacity",
-    fillType: "original",
-  };
 
   const width = parseInt(polygonSvg.getAttribute("width")!);
   const height = parseInt(polygonSvg.getAttribute("height")!);
