@@ -22,9 +22,9 @@ export const dividePolygon = (polygonSvg: SVGElement) => {
 
   const width = parseInt(polygonSvg.getAttribute("width")!);
   const height = parseInt(polygonSvg.getAttribute("height")!);
-  const fill = polygonSvg.getAttribute("fill")!;
+  const originalFill = polygonSvg.getAttribute("fill")!;
 
-  const polygonElements = getDividedPolygonElements(width, height, fill, params);
+  const polygonElements = getDividedPolygonElements(width, height, originalFill, params);
 
   if (params.addIrrelevantFigures) {
     addIrrelevantFiguresTo(polygonElements, width / 2, height / 2, width / 2, height / 2);

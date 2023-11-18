@@ -7,6 +7,9 @@ const STROKE_WIDTH = 1;
 
 export const divideRect = (rectSvg: SVGElement) => {
   // TODO: Add to parameter list
+  // TODO: Extended params
+  // TODO: Colors
+  // TODO: Style inside g if add irrelevant
   const params: ObfuscationParams = {
     divisionStrength: 3,
     elementTag: "path",
