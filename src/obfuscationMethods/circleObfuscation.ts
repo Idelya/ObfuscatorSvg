@@ -12,9 +12,9 @@ export const divideCircle = (circleSvg: SVGElement, params: ObfuscationParams) =
   const cy = parseInt(circleSvg.getAttribute("cy")!);
   const originalFill = circleSvg.getAttribute("fill")!;
 
-  const circleObfuscationParams: CircleObfuscationParams = { cx, cy, diameter: 2 * r, originalFill, ...params };
+  const circleParams = { cx, cy, diameter: 2 * r, originalFill, ...params };
 
-  const circleElements = getDividedCircleElements(circleObfuscationParams);
+  const circleElements = getDividedCircleElements(circleParams);
 
   if (params.addIrrelevantFigures) {
     addIrrelevantFiguresTo(circleElements, cx, cy, r, r);
