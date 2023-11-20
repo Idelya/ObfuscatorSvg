@@ -34,7 +34,7 @@ const replaceFigure = (
   );
 
   const params: ObfuscationParams = {
-    divisionStrength: 3,
+    divisionStrength: 5,
     circleParts: 360,
     elementTag: "path",
     addIrrelevantFigures: true,

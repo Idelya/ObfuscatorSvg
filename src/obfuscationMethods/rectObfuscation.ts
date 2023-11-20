@@ -22,6 +22,10 @@ export const divideRect = (rectSvg: SVGElement, params: ObfuscationParams) => {
     x: 0,
     y: 0,
     elements: [],
+    initWidth: width,
+    initHeight: height,
+    initX: 0,
+    initY: 0,
   };
 
   getDividedRectangleElements(rectParams);
@@ -155,38 +159,51 @@ const createPartialRect = (opacity: number, params: RectObfuscationParams) => {
 
 const getDividedPaths = (params: RectObfuscationParams) => {
   if (params.divisionStrength > 1) {
-    getDividedPaths({
-      ...params,
-      width: params.width / 2,
-      height: params.height / 2,
-      x: params.x,
-      y: params.y,
-      divisionStrength: params.divisionStrength - 1,
-    });
-    getDividedPaths({
-      ...params,
-      width: params.width / 2,
-      height: params.height / 2,
-      x: params.x + params.width / 2,
-      y: params.y,
-      divisionStrength: params.divisionStrength - 1,
-    });
-    getDividedPaths({
-      ...params,
-      width: params.width / 2,
-      height: params.height / 2,
-      x: params.x,
-      y: params.y + params.height / 2,
-      divisionStrength: params.divisionStrength - 1,
-    });
-    getDividedPaths({
-      ...params,
-      width: params.width / 2,
-      height: params.height / 2,
-      x: params.x + params.width / 2,
-      y: params.y + params.height / 2,
-      divisionStrength: params.divisionStrength - 1,
-    });
+    const isLeftBorder = params.x === params.initX;
+    const isRightBorder =
+      params.x + params.width === params.initX + params.initWidth;
+    const isTopBorder = params.y === params.initY;
+    const isBottomBorder =
+      params.y + params.height === params.initY + params.initHeight;
+    // TODO: Temporary condition
+    // TODO: IF border then other logic
+    // TODO: Randomly chose if it should append or not
+    if (isLeftBorder || isRightBorder || isTopBorder || isBottomBorder) {
+      getDividedPaths({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+        x: params.x,
+        y: params.y,
+        divisionStrength: params.divisionStrength - 1,
+      });
+      getDividedPaths({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+        x: params.x + params.width / 2,
+        y: params.y,
+        divisionStrength: params.divisionStrength - 1,
+      });
+      getDividedPaths({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+        x: params.x,
+        y: params.y + params.height / 2,
+        divisionStrength: params.divisionStrength - 1,
+      });
+      getDividedPaths({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+        x: params.x + params.width / 2,
+        y: params.y + params.height / 2,
+        divisionStrength: params.divisionStrength - 1,
+      });
+    } else {
+      buildRectFromFigures(params);
+    }
   } else {
     createCompletedPath(
       params.originalFill,
@@ -221,6 +238,91 @@ const getDividedPaths = (params: RectObfuscationParams) => {
       params,
     ).forEach((p) => params.elements.push(p));
   }
+};
+
+const buildRectFromFigures = (params: RectObfuscationParams) => {
+  // triangle on left
+  params.elements.push(
+    createTriangle(
+      { x: params.x - params.width / 2, y: params.y + params.height },
+      { x: params.x, y: params.y },
+      { x: params.x + params.width / 2, y: params.y + params.height },
+      params,
+    ),
+  );
+  // triangle on right
+  params.elements.push(
+    createTriangle(
+      { x: params.x + params.width / 2, y: params.y + params.height },
+      { x: params.x + params.width, y: params.y },
+      { x: params.x + (3 * params.width) / 2, y: params.y + params.height },
+      params,
+    ),
+  );
+  // reversed triangle on left
+  params.elements.push(
+    createTriangle(
+      { x: params.x, y: params.y },
+      { x: params.x + params.width / 2, y: params.y },
+      { x: params.x + params.width / 2, y: params.y + params.height },
+      params,
+    ),
+  );
+  // reversed triangle on right
+  params.elements.push(
+    createTriangle(
+      { x: params.x + params.width / 2, y: params.y },
+      { x: params.x + params.width, y: params.y },
+      { x: params.x + params.width, y: params.y + params.height },
+      params,
+    ),
+  );
+  // circle inside
+  params.elements.push(
+    createCircle(
+      Math.max(params.height, params.width) / 2,
+      params.x + params.width / 2,
+      params.y + params.height / 2,
+      params,
+    ),
+  );
+};
+
+const createTriangle = (
+  point1: Point,
+  point2: Point,
+  point3: Point,
+  params: RectObfuscationParams,
+) => {
+  const triangle = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "polygon",
+  );
+  triangle.setAttribute(
+    "points",
+    `${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y}`,
+  );
+  setFigureColor(triangle, params, params.originalFill);
+  triangle.setAttribute("stroke-width", STROKE_WIDTH.toString());
+  return triangle;
+};
+
+const createCircle = (
+  r: number,
+  cx: number,
+  cy: number,
+  params: RectObfuscationParams,
+) => {
+  const circle = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "circle",
+  );
+  circle.setAttribute("cx", cx.toString());
+  circle.setAttribute("cy", cy.toString());
+  circle.setAttribute("r", r.toString());
+  setFigureColor(circle, params, params.originalFill);
+  circle.setAttribute("stroke-width", STROKE_WIDTH.toString());
+  return circle;
 };
 
 const createCompletedPath = (
@@ -293,5 +395,9 @@ interface RectObfuscationParams extends ObfuscationParams {
   y: number;
   width: number;
   height: number;
+  initX: number;
+  initY: number;
+  initWidth: number;
+  initHeight: number;
   elements: SVGElement[];
 }
