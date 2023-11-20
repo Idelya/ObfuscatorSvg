@@ -5,123 +5,157 @@ import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const STROKE_WIDTH = 1;
 
+interface PolygonObfuscationParams extends ObfuscationParams {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  originalFill: string;
+  elements: SVGElement[];
+}
+
 export const dividePolygon = (polygonSvg: SVGElement, params: ObfuscationParams) => {
-  // TODO: Extended params
   // TODO: Colors
   // TODO: Style inside g if add irrelevant
-
   const width = parseInt(polygonSvg.getAttribute("width")!);
   const height = parseInt(polygonSvg.getAttribute("height")!);
   const originalFill = polygonSvg.getAttribute("fill")!;
 
-  const polygonElements = getDividedPolygonElements(width, height, originalFill, params);
+  const polygonParams: PolygonObfuscationParams = { ...params, width, height, x: 0, y: 0, originalFill, elements: [] };
+
+  getDividedPolygonElements(polygonParams);
 
   if (params.addIrrelevantFigures) {
-    addIrrelevantFiguresTo(polygonElements, width / 2, height / 2, width / 2, height / 2);
+    addIrrelevantFiguresTo(polygonParams.elements, width / 2, height / 2, width / 2, height / 2);
   }
   if (params.randomizeElements) {
-    shuffle(polygonElements);
+    shuffle(polygonParams.elements);
   }
 
   if (params.addIrrelevantFigures) {
-    polygonElements.unshift(getRandomFigure(0, 0, width, width, height, height));
-    polygonElements.push(getRandomFigure(0, 0, width, width, height, height));
+    polygonParams.elements.unshift(getRandomFigure(0, 0, width, width, height, height));
+    polygonParams.elements.push(getRandomFigure(0, 0, width, width, height, height));
   }
 
-  return polygonElements;
+  return polygonParams.elements;
 };
 
-const getDividedPolygonElements = (width: number, height: number, fill: string, params: ObfuscationParams) => {
+const getDividedPolygonElements = (params: PolygonObfuscationParams) => {
   const innerElements: SVGElement[] = [];
   if (params.elementTag === "path") {
-    getDividedIntoPaths(width, height, 0, 0, params.divisionStrength, innerElements, fill, params);
+    getDividedIntoPaths(params);
   } else {
-    getDividedIntoPolygons(width, height, 0, 0, params.divisionStrength, innerElements, fill, params);
+    getDividedIntoPolygons(params);
   }
   return innerElements;
 };
 
-const getDividedIntoPaths = (
-  width: number,
-  height: number,
-  xInit: number,
-  yInit: number,
-  depth: number,
-  paths: SVGElement[],
-  fill: string,
-  params: ObfuscationParams,
-) => {
-  if (depth > 1) {
-    getDividedIntoPaths(width / 2, height / 2, +xInit + width / 2, +yInit, depth - 1, paths, fill, params);
-    getDividedIntoPaths(width / 2, height / 2, +xInit, +yInit + height, depth - 1, paths, fill, params);
-    getDividedIntoPaths(width / 2, height / 2, +xInit + width, +yInit + height, depth - 1, paths, fill, params);
-    getDividedIntoReversedPaths(width / 2, height / 2, +xInit + width / 2, +yInit + height, depth - 1, paths, fill, params);
+const getDividedIntoPaths = (params: PolygonObfuscationParams) => {
+  if (params.divisionStrength > 1) {
+    getDividedIntoPaths({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      x: params.x + params.width / 2,
+      divisionStrength: params.divisionStrength - 1,
+    });
+    getDividedIntoPaths({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      y: params.y + params.height,
+      divisionStrength: params.divisionStrength - 1,
+    });
+    getDividedIntoPaths({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      x: params.x + params.width,
+      y: params.y + params.height,
+      divisionStrength: params.divisionStrength - 1,
+    });
+    getDividedIntoReversedPaths({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      x: params.x + params.width / 2,
+      y: params.y + params.height,
+      divisionStrength: params.divisionStrength - 1,
+    });
   } else {
-    let point1 = { x: xInit / 2 + width / 2, y: yInit / 2 };
-    let point2 = { x: xInit / 2 + width / 4, y: yInit / 2 + height / 2 };
-    let point3 = { x: xInit / 2 + (3 * width) / 4, y: yInit / 2 + height / 2 };
-    createCompletedPath(fill, point1, point2, point3, params).forEach((p) => paths.push(p));
-    point1 = { x: xInit / 2 + width / 4, y: yInit / 2 + height / 2 };
-    point2 = { x: xInit / 2, y: yInit / 2 + height };
-    point3 = { x: xInit / 2 + width / 2, y: yInit / 2 + height };
-    createCompletedPath(fill, point1, point2, point3, params).forEach((p) => paths.push(p));
-    point1 = { x: xInit / 2 + (3 * width) / 4, y: yInit / 2 + height / 2 };
-    point2 = { x: xInit / 2 + width / 2, y: yInit / 2 + height };
-    point3 = { x: xInit / 2 + width, y: yInit / 2 + height };
-    createCompletedPath(fill, point1, point2, point3, params).forEach((p) => paths.push(p));
-    point1 = { x: xInit / 2 + width / 2, y: yInit / 2 + height };
-    point2 = { x: xInit / 2 + width / 4, y: yInit / 2 + height / 2 };
-    point3 = { x: xInit / 2 + (3 * width) / 4, y: yInit / 2 + height / 2 };
-    createCompletedPath(fill, point1, point2, point3, params).forEach((p) => paths.push(p));
+    let point1 = { x: params.x / 2 + params.width / 2, y: params.y / 2 };
+    let point2 = { x: params.x / 2 + params.width / 4, y: params.y / 2 + params.height / 2 };
+    let point3 = { x: params.x / 2 + (3 * params.width) / 4, y: params.y / 2 + params.height / 2 };
+    createCompletedPath(params.originalFill, point1, point2, point3, params).forEach((p) => params.elements.push(p));
+    point1 = { x: params.x / 2 + params.width / 4, y: params.y / 2 + params.height / 2 };
+    point2 = { x: params.x / 2, y: params.y / 2 + params.height };
+    point3 = { x: params.x / 2 + params.width / 2, y: params.y / 2 + params.height };
+    createCompletedPath(params.originalFill, point1, point2, point3, params).forEach((p) => params.elements.push(p));
+    point1 = { x: params.x / 2 + (3 * params.width) / 4, y: params.y / 2 + params.height / 2 };
+    point2 = { x: params.x / 2 + params.width / 2, y: params.y / 2 + params.height };
+    point3 = { x: params.x / 2 + params.width, y: params.y / 2 + params.height };
+    createCompletedPath(params.originalFill, point1, point2, point3, params).forEach((p) => params.elements.push(p));
+    point1 = { x: params.x / 2 + params.width / 2, y: params.y / 2 + params.height };
+    point2 = { x: params.x / 2 + params.width / 4, y: params.y / 2 + params.height / 2 };
+    point3 = { x: params.x / 2 + (3 * params.width) / 4, y: params.y / 2 + params.height / 2 };
+    createCompletedPath(params.originalFill, point1, point2, point3, params).forEach((p) => params.elements.push(p));
   }
 };
 
-const getDividedIntoReversedPaths = (
-  width: number,
-  height: number,
-  xInit: number,
-  yInit: number,
-  depth: number,
-  paths: SVGElement[],
-  fill: string,
-  params: ObfuscationParams,
-) => {
-  xInit = +xInit;
-  yInit = +yInit;
-  if (depth > 1) {
-    getDividedIntoPaths(width / 2, height / 2, +xInit + width / 2, +yInit, depth - 1, paths, fill, params);
-    getDividedIntoReversedPaths(width / 2, height / 2, +xInit, +yInit, depth - 1, paths, fill, params);
-    getDividedIntoReversedPaths(width / 2, height / 2, +xInit + width, +yInit, depth - 1, paths, fill, params);
-    getDividedIntoReversedPaths(width / 2, height / 2, +xInit + width / 2, +yInit + height, depth - 1, paths, fill, params);
+const getDividedIntoReversedPaths = (params: PolygonObfuscationParams) => {
+  if (params.divisionStrength > 1) {
+    getDividedIntoPaths({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      x: params.x + params.width / 2,
+      divisionStrength: params.divisionStrength - 1,
+    });
+    getDividedIntoReversedPaths({ ...params, width: params.width / 2, height: params.height / 2, divisionStrength: params.divisionStrength - 1 });
+    getDividedIntoReversedPaths({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      x: params.x + params.width,
+      divisionStrength: params.divisionStrength - 1,
+    });
+    getDividedIntoReversedPaths({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      x: params.x + params.width / 2,
+      y: params.y + params.height,
+      divisionStrength: params.divisionStrength - 1,
+    });
   } else {
     createCompletedPath(
-      fill,
-      { x: xInit / 2 + width / 2, y: yInit / 2 + height },
-      { x: xInit / 2 + width / 4, y: yInit / 2 + height / 2 },
-      { x: xInit / 2 + (3 * width) / 4, y: yInit / 2 + height / 2 },
+      params.originalFill,
+      { x: params.x / 2 + params.width / 2, y: params.y / 2 + params.height },
+      { x: params.x / 2 + params.width / 4, y: params.y / 2 + params.height / 2 },
+      { x: params.x / 2 + (3 * params.width) / 4, y: params.y / 2 + params.height / 2 },
       params,
-    ).forEach((p) => paths.push(p));
+    ).forEach((p) => params.elements.push(p));
     createCompletedPath(
-      fill,
-      { x: xInit / 2 + width / 4, y: yInit / 2 + height / 2 },
-      { x: xInit / 2, y: yInit / 2 },
-      { x: xInit / 2 + width / 2, y: yInit / 2 },
+      params.originalFill,
+      { x: params.x / 2 + params.width / 4, y: params.y / 2 + params.height / 2 },
+      { x: params.x / 2, y: params.y / 2 },
+      { x: params.x / 2 + params.width / 2, y: params.y / 2 },
       params,
-    ).forEach((p) => paths.push(p));
+    ).forEach((p) => params.elements.push(p));
     createCompletedPath(
-      fill,
-      { x: xInit / 2 + (3 * width) / 4, y: yInit / 2 + height / 2 },
-      { x: xInit / 2 + width / 2, y: yInit / 2 },
-      { x: xInit / 2 + width, y: yInit / 2 },
+      params.originalFill,
+      { x: params.x / 2 + (3 * params.width) / 4, y: params.y / 2 + params.height / 2 },
+      { x: params.x / 2 + params.width / 2, y: params.y / 2 },
+      { x: params.x / 2 + params.width, y: params.y / 2 },
       params,
-    ).forEach((p) => paths.push(p));
+    ).forEach((p) => params.elements.push(p));
     createCompletedPath(
-      fill,
-      { x: xInit / 2 + width / 2, y: yInit / 2 },
-      { x: xInit / 2 + width / 4, y: yInit / 2 + height / 2 },
-      { x: xInit / 2 + (3 * width) / 4, y: yInit / 2 + height / 2 },
+      params.originalFill,
+      { x: params.x / 2 + params.width / 2, y: params.y / 2 },
+      { x: params.x / 2 + params.width / 4, y: params.y / 2 + params.height / 2 },
+      { x: params.x / 2 + (3 * params.width) / 4, y: params.y / 2 + params.height / 2 },
       params,
-    ).forEach((p) => paths.push(p));
+    ).forEach((p) => params.elements.push(p));
   }
 };
 
@@ -153,99 +187,124 @@ const createPartialPath = (fill: string, opacity: number, point1: Point, point2:
   return pathElement;
 };
 
-const getDividedIntoPolygons = (
-  width: number,
-  height: number,
-  xInit: number,
-  yInit: number,
-  depth: number,
-  polygons: SVGElement[],
-  fill: string,
-  params: ObfuscationParams,
-) => {
-  if (depth > 1) {
-    getDividedIntoPolygons(width / 2, height / 2, +xInit + width / 2, +yInit, depth - 1, polygons, fill, params);
-    getDividedIntoPolygons(width / 2, height / 2, +xInit, +yInit + height, depth - 1, polygons, fill, params);
-    getDividedIntoPolygons(width / 2, height / 2, +xInit + width, +yInit + height, depth - 1, polygons, fill, params);
-    getDividedIntoReversedPolygons(width / 2, height / 2, +xInit + width / 2, +yInit + height, depth - 1, polygons, fill, params);
+const getDividedIntoPolygons = (params: PolygonObfuscationParams) => {
+  if (params.divisionStrength > 1) {
+    getDividedIntoPolygons({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      x: params.x + params.width / 2,
+      divisionStrength: params.divisionStrength - 1,
+    });
+    getDividedIntoPolygons({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      y: params.y + params.height,
+      divisionStrength: params.divisionStrength - 1,
+    });
+    getDividedIntoPolygons({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      x: params.x + params.width,
+      y: params.y + params.height,
+      divisionStrength: params.divisionStrength - 1,
+    });
+    getDividedIntoReversedPolygons({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      x: params.x + params.width / 2,
+      y: params.y + params.height,
+      divisionStrength: params.divisionStrength - 1,
+    });
   } else {
     createCompletedPolygon(
-      fill,
-      { x: xInit / 2 + width / 2, y: yInit / 2 },
-      { x: xInit / 2 + width / 4, y: yInit / 2 + height / 2 },
-      { x: xInit / 2 + (3 * width) / 4, y: yInit / 2 + height / 2 },
+      params.originalFill,
+      { x: params.x / 2 + params.width / 2, y: params.y / 2 },
+      { x: params.x / 2 + params.width / 4, y: params.y / 2 + params.height / 2 },
+      { x: params.x / 2 + (3 * params.width) / 4, y: params.y / 2 + params.height / 2 },
       params,
-    ).forEach((p) => polygons.push(p));
+    ).forEach((p) => params.elements.push(p));
     createCompletedPolygon(
-      fill,
-      { x: xInit / 2 + width / 4, y: yInit / 2 + height / 2 },
-      { x: xInit / 2, y: yInit / 2 + height },
-      { x: xInit / 2 + width / 2, y: yInit / 2 + height },
+      params.originalFill,
+      { x: params.x / 2 + params.width / 4, y: params.y / 2 + params.height / 2 },
+      { x: params.x / 2, y: params.y / 2 + params.height },
+      { x: params.x / 2 + params.width / 2, y: params.y / 2 + params.height },
       params,
-    ).forEach((p) => polygons.push(p));
+    ).forEach((p) => params.elements.push(p));
     createCompletedPolygon(
-      fill,
-      { x: xInit / 2 + (3 * width) / 4, y: yInit / 2 + height / 2 },
-      { x: xInit / 2 + width / 2, y: yInit / 2 + height },
-      { x: xInit / 2 + width, y: yInit / 2 + height },
+      params.originalFill,
+      { x: params.x / 2 + (3 * params.width) / 4, y: params.y / 2 + params.height / 2 },
+      { x: params.x / 2 + params.width / 2, y: params.y / 2 + params.height },
+      { x: params.x / 2 + params.width, y: params.y / 2 + params.height },
       params,
-    ).forEach((p) => polygons.push(p));
+    ).forEach((p) => params.elements.push(p));
     createCompletedPolygon(
-      fill,
-      { x: xInit / 2 + width / 2, y: yInit / 2 + height },
-      { x: xInit / 2 + width / 4, y: yInit / 2 + height / 2 },
-      { x: xInit / 2 + (3 * width) / 4, y: yInit / 2 + height / 2 },
+      params.originalFill,
+      { x: params.x / 2 + params.width / 2, y: params.y / 2 + params.height },
+      { x: params.x / 2 + params.width / 4, y: params.y / 2 + params.height / 2 },
+      { x: params.x / 2 + (3 * params.width) / 4, y: params.y / 2 + params.height / 2 },
       params,
-    ).forEach((p) => polygons.push(p));
+    ).forEach((p) => params.elements.push(p));
   }
 };
 
-const getDividedIntoReversedPolygons = (
-  width: number,
-  height: number,
-  xInit: number,
-  yInit: number,
-  depth: number,
-  polygons: SVGElement[],
-  fill: string,
-  params: ObfuscationParams,
-) => {
-  xInit = +xInit;
-  yInit = +yInit;
-  if (depth > 1) {
-    getDividedIntoPolygons(width / 2, height / 2, +xInit + width / 2, +yInit, depth - 1, polygons, fill, params);
-    getDividedIntoReversedPolygons(width / 2, height / 2, +xInit, +yInit, depth - 1, polygons, fill, params);
-    getDividedIntoReversedPolygons(width / 2, height / 2, +xInit + width, +yInit, depth - 1, polygons, fill, params);
-    getDividedIntoReversedPolygons(width / 2, height / 2, +xInit + width / 2, +yInit + height, depth - 1, polygons, fill, params);
+const getDividedIntoReversedPolygons = (params: PolygonObfuscationParams) => {
+  if (params.divisionStrength > 1) {
+    getDividedIntoPolygons({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      x: params.x + params.width / 2,
+      divisionStrength: params.divisionStrength - 1,
+    });
+    getDividedIntoReversedPolygons({ ...params, width: params.width / 2, height: params.height / 2, divisionStrength: params.divisionStrength - 1 });
+    getDividedIntoReversedPolygons({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      x: params.x + params.width,
+      divisionStrength: params.divisionStrength - 1,
+    });
+    getDividedIntoReversedPolygons({
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+      x: params.x + params.width / 2,
+      y: params.y + params.height,
+      divisionStrength: params.divisionStrength - 1,
+    });
   } else {
     createCompletedPolygon(
-      fill,
-      { x: xInit / 2 + width / 2, y: yInit / 2 + height },
-      { x: xInit / 2 + width / 4, y: yInit / 2 + height / 2 },
-      { x: xInit / 2 + (3 * width) / 4, y: yInit / 2 + height / 2 },
+      params.originalFill,
+      { x: params.x / 2 + params.width / 2, y: params.y / 2 + params.height },
+      { x: params.x / 2 + params.width / 4, y: params.y / 2 + params.height / 2 },
+      { x: params.x / 2 + (3 * params.width) / 4, y: params.y / 2 + params.height / 2 },
       params,
-    ).forEach((p) => polygons.push(p));
+    ).forEach((p) => params.elements.push(p));
     createCompletedPolygon(
-      fill,
-      { x: xInit / 2 + width / 4, y: yInit / 2 + height / 2 },
-      { x: xInit / 2, y: yInit / 2 },
-      { x: xInit / 2 + width / 2, y: yInit / 2 },
+      params.originalFill,
+      { x: params.x / 2 + params.width / 4, y: params.y / 2 + params.height / 2 },
+      { x: params.x / 2, y: params.y / 2 },
+      { x: params.x / 2 + params.width / 2, y: params.y / 2 },
       params,
-    ).forEach((p) => polygons.push(p));
+    ).forEach((p) => params.elements.push(p));
     createCompletedPolygon(
-      fill,
-      { x: xInit / 2 + (3 * width) / 4, y: yInit / 2 + height / 2 },
-      { x: xInit / 2 + width / 2, y: yInit / 2 },
-      { x: xInit / 2 + width, y: yInit / 2 },
+      params.originalFill,
+      { x: params.x / 2 + (3 * params.width) / 4, y: params.y / 2 + params.height / 2 },
+      { x: params.x / 2 + params.width / 2, y: params.y / 2 },
+      { x: params.x / 2 + params.width, y: params.y / 2 },
       params,
-    ).forEach((p) => polygons.push(p));
+    ).forEach((p) => params.elements.push(p));
     createCompletedPolygon(
-      fill,
-      { x: xInit / 2 + width / 2, y: yInit / 2 },
-      { x: xInit / 2 + width / 4, y: yInit / 2 + height / 2 },
-      { x: xInit / 2 + (3 * width) / 4, y: yInit / 2 + height / 2 },
+      params.originalFill,
+      { x: params.x / 2 + params.width / 2, y: params.y / 2 },
+      { x: params.x / 2 + params.width / 4, y: params.y / 2 + params.height / 2 },
+      { x: params.x / 2 + (3 * params.width) / 4, y: params.y / 2 + params.height / 2 },
       params,
-    ).forEach((p) => polygons.push(p));
+    ).forEach((p) => params.elements.push(p));
   }
 };
 

@@ -5,15 +5,6 @@ import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const STROKE_WIDTH = 1;
 
-interface RectObfuscationParams extends ObfuscationParams {
-  originalFill: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  elements: SVGElement[];
-}
-
 export const divideRect = (rectSvg: SVGElement, params: ObfuscationParams) => {
   // TODO: Colors
   // TODO: Style inside g if add irrelevant
@@ -219,3 +210,12 @@ const createPartialPath = (fill: string, opacity: number, point1: Point, point2:
   pathElement.setAttribute("opacity", opacity.toString());
   return pathElement;
 };
+
+interface RectObfuscationParams extends ObfuscationParams {
+  originalFill: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  elements: SVGElement[];
+}
