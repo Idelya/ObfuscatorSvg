@@ -1,12 +1,11 @@
 import { ObfuscationParams } from "./obfuscationParams";
 import { Point } from "./point";
-import { addIrrelevantFiguresTo, getRandomFigure } from "./sharedObfuscation";
+import { addIrrelevantFiguresTo, getRandomFigure, setFigureColor } from "./sharedObfuscation";
 import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const STROKE_WIDTH = 1;
 
 export const divideRect = (rectSvg: SVGElement, params: ObfuscationParams) => {
-  // TODO: Colors
   const width = parseInt(rectSvg.getAttribute("width")!);
   const height = parseInt(rectSvg.getAttribute("height")!);
   const originalFill = rectSvg.getAttribute("fill")!;
@@ -103,8 +102,7 @@ const createPartialRect = (opacity: number, params: RectObfuscationParams) => {
   }
   rectElement.setAttribute("x", params.x.toString());
   rectElement.setAttribute("y", params.y.toString());
-  rectElement.setAttribute("fill", params.originalFill);
-  rectElement.setAttribute("stroke", params.originalFill);
+  setFigureColor(rectElement, params, params.originalFill);
   rectElement.setAttribute("width", params.width.toString());
   rectElement.setAttribute("height", params.height.toString());
   rectElement.setAttribute("stroke-width", STROKE_WIDTH.toString());
@@ -203,8 +201,7 @@ const createPartialPath = (fill: string, opacity: number, point1: Point, point2:
     pathElement.setAttribute("width", fakeWidth.toString());
     pathElement.setAttribute("height", fakeHeight.toString());
   }
-  pathElement.setAttribute("fill", fill);
-  pathElement.setAttribute("stroke", fill);
+  setFigureColor(pathElement, params, fill);
   pathElement.setAttribute("stroke-width", STROKE_WIDTH.toString());
   pathElement.setAttribute("opacity", opacity.toString());
   return pathElement;

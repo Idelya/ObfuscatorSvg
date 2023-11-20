@@ -1,6 +1,6 @@
 import { ObfuscationParams } from "./obfuscationParams";
 import { Point } from "./point";
-import { addIrrelevantFiguresTo, getRandomFigure } from "./sharedObfuscation";
+import { addIrrelevantFiguresTo, getRandomFigure, setFigureColor } from "./sharedObfuscation";
 import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const STROKE_WIDTH = 1;
@@ -15,7 +15,6 @@ interface PolygonObfuscationParams extends ObfuscationParams {
 }
 
 export const dividePolygon = (polygonSvg: SVGElement, params: ObfuscationParams) => {
-  // TODO: Colors
   const width = parseInt(polygonSvg.getAttribute("width")!);
   const height = parseInt(polygonSvg.getAttribute("height")!);
   const originalFill = polygonSvg.getAttribute("fill")!;
@@ -179,8 +178,7 @@ const createPartialPath = (fill: string, opacity: number, point1: Point, point2:
     pathElement.setAttribute("heigth", fakeHeight.toString());
   }
   pathElement.setAttribute("d", `M${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y} Z`);
-  pathElement.setAttribute("fill", fill);
-  pathElement.setAttribute("stroke", fill);
+  setFigureColor(pathElement, params, fill);
   pathElement.setAttribute("stroke-width", STROKE_WIDTH.toString());
   pathElement.setAttribute("opacity", opacity.toString());
   return pathElement;
@@ -328,8 +326,7 @@ const createPartialPolygon = (fill: string, opacity: number, point1: Point, poin
     polygonElement.setAttribute("heigth", fakeHeight.toString());
   }
   polygonElement.setAttribute("points", `${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y}`);
-  polygonElement.setAttribute("fill", fill);
-  polygonElement.setAttribute("stroke", fill);
+  setFigureColor(polygonElement, params, fill);
   polygonElement.setAttribute("stroke-width", STROKE_WIDTH.toString());
   polygonElement.setAttribute("opacity", opacity.toString());
   return polygonElement;

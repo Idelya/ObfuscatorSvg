@@ -1,3 +1,4 @@
+import { ObfuscationParams } from "./obfuscationParams";
 import { getRandomHexColor, getRandomNumber } from "./utils";
 
 export const getRandomFigure = (x: number, y: number, minWidth: number, maxWidth: number, minHeight: number, maxHeight: number) => {
@@ -71,4 +72,14 @@ export const addIrrelevantFiguresTo = (elements: SVGElement[], maxX: number, max
     irrelevantFigures.push(getRandomFigure(figX, figY, 0, maxWidth, 0, maxHeight));
   }
   irrelevantFigures.forEach((f) => elements.push(f));
+};
+
+export const setFigureColor = (element: SVGElement, params: ObfuscationParams, originalFill: string) => {
+  let fill = originalFill;
+  if (params.fillType === "random") {
+    fill = getRandomHexColor();
+  }
+
+  element.setAttribute("fill", fill);
+  element.setAttribute("stroke", fill);
 };

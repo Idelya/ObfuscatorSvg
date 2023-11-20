@@ -1,11 +1,10 @@
 import { ObfuscationParams } from "./obfuscationParams";
-import { addIrrelevantFiguresTo, getRandomFigure } from "./sharedObfuscation";
+import { addIrrelevantFiguresTo, getRandomFigure, setFigureColor } from "./sharedObfuscation";
 import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const STROKE_WIDTH = 1;
 
 export const divideCircle = (circleSvg: SVGElement, params: ObfuscationParams) => {
-  // TODO: Colors
   const r = parseInt(circleSvg.getAttribute("r")!);
   const cx = parseInt(circleSvg.getAttribute("cx")!);
   const cy = parseInt(circleSvg.getAttribute("cy")!);
@@ -71,8 +70,7 @@ const createPartialCircleSector = (angleStart: number, angleEnd: number, opacity
     pathElement.setAttribute("height", fakeHeight.toString());
   }
   pathElement.setAttribute("d", getSectorPath(params.diameter, params.cx, params.cy, angleStart, angleEnd));
-  pathElement.setAttribute("fill", params.originalFill);
-  pathElement.setAttribute("stroke", params.originalFill);
+  setFigureColor(pathElement, params, params.originalFill);
   pathElement.setAttribute("stroke-width", STROKE_WIDTH.toString());
   pathElement.setAttribute("opacity", opacity.toString());
   return pathElement;
