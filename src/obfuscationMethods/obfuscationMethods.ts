@@ -4,7 +4,8 @@ import { dividePolygon } from "./polygonObfuscation";
 import { divideRect } from "./rectObfuscation";
 
 export const obfuscate = (svgElement: string) => {
-  const resultSvg = new DOMParser().parseFromString(svgElement, "image/svg+xml").documentElement as unknown as SVGElement;
+  const resultSvg = new DOMParser().parseFromString(svgElement, "image/svg+xml")
+    .documentElement as unknown as SVGElement;
 
   resultSvg.childNodes.forEach((elem) => {
     const svgChild = elem as SVGElement;
@@ -23,8 +24,14 @@ export const obfuscate = (svgElement: string) => {
   return svgAsStr;
 };
 
-const replaceFigure = (svgElement: SVGElement, obfuscation: (element: SVGElement, params: ObfuscationParams) => SVGElement[]) => {
-  const dividedSvg = document.createElementNS("http://www.w3.org/2000/svg", "g");
+const replaceFigure = (
+  svgElement: SVGElement,
+  obfuscation: (element: SVGElement, params: ObfuscationParams) => SVGElement[],
+) => {
+  const dividedSvg = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "g",
+  );
 
   const params: ObfuscationParams = {
     divisionStrength: 3,
@@ -37,7 +44,9 @@ const replaceFigure = (svgElement: SVGElement, obfuscation: (element: SVGElement
     fillType: "original",
   };
   const childNodes = obfuscation(svgElement, params);
-  dividedSvg.innerHTML = childNodes.map((element) => element.outerHTML).join("");
+  dividedSvg.innerHTML = childNodes
+    .map((element) => element.outerHTML)
+    .join("");
 
   if (params.addIrrelevantFigures) {
     dividedSvg.appendChild(getObfuscatedSvgStyleTag());
@@ -47,7 +56,10 @@ const replaceFigure = (svgElement: SVGElement, obfuscation: (element: SVGElement
 };
 
 const getObfuscatedSvgStyleTag = () => {
-  const styleElement = document.createElementNS("http://www.w3.org/2000/svg", "style");
+  const styleElement = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "style",
+  );
 
   styleElement.textContent = `
     .red {

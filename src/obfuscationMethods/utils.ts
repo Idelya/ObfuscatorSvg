@@ -14,17 +14,19 @@ export const shuffle = (array: any[]) => {
   }
 
   return array;
-}
+};
 
 export function getRandomHexColor(): string {
-  const color = Math.floor(Math.random()*16777215).toString(16);
-  
-  return '#' + '0'.repeat(6 - color.length) + color;
+  const color = Math.floor(Math.random() * 16777215).toString(16);
+
+  return "#" + "0".repeat(6 - color.length) + color;
 }
 
 export function getRandomNumber(min: number, max: number): number {
   if (min > max) {
-      throw new Error("Minimum value must be less than or equal to the maximum value");
+    throw new Error(
+      "Minimum value must be less than or equal to the maximum value",
+    );
   }
 
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -32,8 +34,8 @@ export function getRandomNumber(min: number, max: number): number {
 
 export const getRandomInt = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min) + min);
-}
+};
 
 export const ceilTo1 = (value: number) => {
   return value > 1 ? 1 : value;
-}
+};
