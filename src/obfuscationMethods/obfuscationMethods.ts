@@ -27,7 +27,8 @@ const replaceFigure = (svgElement: SVGElement, obfuscation: (element: SVGElement
   const dividedSvg = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
   const params: ObfuscationParams = {
-    divisionStrength: svgElement.tagName === "circle" ? 360 : 3,
+    divisionStrength: 3,
+    circleParts: 360,
     elementTag: "path",
     addIrrelevantFigures: true,
     addIrrelevantAttributes: true,

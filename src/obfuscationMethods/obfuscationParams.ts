@@ -1,9 +1,10 @@
 export interface ObfuscationParams {
-  divisionStrength: number;
   elementTag: "original" | "path";
   addIrrelevantFigures: boolean;
   addIrrelevantAttributes: boolean;
   randomizeElements: boolean;
+  fillType: "original" | "random";
+  circleParts: number;
+  divisionStrength: number;
   figureSplitBy: "no" | "opacity";
-  fillType: "original" | "random" | "highContrast";
 }

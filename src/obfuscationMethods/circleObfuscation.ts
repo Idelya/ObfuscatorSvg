@@ -41,9 +41,9 @@ const getSectorPath = (outerDiameter: number, x: number, y: number, angleStart: 
 };
 
 const getDividedCircleElements = (params: CircleObfuscationParams) => {
-  const angle = 360 / params.divisionStrength;
+  const angle = 360 / params.circleParts;
   let paths: SVGElement[] = [];
-  for (let i = 0; i < params.divisionStrength; i++) {
+  for (let i = 0; i < params.circleParts; i++) {
     paths = paths.concat(createCompletedCircleSector(i, angle, params));
   }
   return paths;
