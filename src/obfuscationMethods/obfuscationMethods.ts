@@ -38,7 +38,9 @@ const replaceFigure = (svgElement: SVGElement, obfuscation: (element: SVGElement
   const childNodes = obfuscation(svgElement, params);
   dividedSvg.innerHTML = childNodes.map((element) => element.outerHTML).join("");
 
-  dividedSvg.appendChild(getObfuscatedSvgStyleTag());
+  if (params.addIrrelevantFigures) {
+    dividedSvg.appendChild(getObfuscatedSvgStyleTag());
+  }
 
   svgElement.parentNode?.replaceChild(dividedSvg, svgElement);
 };

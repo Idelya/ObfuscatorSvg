@@ -6,7 +6,6 @@ const STROKE_WIDTH = 1;
 
 export const divideCircle = (circleSvg: SVGElement, params: ObfuscationParams) => {
   // TODO: Colors
-  // TODO: Style inside g if add irrelevant
   const r = parseInt(circleSvg.getAttribute("r")!);
   const cx = parseInt(circleSvg.getAttribute("cx")!);
   const cy = parseInt(circleSvg.getAttribute("cy")!);

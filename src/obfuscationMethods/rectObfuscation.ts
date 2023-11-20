@@ -7,7 +7,6 @@ const STROKE_WIDTH = 1;
 
 export const divideRect = (rectSvg: SVGElement, params: ObfuscationParams) => {
   // TODO: Colors
-  // TODO: Style inside g if add irrelevant
   const width = parseInt(rectSvg.getAttribute("width")!);
   const height = parseInt(rectSvg.getAttribute("height")!);
   const originalFill = rectSvg.getAttribute("fill")!;

@@ -16,7 +16,6 @@ interface PolygonObfuscationParams extends ObfuscationParams {
 
 export const dividePolygon = (polygonSvg: SVGElement, params: ObfuscationParams) => {
   // TODO: Colors
-  // TODO: Style inside g if add irrelevant
   const width = parseInt(polygonSvg.getAttribute("width")!);
   const height = parseInt(polygonSvg.getAttribute("height")!);
   const originalFill = polygonSvg.getAttribute("fill")!;
