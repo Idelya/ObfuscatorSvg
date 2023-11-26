@@ -36,9 +36,3 @@ export const svgGeneratorInit: { elements: FormSchemaSvgGenerator[] } = {
     },
   ],
 };
-
-export type ObfuscationParametrs = {
-  rectDivisionDepth: number;
-  circleDivision: number;
-  polygonDivisionDepth: number;
-};

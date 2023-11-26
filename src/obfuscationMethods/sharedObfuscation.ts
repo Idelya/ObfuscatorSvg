@@ -1,3 +1,4 @@
+import { ObfuscationParams } from "./obfuscationParams";
 import { getRandomHexColor, getRandomNumber } from "./utils";
 
 export const getRandomFigure = (
@@ -32,14 +33,14 @@ export const getRandomFigure = (
         "d",
         `M ${x} ${y} L ${x + width} ${y} L ${x + width} ${y + height} L ${x} ${
           y + height
-        } Z`
+        } Z`,
       );
       break;
     case 2:
       // circle
       element = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "circle"
+        "circle",
       );
       element.setAttribute("r", (width / 2).toString());
       element.setAttribute("cx", (x + width / 2).toString());
@@ -49,11 +50,11 @@ export const getRandomFigure = (
       // polygon
       element = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "polygon"
+        "polygon",
       );
       element.setAttribute(
         "points",
-        `${x + width / 2},${y} ${x},${y + height} ${x + width},${y + height}`
+        `${x + width / 2},${y} ${x},${y + height} ${x + width},${y + height}`,
       );
       break;
   }
@@ -91,15 +92,29 @@ export const addIrrelevantFiguresTo = (
   maxX: number,
   maxY: number,
   maxWidth: number,
-  maxHeight: number
+  maxHeight: number,
 ) => {
   const irrelevantFigures: SVGElement[] = [];
   for (let i = 0; i < elements.length; i++) {
     const figX = Math.random() * maxX;
     const figY = Math.random() * maxY;
     irrelevantFigures.push(
-      getRandomFigure(figX, figY, 0, maxWidth, 0, maxHeight)
+      getRandomFigure(figX, figY, 0, maxWidth, 0, maxHeight),
     );
   }
   irrelevantFigures.forEach((f) => elements.push(f));
+};
+
+export const setFigureColor = (
+  element: SVGElement,
+  params: ObfuscationParams,
+  originalFill: string,
+) => {
+  let fill = originalFill;
+  if (params.fillType === "random") {
+    fill = getRandomHexColor();
+  }
+
+  element.setAttribute("fill", fill);
+  element.setAttribute("stroke", fill);
 };

@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, Box, Button, Slider } from "@mui/material";
 import { obfuscate } from "../../obfuscationMethods/obfuscationMethods";
 import { useFormik } from "formik";
-import { ObfuscationParametrs } from "../../constant";
+import { ObfuscationParams } from "../../obfuscationMethods/obfuscationParams";
 
 interface ObfuscationFormProps {
   generatedSvg: string;
@@ -10,7 +10,7 @@ interface ObfuscationFormProps {
 
 const onChange = (
   generatedSvg: string,
-  params: ObfuscationParametrs,
+  params: ObfuscationParams,
   onObfuscate: (svg: string) => void,
 ) => {
   const obfuscationResult = obfuscate(generatedSvg, params);
@@ -20,10 +20,15 @@ const onChange = (
 function ObfuscationForm({ generatedSvg, onObfuscate }: ObfuscationFormProps) {
   const formik = useFormik({
     initialValues: {
-      rectDivisionDepth: 2,
-      circleDivision: 2,
-      polygonDivisionDepth: 2,
-    },
+      elementTag: "original",
+      addIrrelevantFigures: false,
+      addIrrelevantAttributes: false,
+      randomizeElements: false,
+      fillType: "original",
+      divisionStrength: 2,
+      circleParts: 2,
+      figureSplitBy: "no",
+    } as ObfuscationParams,
     onSubmit: (values) => {
       onChange(generatedSvg, values, onObfuscate);
     },
@@ -38,40 +43,28 @@ function ObfuscationForm({ generatedSvg, onObfuscate }: ObfuscationFormProps) {
               Set parametrs of obfuscation
             </FormLabel>
             <br />
-            <FormLabel htmlFor="rectDivisionDepth">
-              Rect division depth
+            <FormLabel htmlFor="divisionStrength">
+              Rect/Polygon division depth
             </FormLabel>
             <Slider
-              name="rectDivisionDepth"
+              name="divisionStrength"
               min={1}
               max={5}
               step={1}
               valueLabelDisplay="auto"
-              value={formik.values.rectDivisionDepth}
+              value={formik.values.divisionStrength}
               onChange={formik.handleChange}
             />
             <FormLabel htmlFor="circleDivision">
               Circle division - number of parts
             </FormLabel>
             <Slider
-              name="circleDivision"
+              name="circleParts"
               min={1}
               max={360}
               step={1}
               valueLabelDisplay="auto"
-              value={formik.values.circleDivision}
-              onChange={formik.handleChange}
-            />
-            <FormLabel htmlFor="polygonDivisionDepth">
-              Polygon division depth
-            </FormLabel>
-            <Slider
-              name="polygonDivisionDepth"
-              min={1}
-              max={5}
-              step={1}
-              valueLabelDisplay="auto"
-              value={formik.values.polygonDivisionDepth}
+              value={formik.values.circleParts}
               onChange={formik.handleChange}
             />
           </FormControl>
