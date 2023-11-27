@@ -1,4 +1,4 @@
-import { ObfuscationParams } from "./obfuscationParams";
+import { ELEMENT_TAG_PARAMS, ObfuscationParams } from "./obfuscationParams";
 import { Point } from "./point";
 import {
   addIrrelevantFiguresTo,
@@ -65,7 +65,7 @@ export const dividePolygon = (
 
 const getDividedPolygonElements = (params: PolygonObfuscationParams) => {
   const innerElements: SVGElement[] = [];
-  if (params.elementTag === "path") {
+  if (params.elementTag === ELEMENT_TAG_PARAMS.PATH) {
     getDividedIntoPaths(params);
   } else {
     getDividedIntoPolygons(params);
