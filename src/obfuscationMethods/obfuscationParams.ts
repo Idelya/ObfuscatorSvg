@@ -1,5 +1,5 @@
 export interface ObfuscationParams {
-  elementTag: "original" | "path";
+  elementTag: ELEMENT_TAG_PARAMS;
   addIrrelevantFigures: boolean;
   addIrrelevantAttributes: boolean;
   randomizeElements: boolean;
@@ -7,4 +7,19 @@ export interface ObfuscationParams {
   circleParts: number;
   divisionStrength: number;
   figureSplitBy: "no" | "opacity";
+}
+
+export enum ELEMENT_TAG_PARAMS {
+  ORIGNAL = "original",
+  PATH = "path",
+}
+
+export enum FILL_TYPE_PARAMS {
+  ORIGNAL = "original",
+  RANDOM = "random",
+}
+
+export enum FIGURE_SPLIT_BY_PARAMS {
+  NO = "no",
+  OPACITY = "opacity",
 }
