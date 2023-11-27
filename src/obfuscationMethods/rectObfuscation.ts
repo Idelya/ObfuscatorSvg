@@ -158,53 +158,59 @@ const createPartialRect = (opacity: number, params: RectObfuscationParams) => {
 };
 
 const getDividedPaths = (params: RectObfuscationParams) => {
-  if (params.divisionStrength > 1) {
-    const isLeftBorder = params.x === params.initX;
-    const isRightBorder =
-      params.x + params.width === params.initX + params.initWidth;
-    const isTopBorder = params.y === params.initY;
-    const isBottomBorder =
-      params.y + params.height === params.initY + params.initHeight;
+  const isLeftBorder = params.x === params.initX;
+  const isRightBorder =
+    params.x + params.width === params.initX + params.initWidth;
+  const isTopBorder = params.y === params.initY;
+  const isBottomBorder =
+    params.y + params.height === params.initY + params.initHeight;
 
-    const isBorder =
-      isLeftBorder || isRightBorder || isTopBorder || isBottomBorder;
-    // TODO: IF border then other logic
-    const isNotMosaic = Math.random() * 2 > 1;
-    if (isBorder || isNotMosaic) {
-      getDividedPaths({
-        ...params,
-        width: params.width / 2,
-        height: params.height / 2,
-        x: params.x,
-        y: params.y,
-        divisionStrength: params.divisionStrength - 1,
-      });
-      getDividedPaths({
-        ...params,
-        width: params.width / 2,
-        height: params.height / 2,
-        x: params.x + params.width / 2,
-        y: params.y,
-        divisionStrength: params.divisionStrength - 1,
-      });
-      getDividedPaths({
-        ...params,
-        width: params.width / 2,
-        height: params.height / 2,
-        x: params.x,
-        y: params.y + params.height / 2,
-        divisionStrength: params.divisionStrength - 1,
-      });
-      getDividedPaths({
-        ...params,
-        width: params.width / 2,
-        height: params.height / 2,
-        x: params.x + params.width / 2,
-        y: params.y + params.height / 2,
-        divisionStrength: params.divisionStrength - 1,
-      });
+  const isFirstDivision =
+    isLeftBorder && isRightBorder && isTopBorder && isBottomBorder;
+
+  const maxDivisionStrength = 5;
+  if (params.divisionStrength > 1) {
+    const isMosaic =
+      maxDivisionStrength + 1 - params.divisionStrength >
+      Math.random() * maxDivisionStrength * 4;
+
+    if (isMosaic && !isFirstDivision) {
+      const isBorder =
+        isLeftBorder || isRightBorder || isTopBorder || isBottomBorder;
+      buildRectFromFigures(params, isBorder);
     } else {
-      buildRectFromFigures(params);
+      getDividedPaths({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+        x: params.x,
+        y: params.y,
+        divisionStrength: params.divisionStrength - 1,
+      });
+      getDividedPaths({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+        x: params.x + params.width / 2,
+        y: params.y,
+        divisionStrength: params.divisionStrength - 1,
+      });
+      getDividedPaths({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+        x: params.x,
+        y: params.y + params.height / 2,
+        divisionStrength: params.divisionStrength - 1,
+      });
+      getDividedPaths({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+        x: params.x + params.width / 2,
+        y: params.y + params.height / 2,
+        divisionStrength: params.divisionStrength - 1,
+      });
     }
   } else {
     createCompletedPath(
@@ -242,43 +248,94 @@ const getDividedPaths = (params: RectObfuscationParams) => {
   }
 };
 
-const buildRectFromFigures = (params: RectObfuscationParams) => {
+const buildRectFromFigures = (
+  params: RectObfuscationParams,
+  isBorder: boolean,
+) => {
   // triangle on left
-  params.elements.push(
-    createTriangle(
-      { x: params.x - params.width / 2, y: params.y + params.height },
-      { x: params.x, y: params.y },
-      { x: params.x + params.width / 2, y: params.y + params.height },
-      params,
-    ),
-  );
+  if (isBorder) {
+    params.elements.push(
+      createTriangle(
+        { x: params.x - params.width, y: params.y + params.height },
+        { x: params.x, y: params.y },
+        { x: params.x + params.width / 2, y: params.y + params.height },
+        params,
+      ),
+    );
+  } else {
+    params.elements.push(
+      createTriangle(
+        { x: params.x - params.width / 2, y: params.y + params.height },
+        { x: params.x, y: params.y },
+        { x: params.x + params.width / 2, y: params.y + params.height },
+        params,
+      ),
+    );
+  }
+
   // triangle on right
-  params.elements.push(
-    createTriangle(
-      { x: params.x + params.width / 2, y: params.y + params.height },
-      { x: params.x + params.width, y: params.y },
-      { x: params.x + (3 * params.width) / 2, y: params.y + params.height },
-      params,
-    ),
-  );
+  if (isBorder) {
+    params.elements.push(
+      createTriangle(
+        { x: params.x + params.width / 2, y: params.y + params.height },
+        { x: params.x + params.width, y: params.y },
+        { x: params.x + params.width, y: params.y + params.height },
+        params,
+      ),
+    );
+  } else {
+    params.elements.push(
+      createTriangle(
+        { x: params.x + params.width / 2, y: params.y + params.height },
+        { x: params.x + params.width, y: params.y },
+        { x: params.x + (3 * params.width) / 2, y: params.y + params.height },
+        params,
+      ),
+    );
+  }
+
   // reversed triangle on left
-  params.elements.push(
-    createTriangle(
-      { x: params.x, y: params.y },
-      { x: params.x + params.width / 2, y: params.y },
-      { x: params.x + params.width / 2, y: params.y + params.height },
-      params,
-    ),
-  );
+  if (isBorder) {
+    params.elements.push(
+      createTriangle(
+        { x: params.x, y: params.y },
+        { x: params.x + params.width / 2, y: params.y },
+        { x: params.x + params.width / 2, y: params.y + params.height },
+        params,
+      ),
+    );
+  } else {
+    params.elements.push(
+      createTriangle(
+        { x: params.x - params.width / 2, y: params.y },
+        { x: params.x + params.width / 2, y: params.y },
+        { x: params.x + params.width / 2, y: params.y + params.height },
+        params,
+      ),
+    );
+  }
+
   // reversed triangle on right
-  params.elements.push(
-    createTriangle(
-      { x: params.x + params.width / 2, y: params.y },
-      { x: params.x + params.width, y: params.y },
-      { x: params.x + params.width, y: params.y + params.height },
-      params,
-    ),
-  );
+  if (isBorder) {
+    params.elements.push(
+      createTriangle(
+        { x: params.x + params.width / 2, y: params.y },
+        { x: params.x + params.width, y: params.y },
+        { x: params.x + params.width, y: params.y + params.height },
+        params,
+      ),
+    );
+  } else {
+    params.elements.push(
+      createTriangle(
+        { x: params.x + params.width / 2, y: params.y },
+        { x: params.x + (3 / 2) * params.width, y: params.y },
+        { x: params.x + params.width, y: params.y + params.height },
+        params,
+      ),
+    );
+  }
+
   // circle inside
   params.elements.push(
     createCircle(
