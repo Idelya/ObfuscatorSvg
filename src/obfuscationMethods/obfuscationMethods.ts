@@ -3,18 +3,18 @@ import { ObfuscationParams } from "./obfuscationParams";
 import { dividePolygon } from "./polygonObfuscation";
 import { divideRect } from "./rectObfuscation";
 
-export const obfuscate = (svgElement: string) => {
+export const obfuscate = (svgElement: string, params: ObfuscationParams) => {
   const resultSvg = new DOMParser().parseFromString(svgElement, "image/svg+xml")
     .documentElement as unknown as SVGElement;
 
   resultSvg.childNodes.forEach((elem) => {
     const svgChild = elem as SVGElement;
     if (svgChild.tagName === "circle") {
-      replaceFigure(svgChild, divideCircle);
+      replaceFigure(svgChild, params, divideCircle);
     } else if (svgChild.tagName === "rect") {
-      replaceFigure(svgChild, divideRect);
+      replaceFigure(svgChild, params, divideRect);
     } else if (svgChild.tagName === "polygon") {
-      replaceFigure(svgChild, dividePolygon);
+      replaceFigure(svgChild, params, dividePolygon);
     } else {
       throw elem;
     }
@@ -26,6 +26,7 @@ export const obfuscate = (svgElement: string) => {
 
 const replaceFigure = (
   svgElement: SVGElement,
+  params: ObfuscationParams,
   obfuscation: (element: SVGElement, params: ObfuscationParams) => SVGElement[],
 ) => {
   const dividedSvg = document.createElementNS(
@@ -33,16 +34,6 @@ const replaceFigure = (
     "g",
   );
 
-  const params: ObfuscationParams = {
-    divisionStrength: 3,
-    circleParts: 360,
-    elementTag: "path",
-    addIrrelevantFigures: true,
-    addIrrelevantAttributes: true,
-    randomizeElements: true,
-    figureSplitBy: "opacity",
-    fillType: "original",
-  };
   const childNodes = obfuscation(svgElement, params);
   dividedSvg.innerHTML = childNodes
     .map((element) => element.outerHTML)

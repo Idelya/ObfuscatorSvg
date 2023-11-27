@@ -1,4 +1,4 @@
-import { ObfuscationParams } from "./obfuscationParams";
+import { FILL_TYPE_PARAMS, ObfuscationParams } from "./obfuscationParams";
 import { getRandomHexColor, getRandomNumber } from "./utils";
 
 export const getRandomFigure = (
@@ -111,7 +111,7 @@ export const setFigureColor = (
   originalFill: string,
 ) => {
   let fill = originalFill;
-  if (params.fillType === "random") {
+  if (params.fillType === FILL_TYPE_PARAMS.RANDOM) {
     fill = getRandomHexColor();
   }
 

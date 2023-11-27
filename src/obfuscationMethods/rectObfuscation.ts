@@ -1,4 +1,4 @@
-import { ObfuscationParams } from "./obfuscationParams";
+import { ELEMENT_TAG_PARAMS, ObfuscationParams } from "./obfuscationParams";
 import { Point } from "./point";
 import {
   addIrrelevantFiguresTo,
@@ -54,7 +54,7 @@ export const divideRect = (rectSvg: SVGElement, params: ObfuscationParams) => {
 
 const getDividedRectangleElements = (params: RectObfuscationParams) => {
   const innerElements: SVGElement[] = [];
-  if (params.elementTag === "path") {
+  if (params.elementTag === ELEMENT_TAG_PARAMS.PATH) {
     getDividedPaths(params);
   } else {
     getDividedRects(params);
