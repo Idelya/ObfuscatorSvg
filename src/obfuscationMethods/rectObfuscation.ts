@@ -165,10 +165,12 @@ const getDividedPaths = (params: RectObfuscationParams) => {
     const isTopBorder = params.y === params.initY;
     const isBottomBorder =
       params.y + params.height === params.initY + params.initHeight;
-    // TODO: Temporary condition
+
+    const isBorder =
+      isLeftBorder || isRightBorder || isTopBorder || isBottomBorder;
     // TODO: IF border then other logic
-    // TODO: Randomly chose if it should append or not
-    if (isLeftBorder || isRightBorder || isTopBorder || isBottomBorder) {
+    const isNotMosaic = Math.random() * 2 > 1;
+    if (isBorder || isNotMosaic) {
       getDividedPaths({
         ...params,
         width: params.width / 2,
