@@ -7,6 +7,7 @@ export interface ObfuscationParams {
   circleParts: number;
   divisionStrength: number;
   figureSplitBy: "no" | "opacity";
+  glassEnabled: boolean;
 }
 
 export enum ELEMENT_TAG_PARAMS {

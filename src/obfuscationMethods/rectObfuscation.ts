@@ -219,9 +219,12 @@ const getDividedPaths = (params: RectObfuscationParams) => {
       width: params.width / 2,
       height: params.height / 2,
     };
-    // TODO: Add parameter variable - convert to irregular figures and glass method
+
+    const changeToGlass = () =>
+      params.glassEnabled && Math.random() < GLASS_METHOD_PROBABILITY;
+
     // top left
-    if (Math.random() < GLASS_METHOD_PROBABILITY) {
+    if (changeToGlass()) {
       buildRectGlass(innerElemParmas);
     } else {
       createCompletedPath(
@@ -234,7 +237,7 @@ const getDividedPaths = (params: RectObfuscationParams) => {
       ).forEach((p) => params.elements.push(p));
     }
     // top right
-    if (Math.random() < GLASS_METHOD_PROBABILITY) {
+    if (changeToGlass()) {
       buildRectGlass({
         ...innerElemParmas,
         x: params.x + params.width / 2,
@@ -250,7 +253,7 @@ const getDividedPaths = (params: RectObfuscationParams) => {
       ).forEach((p) => params.elements.push(p));
     }
     // bottom left
-    if (Math.random() < GLASS_METHOD_PROBABILITY) {
+    if (changeToGlass()) {
       buildRectGlass({
         ...innerElemParmas,
         y: params.y + params.height / 2,
@@ -266,7 +269,7 @@ const getDividedPaths = (params: RectObfuscationParams) => {
       ).forEach((p) => params.elements.push(p));
     }
     // bottom right
-    if (Math.random() < GLASS_METHOD_PROBABILITY) {
+    if (changeToGlass()) {
       buildRectGlass({
         ...innerElemParmas,
         x: params.x + params.width / 2,
