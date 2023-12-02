@@ -122,7 +122,7 @@ function ObfuscationForm({ generatedSvg, onObfuscate }: ObfuscationFormProps) {
           <FormControlLabel
             control={<Checkbox />}
             name="mosaicEnabled"
-            label="Mosaic method"
+            label="Mosaic method (rect)"
             onChange={() =>
               formik.setFieldValue(
                 "mosaicEnabled",
