@@ -44,6 +44,7 @@ function ObfuscationForm({ generatedSvg, onObfuscate }: ObfuscationFormProps) {
       circleParts: 2,
       figureSplitBy: FIGURE_SPLIT_BY_PARAMS.NO,
       glassEnabled: false,
+      mosaicEnabled: false,
     } as ObfuscationParams,
     onSubmit: (values) => {
       onChange(generatedSvg, values, onObfuscate);
@@ -115,6 +116,18 @@ function ObfuscationForm({ generatedSvg, onObfuscate }: ObfuscationFormProps) {
             label="Glass method"
             onChange={() =>
               formik.setFieldValue("glassEnabled", !formik.values.glassEnabled)
+            }
+          />
+          <br />
+          <FormControlLabel
+            control={<Checkbox />}
+            name="mosaicEnabled"
+            label="Mosaic method"
+            onChange={() =>
+              formik.setFieldValue(
+                "mosaicEnabled",
+                !formik.values.mosaicEnabled,
+              )
             }
           />
           <br />

@@ -9,6 +9,7 @@ import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const STROKE_WIDTH = 1;
 const GLASS_METHOD_PROBABILITY = 0.5;
+const MAX_DIVISION_STRENGTH = 5;
 
 export const divideRect = (rectSvg: SVGElement, params: ObfuscationParams) => {
   const width = parseInt(rectSvg.getAttribute("width")!);
@@ -169,11 +170,11 @@ const getDividedPaths = (params: RectObfuscationParams) => {
   const isFirstDivision =
     isLeftBorder && isRightBorder && isTopBorder && isBottomBorder;
 
-  const maxDivisionStrength = 5;
   if (params.divisionStrength > 1) {
     const isMosaic =
-      maxDivisionStrength + 1 - params.divisionStrength >
-      Math.random() * maxDivisionStrength * 3;
+      params.mosaicEnabled &&
+      MAX_DIVISION_STRENGTH + 1 - params.divisionStrength >
+        Math.random() * MAX_DIVISION_STRENGTH * 3;
 
     if (isMosaic && !isFirstDivision) {
       const isBorder =
