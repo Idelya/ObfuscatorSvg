@@ -8,6 +8,7 @@ import {
 import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const STROKE_WIDTH = 1;
+const GLASS_METHOD_PROBABILITY = 0.5;
 
 export const divideRect = (rectSvg: SVGElement, params: ObfuscationParams) => {
   const width = parseInt(rectSvg.getAttribute("width")!);
@@ -213,15 +214,15 @@ const getDividedPaths = (params: RectObfuscationParams) => {
       });
     }
   } else {
-    // TODO: params = params widt and height / 2
+    const innerElemParmas = {
+      ...params,
+      width: params.width / 2,
+      height: params.height / 2,
+    };
     // TODO: Add parameter variable - convert to irregular figures and glass method
     // top left
-    if (Math.random() > 0.5) {
-      buildRectGlass({
-        ...params,
-        width: params.width / 2,
-        height: params.height / 2,
-      });
+    if (Math.random() < GLASS_METHOD_PROBABILITY) {
+      buildRectGlass(innerElemParmas);
     } else {
       createCompletedPath(
         params.originalFill,
@@ -233,12 +234,10 @@ const getDividedPaths = (params: RectObfuscationParams) => {
       ).forEach((p) => params.elements.push(p));
     }
     // top right
-    if (Math.random() > 0.5) {
+    if (Math.random() < GLASS_METHOD_PROBABILITY) {
       buildRectGlass({
-        ...params,
+        ...innerElemParmas,
         x: params.x + params.width / 2,
-        width: params.width / 2,
-        height: params.height / 2,
       });
     } else {
       createCompletedPath(
@@ -251,12 +250,10 @@ const getDividedPaths = (params: RectObfuscationParams) => {
       ).forEach((p) => params.elements.push(p));
     }
     // bottom left
-    if (Math.random() > 0.5) {
+    if (Math.random() < GLASS_METHOD_PROBABILITY) {
       buildRectGlass({
-        ...params,
+        ...innerElemParmas,
         y: params.y + params.height / 2,
-        width: params.width / 2,
-        height: params.height / 2,
       });
     } else {
       createCompletedPath(
@@ -269,13 +266,11 @@ const getDividedPaths = (params: RectObfuscationParams) => {
       ).forEach((p) => params.elements.push(p));
     }
     // bottom right
-    if (Math.random() > 0.5) {
+    if (Math.random() < GLASS_METHOD_PROBABILITY) {
       buildRectGlass({
-        ...params,
+        ...innerElemParmas,
         x: params.x + params.width / 2,
         y: params.y + params.height / 2,
-        width: params.width / 2,
-        height: params.height / 2,
       });
     } else {
       createCompletedPath(
