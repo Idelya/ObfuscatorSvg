@@ -172,7 +172,7 @@ const getDividedPaths = (params: RectObfuscationParams) => {
   if (params.divisionStrength > 1) {
     const isMosaic =
       maxDivisionStrength + 1 - params.divisionStrength >
-      Math.random() * maxDivisionStrength * 4;
+      Math.random() * maxDivisionStrength * 3;
 
     if (isMosaic && !isFirstDivision) {
       const isBorder =
@@ -213,39 +213,126 @@ const getDividedPaths = (params: RectObfuscationParams) => {
       });
     }
   } else {
-    createCompletedPath(
-      params.originalFill,
+    // TODO: params = params widt and height / 2
+    // TODO: Add parameter variable - convert to irregular figures and glass method
+    // top left
+    if (Math.random() > 0.5) {
+      buildRectGlass({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+      });
+    } else {
+      createCompletedPath(
+        params.originalFill,
+        { x: params.x, y: params.y },
+        { x: params.x + params.width / 2, y: params.y },
+        { x: params.x + params.width / 2, y: params.y + params.height / 2 },
+        { x: params.x, y: params.y + params.height / 2 },
+        params,
+      ).forEach((p) => params.elements.push(p));
+    }
+    // top right
+    if (Math.random() > 0.5) {
+      buildRectGlass({
+        ...params,
+        x: params.x + params.width / 2,
+        width: params.width / 2,
+        height: params.height / 2,
+      });
+    } else {
+      createCompletedPath(
+        params.originalFill,
+        { x: params.x + params.width / 2, y: params.y },
+        { x: params.x + params.width, y: params.y },
+        { x: params.x + params.width, y: params.y + params.height / 2 },
+        { x: params.x + params.width / 2, y: params.y + params.height / 2 },
+        params,
+      ).forEach((p) => params.elements.push(p));
+    }
+    // bottom left
+    if (Math.random() > 0.5) {
+      buildRectGlass({
+        ...params,
+        y: params.y + params.height / 2,
+        width: params.width / 2,
+        height: params.height / 2,
+      });
+    } else {
+      createCompletedPath(
+        params.originalFill,
+        { x: params.x, y: params.y + params.height / 2 },
+        { x: params.x + params.width / 2, y: params.y + params.height / 2 },
+        { x: params.x + params.width / 2, y: params.y + params.height },
+        { x: params.x, y: params.y + params.height },
+        params,
+      ).forEach((p) => params.elements.push(p));
+    }
+    // bottom right
+    if (Math.random() > 0.5) {
+      buildRectGlass({
+        ...params,
+        x: params.x + params.width / 2,
+        y: params.y + params.height / 2,
+        width: params.width / 2,
+        height: params.height / 2,
+      });
+    } else {
+      createCompletedPath(
+        params.originalFill,
+        { x: params.x + params.width / 2, y: params.y + params.height / 2 },
+        { x: params.x + params.width, y: params.y + params.height / 2 },
+        { x: params.x + params.width, y: params.y + params.height },
+        { x: params.x + params.width / 2, y: params.y + params.height },
+        params,
+      ).forEach((p) => params.elements.push(p));
+    }
+  }
+};
+
+const buildRectGlass = (params: RectObfuscationParams) => {
+  const centerX = params.x + Math.random() * params.width;
+  const centerY = params.y + Math.random() * params.height;
+
+  // left triangle
+  params.elements.push(
+    createTriangle(
       { x: params.x, y: params.y },
-      { x: params.x + params.width / 2, y: params.y },
-      { x: params.x + params.width / 2, y: params.y + params.height / 2 },
-      { x: params.x, y: params.y + params.height / 2 },
-      params,
-    ).forEach((p) => params.elements.push(p));
-    createCompletedPath(
-      params.originalFill,
-      { x: params.x + params.width / 2, y: params.y },
-      { x: params.x + params.width, y: params.y },
-      { x: params.x + params.width, y: params.y + params.height / 2 },
-      { x: params.x + params.width / 2, y: params.y + params.height / 2 },
-      params,
-    ).forEach((p) => params.elements.push(p));
-    createCompletedPath(
-      params.originalFill,
-      { x: params.x, y: params.y + params.height / 2 },
-      { x: params.x + params.width / 2, y: params.y + params.height / 2 },
-      { x: params.x + params.width / 2, y: params.y + params.height },
+      { x: centerX, y: centerY },
       { x: params.x, y: params.y + params.height },
       params,
-    ).forEach((p) => params.elements.push(p));
-    createCompletedPath(
-      params.originalFill,
-      { x: params.x + params.width / 2, y: params.y + params.height / 2 },
-      { x: params.x + params.width, y: params.y + params.height / 2 },
-      { x: params.x + params.width, y: params.y + params.height },
-      { x: params.x + params.width / 2, y: params.y + params.height },
+    ),
+  );
+
+  // top triangle
+  params.elements.push(
+    createTriangle(
+      { x: params.x, y: params.y },
+      { x: centerX, y: centerY },
+      { x: params.x + params.width, y: params.y },
       params,
-    ).forEach((p) => params.elements.push(p));
-  }
+    ),
+  );
+
+  // right triangle
+  params.elements.push(
+    createTriangle(
+      { x: params.x + params.width, y: params.y },
+      { x: centerX, y: centerY },
+      { x: params.x + params.width, y: params.y + params.height },
+      params,
+    ),
+  );
+
+  // bottom triangle
+  params.elements.push(
+    createTriangle(
+      { x: params.x, y: params.y + params.height },
+      { x: centerX, y: centerY },
+      { x: params.x + params.width, y: params.y + params.height },
+      params,
+    ),
+  );
 };
 
 const buildRectFromFigures = (
