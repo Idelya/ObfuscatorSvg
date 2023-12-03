@@ -1,4 +1,5 @@
 import { divideCircle } from "./circleObfuscation";
+import { styleTransform } from "./obfuscationByStyle";
 import { ObfuscationParams } from "./obfuscationParams";
 import { dividePolygon } from "./polygonObfuscation";
 import { divideRect } from "./rectObfuscation";
@@ -42,7 +43,7 @@ const replaceFigure = (
   if (params.addIrrelevantFigures) {
     dividedSvg.appendChild(getObfuscatedSvgStyleTag());
   }
-
+  styleTransform(dividedSvg);
   svgElement.parentNode?.replaceChild(dividedSvg, svgElement);
 };
 

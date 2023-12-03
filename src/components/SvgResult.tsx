@@ -5,6 +5,7 @@ import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import parser from "prettier/plugins/html";
 import prettier from "prettier/standalone";
 import { highlightSvgElements } from "../lib/highlightElements";
+import { deleteStyles } from "../lib/deleteStyles";
 
 interface SvgResultProps {
   svg: string;
@@ -14,6 +15,7 @@ interface SvgResultProps {
 function SvgResult({ svg, name }: SvgResultProps) {
   const [showCode, setShowCode] = useState(false);
   const [highlightElements, setHighlightElements] = useState(false);
+  const [withStyles, setWithStyles] = useState(false);
   const [svgString, setSvgString] = useState("");
 
   useEffect(() => {
@@ -27,15 +29,18 @@ function SvgResult({ svg, name }: SvgResultProps) {
         .then((code) => setSvgString(code));
     } else {
       const box = document.getElementById(name);
+      let svgStr = svg;
       if (!box) return;
 
       if (highlightElements) {
-        box.innerHTML = highlightSvgElements(svg);
-        return;
+        svgStr = highlightSvgElements(svgStr);
       }
-      box.innerHTML = svg;
+      if (withStyles) {
+        svgStr = deleteStyles(svgStr);
+      }
+      box.innerHTML = svgStr;
     }
-  }, [svg, showCode, highlightElements, name]);
+  }, [svg, showCode, highlightElements, name, withStyles]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -53,6 +58,13 @@ function SvgResult({ svg, name }: SvgResultProps) {
           label="Highlight svg elements"
           labelPlacement="end"
           onChange={() => setHighlightElements(!highlightElements)}
+        />
+        <FormControlLabel
+          value="disableStyle"
+          control={<Switch color="secondary" />}
+          label="Disable <style>"
+          labelPlacement="end"
+          onChange={() => setWithStyles(!withStyles)}
         />
         {showCode && <Typography>Chars: {svgString.length}</Typography>}
       </Box>
