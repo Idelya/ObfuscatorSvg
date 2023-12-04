@@ -47,6 +47,11 @@ const replaceFigure = (
   if (transform) {
     transform(dividedSvg);
   }
+
+  dividedSvg.childNodes.forEach((element) => {
+    (element as SVGElement).removeAttribute("origin");
+  });
+
   svgElement.parentNode?.replaceChild(dividedSvg, svgElement);
 };
 

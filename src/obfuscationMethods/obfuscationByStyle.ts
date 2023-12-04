@@ -1,5 +1,6 @@
 export const styleTransform = (svgElement: SVGElement) => {
   svgElement.childNodes.forEach((element) => {
+    if ((element as SVGElement).hasAttribute("origin")) return;
     const randomNumber = Math.floor(Math.random() * 45);
 
     const styleElement = document.createElementNS(
