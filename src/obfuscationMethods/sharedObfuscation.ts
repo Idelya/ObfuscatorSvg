@@ -60,6 +60,7 @@ export const getRandomFigure = (
   }
 
   element!.setAttribute("fill", getRandomHexColor());
+  element?.setAttribute("origin", "random");
   hideElement(element!);
 
   return element!;
