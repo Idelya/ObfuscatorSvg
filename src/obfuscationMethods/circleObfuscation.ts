@@ -17,7 +17,22 @@ export const divideCircle = (
   const cy = parseInt(circleSvg.getAttribute("cy")!);
   const originalFill = circleSvg.getAttribute("fill")!;
 
-  const circleParams = { cx, cy, diameter: 2 * r, originalFill, ...params };
+  const circleX = params.glassEnabled ? cx - r + Math.random() * 2 * r : cx;
+  const circleY = params.glassEnabled
+    ? cy -
+      (r - Math.abs(circleX - cx)) +
+      Math.random() * 2 * (r - Math.abs(circleX - cx))
+    : cy;
+
+  const circleParams = {
+    centerX: cx,
+    centerY: cy,
+    circleX: circleX,
+    circleY: circleY,
+    diameter: 2 * r,
+    originalFill,
+    ...params,
+  };
 
   const circleElements = getDividedCircleElements(circleParams);
 
@@ -42,19 +57,21 @@ export const divideCircle = (
 
 const getSectorPath = (
   outerDiameter: number,
-  x: number,
-  y: number,
+  centerX: number,
+  centerY: number,
+  circleX: number,
+  circleY: number,
   angleStart: number,
   angleEnd: number,
 ) => {
   const degreesToRadiansRatio = Math.PI / 180;
   const cr = outerDiameter / 2;
-  const cx1 = Math.cos(degreesToRadiansRatio * angleEnd) * cr + x;
-  const cy1 = -Math.sin(degreesToRadiansRatio * angleEnd) * cr + y;
-  const cx2 = Math.cos(degreesToRadiansRatio * angleStart) * cr + x;
-  const cy2 = -Math.sin(degreesToRadiansRatio * angleStart) * cr + y;
+  const cx1 = Math.cos(degreesToRadiansRatio * angleEnd) * cr + centerX;
+  const cy1 = -Math.sin(degreesToRadiansRatio * angleEnd) * cr + centerY;
+  const cx2 = Math.cos(degreesToRadiansRatio * angleStart) * cr + centerX;
+  const cy2 = -Math.sin(degreesToRadiansRatio * angleStart) * cr + centerY;
 
-  return `M${x} ${y} ${cx1} ${cy1} A${cr} ${cr} 0 0 1 ${cx2} ${cy2}Z`;
+  return `M${circleX} ${circleY} ${cx1} ${cy1} A${cr} ${cr} 0 0 1 ${cx2} ${cy2}Z`;
 };
 
 const getDividedCircleElements = (params: CircleObfuscationParams) => {
@@ -110,7 +127,15 @@ const createPartialCircleSector = (
   }
   pathElement.setAttribute(
     "d",
-    getSectorPath(params.diameter, params.cx, params.cy, angleStart, angleEnd),
+    getSectorPath(
+      params.diameter,
+      params.centerX,
+      params.centerY,
+      params.circleX,
+      params.circleY,
+      angleStart,
+      angleEnd,
+    ),
   );
   setFigureColor(pathElement, params, params.originalFill);
   pathElement.setAttribute("stroke-width", STROKE_WIDTH.toString());
@@ -120,7 +145,9 @@ const createPartialCircleSector = (
 
 interface CircleObfuscationParams extends ObfuscationParams {
   diameter: number;
-  cx: number;
-  cy: number;
+  centerX: number;
+  centerY: number;
+  circleX: number;
+  circleY: number;
   originalFill: string;
 }
