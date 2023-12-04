@@ -32,8 +32,6 @@ const rotatePath = (elem: SVGElement, angle: number) => {
         .split(" ")
         .filter((point) => !!point)
         .map((point) => {
-          console.log(point, point.split(","));
-
           const [x, y] = point.split(",").map(parseFloat);
           const rotatedPoint = rotatePoint([x, y], angle);
           return rotatedPoint.join(",");
@@ -44,7 +42,7 @@ const rotatePath = (elem: SVGElement, angle: number) => {
   elem.setAttribute("d", pathCommands.join(" "));
 };
 
-function rotatePoint([x, y], angle) {
+function rotatePoint([x, y]: [number, number], angle: number) {
   const radians = (angle * Math.PI) / 180;
   const newX = x * Math.cos(radians) - y * Math.sin(radians);
   const newY = x * Math.sin(radians) + y * Math.cos(radians);

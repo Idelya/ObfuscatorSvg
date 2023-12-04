@@ -15,7 +15,7 @@ export const obfuscate = (svgElement: string, params: ObfuscationParams) => {
     } else if (svgChild.tagName === "rect") {
       replaceFigure(svgChild, params, divideRect);
     } else if (svgChild.tagName === "polygon") {
-      replaceFigure(svgChild, params, dividePolygon);
+      replaceFigure(svgChild, params, dividePolygon, styleTransform);
     } else {
       throw elem;
     }
@@ -29,6 +29,7 @@ const replaceFigure = (
   svgElement: SVGElement,
   params: ObfuscationParams,
   obfuscation: (element: SVGElement, params: ObfuscationParams) => SVGElement[],
+  transform?: (element: SVGElement) => void,
 ) => {
   const dividedSvg = document.createElementNS(
     "http://www.w3.org/2000/svg",
@@ -43,7 +44,9 @@ const replaceFigure = (
   if (params.addIrrelevantFigures) {
     dividedSvg.appendChild(getObfuscatedSvgStyleTag());
   }
-  styleTransform(dividedSvg);
+  if (transform) {
+    transform(dividedSvg);
+  }
   svgElement.parentNode?.replaceChild(dividedSvg, svgElement);
 };
 
