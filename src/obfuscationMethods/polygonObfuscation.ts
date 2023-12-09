@@ -5,7 +5,12 @@ import {
   getRandomFigure,
   setFigureColor,
 } from "./sharedObfuscation";
-import { ceilTo1, getRandomInt, shuffle } from "./utils";
+import {
+  ceilTo1,
+  getRandomInt,
+  getRandomPointInsidePolygon,
+  shuffle,
+} from "./utils";
 
 const STROKE_WIDTH = 1;
 const GLASS_METHOD_PROBABILITY = 0.5;
@@ -208,9 +213,13 @@ const getDividedIntoPaths = (params: PolygonObfuscationParams) => {
       y: params.y / 2 + params.height / 2,
     };
     // Middle
-    if (false) {
-      //if (changeToGlass() && false) {
-      // TODO: buildPolygonGlass
+    if (changeToGlass()) {
+      buildPolygonGlass(
+        { ...point1 },
+        { ...point2 },
+        { ...point3 },
+        { ...params },
+      );
     } else {
       createCompletedPath(
         params.originalFill,
@@ -327,31 +336,12 @@ const getDividedIntoReversedPaths = (params: PolygonObfuscationParams) => {
   }
 };
 
-// todo: move
-function getRandomPointInsidePolygon(a: Point, b: Point, c: Point): Point {
-  // Losowe współczynniki barycentryczne
-  const r1 = Math.random();
-  const r2 = Math.random();
-
-  // Współczynniki barycentryczne
-  const l1 = 1 - Math.sqrt(r1);
-  const l2 = (1 - r2) * Math.sqrt(r1);
-  const l3 = r2 * Math.sqrt(r1);
-
-  // Współrzędne punktu wewnątrz trójkąta
-  const x = l1 * a.x + l2 * b.x + l3 * c.x;
-  const y = l1 * a.y + l2 * b.y + l3 * c.y;
-
-  return { x, y };
-}
-
 const buildPolygonGlass = (
   point1: Point,
   point2: Point,
   point3: Point,
   params: PolygonObfuscationParams,
 ) => {
-  // TODO: Fix it
   const centerPoint = getRandomPointInsidePolygon(point1, point2, point3);
 
   //left triangle
