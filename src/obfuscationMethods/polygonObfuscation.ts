@@ -120,8 +120,13 @@ const getDividedIntoPaths = (params: PolygonObfuscationParams) => {
       y: params.y / 2 + params.height / 2,
     };
     // Top part
-    if (false && changeToGlass()) {
-      //buildPolygonGlass({ ...params });
+    if (changeToGlass()) {
+      buildPolygonGlass(
+        { ...point1 },
+        { ...point2 },
+        { ...point3 },
+        { ...params },
+      );
     } else {
       createCompletedPath(
         params.originalFill,
@@ -145,9 +150,13 @@ const getDividedIntoPaths = (params: PolygonObfuscationParams) => {
       y: params.y / 2 + params.height,
     };
     // Left
-    //if (changeToGlass()) {
-    if (false) {
-      // TODO: buildPolygonGlass
+    if (changeToGlass()) {
+      buildPolygonGlass(
+        { ...point1 },
+        { ...point2 },
+        { ...point3 },
+        { ...params },
+      );
     } else {
       createCompletedPath(
         params.originalFill,
@@ -170,9 +179,13 @@ const getDividedIntoPaths = (params: PolygonObfuscationParams) => {
       y: params.y / 2 + params.height,
     };
     // Right
-    if (false) {
-      //if (changeToGlass()) {
-      // TODO: buildPolygonGlass
+    if (changeToGlass()) {
+      buildPolygonGlass(
+        { ...point1 },
+        { ...point2 },
+        { ...point3 },
+        { ...params },
+      );
     } else {
       createCompletedPath(
         params.originalFill,
@@ -314,40 +327,41 @@ const getDividedIntoReversedPaths = (params: PolygonObfuscationParams) => {
   }
 };
 
-const buildPolygonGlass = (params: PolygonObfuscationParams) => {
-  // TODO: Fix it
-  const centerX = params.x + params.width / 2;
-  const centerY = params.y + params.height / 2;
+// todo: move
+function getRandomPointInsidePolygon(a: Point, b: Point, c: Point): Point {
+  // Losowe współczynniki barycentryczne
+  const r1 = Math.random();
+  const r2 = Math.random();
 
-  // left triangle
-  params.elements.push(
-    createTriangle(
-      { x: params.x, y: params.y + params.width / 2 },
-      { x: centerX, y: centerY },
-      { x: params.x, y: params.y + params.height },
-      params,
-    ),
-  );
+  // Współczynniki barycentryczne
+  const l1 = 1 - Math.sqrt(r1);
+  const l2 = (1 - r2) * Math.sqrt(r1);
+  const l3 = r2 * Math.sqrt(r1);
+
+  // Współrzędne punktu wewnątrz trójkąta
+  const x = l1 * a.x + l2 * b.x + l3 * c.x;
+  const y = l1 * a.y + l2 * b.y + l3 * c.y;
+
+  return { x, y };
+}
+
+const buildPolygonGlass = (
+  point1: Point,
+  point2: Point,
+  point3: Point,
+  params: PolygonObfuscationParams,
+) => {
+  // TODO: Fix it
+  const centerPoint = getRandomPointInsidePolygon(point1, point2, point3);
+
+  //left triangle
+  params.elements.push(createTriangle(point1, centerPoint, point2, params));
 
   // right triangle
-  params.elements.push(
-    createTriangle(
-      { x: params.x + params.width / 2, y: params.y },
-      { x: centerX, y: centerY },
-      { x: params.x + params.width, y: params.y + params.height },
-      params,
-    ),
-  );
+  params.elements.push(createTriangle(point1, centerPoint, point3, params));
 
   // bottom triangle
-  params.elements.push(
-    createTriangle(
-      { x: params.x, y: params.y + params.height },
-      { x: centerX, y: centerY },
-      { x: params.x + params.width, y: params.y + params.height },
-      params,
-    ),
-  );
+  params.elements.push(createTriangle(point2, centerPoint, point3, params));
 };
 
 const createTriangle = (
