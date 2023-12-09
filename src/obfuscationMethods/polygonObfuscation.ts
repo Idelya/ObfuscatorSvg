@@ -8,6 +8,7 @@ import {
 import { ceilTo1, getRandomInt, shuffle } from "./utils";
 
 const STROKE_WIDTH = 1;
+const GLASS_METHOD_PROBABILITY = 0.5;
 
 interface PolygonObfuscationParams extends ObfuscationParams {
   width: number;
@@ -106,6 +107,9 @@ const getDividedIntoPaths = (params: PolygonObfuscationParams) => {
       divisionStrength: params.divisionStrength - 1,
     });
   } else {
+    const changeToGlass = () =>
+      params.glassEnabled && Math.random() < GLASS_METHOD_PROBABILITY;
+
     let point1 = { x: params.x / 2 + params.width / 2, y: params.y / 2 };
     let point2 = {
       x: params.x / 2 + params.width / 4,
@@ -115,29 +119,44 @@ const getDividedIntoPaths = (params: PolygonObfuscationParams) => {
       x: params.x / 2 + (3 * params.width) / 4,
       y: params.y / 2 + params.height / 2,
     };
-    createCompletedPath(
-      params.originalFill,
-      point1,
-      point2,
-      point3,
-      params,
-    ).forEach((p) => params.elements.push(p));
+    // Top part
+    if (false && changeToGlass()) {
+      //buildPolygonGlass({ ...params });
+    } else {
+      createCompletedPath(
+        params.originalFill,
+        point1,
+        point2,
+        point3,
+        params,
+      ).forEach((p) => params.elements.push(p));
+      point1 = {
+        x: params.x / 2 + params.width / 4,
+        y: params.y / 2 + params.height / 2,
+      };
+    }
     point1 = {
       x: params.x / 2 + params.width / 4,
-      y: params.y / 2 + params.height / 2,
+      y: params.y / 2 + +params.height / 2,
     };
     point2 = { x: params.x / 2, y: params.y / 2 + params.height };
     point3 = {
       x: params.x / 2 + params.width / 2,
       y: params.y / 2 + params.height,
     };
-    createCompletedPath(
-      params.originalFill,
-      point1,
-      point2,
-      point3,
-      params,
-    ).forEach((p) => params.elements.push(p));
+    // Left
+    //if (changeToGlass()) {
+    if (false) {
+      // TODO: buildPolygonGlass
+    } else {
+      createCompletedPath(
+        params.originalFill,
+        point1,
+        point2,
+        point3,
+        params,
+      ).forEach((p) => params.elements.push(p));
+    }
     point1 = {
       x: params.x / 2 + (3 * params.width) / 4,
       y: params.y / 2 + params.height / 2,
@@ -150,13 +169,19 @@ const getDividedIntoPaths = (params: PolygonObfuscationParams) => {
       x: params.x / 2 + params.width,
       y: params.y / 2 + params.height,
     };
-    createCompletedPath(
-      params.originalFill,
-      point1,
-      point2,
-      point3,
-      params,
-    ).forEach((p) => params.elements.push(p));
+    // Right
+    if (false) {
+      //if (changeToGlass()) {
+      // TODO: buildPolygonGlass
+    } else {
+      createCompletedPath(
+        params.originalFill,
+        point1,
+        point2,
+        point3,
+        params,
+      ).forEach((p) => params.elements.push(p));
+    }
     point1 = {
       x: params.x / 2 + params.width / 2,
       y: params.y / 2 + params.height,
@@ -169,13 +194,19 @@ const getDividedIntoPaths = (params: PolygonObfuscationParams) => {
       x: params.x / 2 + (3 * params.width) / 4,
       y: params.y / 2 + params.height / 2,
     };
-    createCompletedPath(
-      params.originalFill,
-      point1,
-      point2,
-      point3,
-      params,
-    ).forEach((p) => params.elements.push(p));
+    // Middle
+    if (false) {
+      //if (changeToGlass() && false) {
+      // TODO: buildPolygonGlass
+    } else {
+      createCompletedPath(
+        params.originalFill,
+        point1,
+        point2,
+        point3,
+        params,
+      ).forEach((p) => params.elements.push(p));
+    }
   }
 };
 
@@ -210,53 +241,132 @@ const getDividedIntoReversedPaths = (params: PolygonObfuscationParams) => {
       divisionStrength: params.divisionStrength - 1,
     });
   } else {
-    createCompletedPath(
-      params.originalFill,
-      { x: params.x / 2 + params.width / 2, y: params.y / 2 + params.height },
-      {
-        x: params.x / 2 + params.width / 4,
-        y: params.y / 2 + params.height / 2,
-      },
-      {
-        x: params.x / 2 + (3 * params.width) / 4,
-        y: params.y / 2 + params.height / 2,
-      },
-      params,
-    ).forEach((p) => params.elements.push(p));
-    createCompletedPath(
-      params.originalFill,
-      {
-        x: params.x / 2 + params.width / 4,
-        y: params.y / 2 + params.height / 2,
-      },
-      { x: params.x / 2, y: params.y / 2 },
-      { x: params.x / 2 + params.width / 2, y: params.y / 2 },
-      params,
-    ).forEach((p) => params.elements.push(p));
-    createCompletedPath(
-      params.originalFill,
-      {
-        x: params.x / 2 + (3 * params.width) / 4,
-        y: params.y / 2 + params.height / 2,
-      },
-      { x: params.x / 2 + params.width / 2, y: params.y / 2 },
-      { x: params.x / 2 + params.width, y: params.y / 2 },
-      params,
-    ).forEach((p) => params.elements.push(p));
-    createCompletedPath(
-      params.originalFill,
-      { x: params.x / 2 + params.width / 2, y: params.y / 2 },
-      {
-        x: params.x / 2 + params.width / 4,
-        y: params.y / 2 + params.height / 2,
-      },
-      {
-        x: params.x / 2 + (3 * params.width) / 4,
-        y: params.y / 2 + params.height / 2,
-      },
-      params,
-    ).forEach((p) => params.elements.push(p));
+    const changeToGlass = () =>
+      params.glassEnabled && Math.random() < GLASS_METHOD_PROBABILITY;
+
+    // TODO: Label
+    if (changeToGlass() && false) {
+      // TODO: buildPolygonGlass
+    } else {
+      createCompletedPath(
+        params.originalFill,
+        { x: params.x / 2 + params.width / 2, y: params.y / 2 + params.height },
+        {
+          x: params.x / 2 + params.width / 4,
+          y: params.y / 2 + params.height / 2,
+        },
+        {
+          x: params.x / 2 + (3 * params.width) / 4,
+          y: params.y / 2 + params.height / 2,
+        },
+        params,
+      ).forEach((p) => params.elements.push(p));
+    }
+
+    // TODO: Label
+    if (changeToGlass() && false) {
+      // TODO: buildPolygonGlass
+    } else {
+      createCompletedPath(
+        params.originalFill,
+        {
+          x: params.x / 2 + params.width / 4,
+          y: params.y / 2 + params.height / 2,
+        },
+        { x: params.x / 2, y: params.y / 2 },
+        { x: params.x / 2 + params.width / 2, y: params.y / 2 },
+        params,
+      ).forEach((p) => params.elements.push(p));
+    }
+    // TODO: Label
+    if (changeToGlass() && false) {
+      // TODO: buildPolygonGlass
+    } else {
+      createCompletedPath(
+        params.originalFill,
+        {
+          x: params.x / 2 + (3 * params.width) / 4,
+          y: params.y / 2 + params.height / 2,
+        },
+        { x: params.x / 2 + params.width / 2, y: params.y / 2 },
+        { x: params.x / 2 + params.width, y: params.y / 2 },
+        params,
+      ).forEach((p) => params.elements.push(p));
+    }
+    // TODO: Label
+    if (changeToGlass() && false) {
+      // TODO: buildPolygonGlass
+    } else {
+      createCompletedPath(
+        params.originalFill,
+        { x: params.x / 2 + params.width / 2, y: params.y / 2 },
+        {
+          x: params.x / 2 + params.width / 4,
+          y: params.y / 2 + params.height / 2,
+        },
+        {
+          x: params.x / 2 + (3 * params.width) / 4,
+          y: params.y / 2 + params.height / 2,
+        },
+        params,
+      ).forEach((p) => params.elements.push(p));
+    }
   }
+};
+
+const buildPolygonGlass = (params: PolygonObfuscationParams) => {
+  // TODO: Fix it
+  const centerX = params.x + params.width / 2;
+  const centerY = params.y + params.height / 2;
+
+  // left triangle
+  params.elements.push(
+    createTriangle(
+      { x: params.x, y: params.y + params.width / 2 },
+      { x: centerX, y: centerY },
+      { x: params.x, y: params.y + params.height },
+      params,
+    ),
+  );
+
+  // right triangle
+  params.elements.push(
+    createTriangle(
+      { x: params.x + params.width / 2, y: params.y },
+      { x: centerX, y: centerY },
+      { x: params.x + params.width, y: params.y + params.height },
+      params,
+    ),
+  );
+
+  // bottom triangle
+  params.elements.push(
+    createTriangle(
+      { x: params.x, y: params.y + params.height },
+      { x: centerX, y: centerY },
+      { x: params.x + params.width, y: params.y + params.height },
+      params,
+    ),
+  );
+};
+
+const createTriangle = (
+  point1: Point,
+  point2: Point,
+  point3: Point,
+  params: PolygonObfuscationParams,
+) => {
+  const triangle = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "polygon",
+  );
+  triangle.setAttribute(
+    "points",
+    `${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y}`,
+  );
+  setFigureColor(triangle, params, params.originalFill);
+  triangle.setAttribute("stroke-width", STROKE_WIDTH.toString());
+  return triangle;
 };
 
 const createCompletedPath = (
