@@ -22,7 +22,11 @@ export const styleTransformPolygon = (svgElement: SVGElement) => {
 
 export const styleTransformRect = (svgElement: SVGElement) => {
   svgElement.childNodes.forEach((element) => {
-    if ((element as SVGElement).hasAttribute("origin")) return;
+    if (
+      (element as SVGElement).hasAttribute("origin") ||
+      !(element as SVGElement).hasAttribute("d")
+    )
+      return;
     const randomNumber = Math.floor(Math.random() * 360);
 
     const styleElement = document.createElementNS(
