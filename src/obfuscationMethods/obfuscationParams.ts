@@ -9,6 +9,7 @@ export interface ObfuscationParams {
   figureSplitBy: "no" | "opacity";
   glassEnabled: boolean;
   mosaicEnabled: boolean;
+  transformEnable: boolean;
 }
 
 export enum ELEMENT_TAG_PARAMS {

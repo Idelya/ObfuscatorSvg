@@ -1,5 +1,9 @@
 import { divideCircle } from "./circleObfuscation";
-import { styleTransform } from "./obfuscationByStyle";
+import {
+  styleTransformCircle,
+  styleTransformPolygon,
+  styleTransformRect,
+} from "./obfuscationByStyle";
 import { ObfuscationParams } from "./obfuscationParams";
 import { dividePolygon } from "./polygonObfuscation";
 import { divideRect } from "./rectObfuscation";
@@ -11,11 +15,11 @@ export const obfuscate = (svgElement: string, params: ObfuscationParams) => {
   resultSvg.childNodes.forEach((elem) => {
     const svgChild = elem as SVGElement;
     if (svgChild.tagName === "circle") {
-      replaceFigure(svgChild, params, divideCircle);
+      replaceFigure(svgChild, params, divideCircle, styleTransformCircle);
     } else if (svgChild.tagName === "rect") {
-      replaceFigure(svgChild, params, divideRect);
+      replaceFigure(svgChild, params, divideRect, styleTransformRect);
     } else if (svgChild.tagName === "polygon") {
-      replaceFigure(svgChild, params, dividePolygon, styleTransform);
+      replaceFigure(svgChild, params, dividePolygon, styleTransformPolygon);
     } else {
       throw elem;
     }
@@ -44,7 +48,7 @@ const replaceFigure = (
   if (params.addIrrelevantFigures) {
     dividedSvg.appendChild(getObfuscatedSvgStyleTag());
   }
-  if (transform) {
+  if (transform && params.transformEnable) {
     transform(dividedSvg);
   }
 
