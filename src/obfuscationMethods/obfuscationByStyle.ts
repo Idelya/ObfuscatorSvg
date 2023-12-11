@@ -22,29 +22,9 @@ export const styleTransform = (svgElement: SVGElement) => {
       rotatePath(elementSvg, randomNumber * -1);
     } else if (elementSvg.getAttribute("figure-type") === "rect") {
       rotatePathRect(elementSvg, randomNumber * -1);
+    } else if (elementSvg.getAttribute("figure-type") === "circle") {
+      rotatePathCircle(elementSvg, randomNumber * -1);
     }
-  });
-};
-
-export const styleTransformCircle = (svgElement: SVGElement) => {
-  svgElement.childNodes.forEach((element) => {
-    if ((element as SVGElement).hasAttribute("origin")) return;
-    const randomNumber = Math.floor(Math.random() * 360);
-
-    const styleElement = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "style",
-    );
-
-    styleElement.textContent = `
-      .rot-${randomNumber} {
-          transform: rotate(${randomNumber}deg);
-      }
-    `;
-
-    svgElement.appendChild(styleElement);
-    (element as SVGElement).classList.add(`rot-${randomNumber}`);
-    rotatePathCircle(element as SVGElement, randomNumber * -1);
   });
 };
 
