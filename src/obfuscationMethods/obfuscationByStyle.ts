@@ -22,10 +22,8 @@ export const styleTransformPolygon = (svgElement: SVGElement) => {
 
 export const styleTransformRect = (svgElement: SVGElement) => {
   svgElement.childNodes.forEach((element) => {
-    if (
-      (element as SVGElement).hasAttribute("origin") ||
-      !(element as SVGElement).hasAttribute("d")
-    )
+    const elementSvg = element as SVGElement;
+    if (elementSvg.hasAttribute("origin") || !elementSvg.hasAttribute("d"))
       return;
     const randomNumber = Math.floor(Math.random() * 360);
 
@@ -41,8 +39,12 @@ export const styleTransformRect = (svgElement: SVGElement) => {
     `;
 
     svgElement.appendChild(styleElement);
-    (element as SVGElement).classList.add(`rot-${randomNumber}`);
-    rotatePathRect(element as SVGElement, randomNumber * -1);
+    elementSvg.classList.add(`rot-${randomNumber}`);
+    if (elementSvg.hasAttribute("figure-type-polygon")) {
+      rotatePath(elementSvg, randomNumber * -1);
+    } else {
+      rotatePathRect(elementSvg, randomNumber * -1);
+    }
   });
 };
 
