@@ -1,3 +1,5 @@
+import { generateRandomString } from "./utils";
+
 export const styleTransform = (svgElement: SVGElement) => {
   svgElement.childNodes.forEach((element) => {
     const elementSvg = element as SVGElement;
@@ -10,14 +12,18 @@ export const styleTransform = (svgElement: SVGElement) => {
       "style",
     );
 
+    const className = `${generateRandomString(
+      5,
+    )}${randomNumber}${generateRandomString(3)}`;
+
     styleElement.textContent = `
-      .rot-${randomNumber} {
+      .${className} {
           transform: rotate(${randomNumber}deg);
       }
     `;
 
     svgElement.appendChild(styleElement);
-    elementSvg.classList.add(`rot-${randomNumber}`);
+    elementSvg.classList.add(`${className}`);
     if (elementSvg.getAttribute("figure-type") === "polygon") {
       rotatePath(elementSvg, randomNumber * -1);
     } else if (elementSvg.getAttribute("figure-type") === "rect") {
