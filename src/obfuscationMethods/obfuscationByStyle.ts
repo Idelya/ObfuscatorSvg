@@ -25,7 +25,7 @@ export const styleTransform = (svgElement: SVGElement) => {
     svgElement.appendChild(styleElement);
     elementSvg.classList.add(`${className}`);
     if (elementSvg.getAttribute("figure-type") === "polygon") {
-      rotatePath(elementSvg, randomNumber * -1);
+      rotatePathPolygon(elementSvg, randomNumber * -1);
     } else if (elementSvg.getAttribute("figure-type") === "rect") {
       rotatePathRect(elementSvg, randomNumber * -1);
     } else if (elementSvg.getAttribute("figure-type") === "circle") {
@@ -58,7 +58,7 @@ const rotatePathRect = (elem: SVGElement, angle: number) => {
   elem.setAttribute("d", pathCommands.join(" "));
 };
 
-const rotatePath = (elem: SVGElement, angle: number) => {
+const rotatePathPolygon = (elem: SVGElement, angle: number) => {
   const pathData = elem.getAttribute("d");
   if (!pathData) return;
 
