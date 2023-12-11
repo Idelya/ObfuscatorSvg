@@ -485,7 +485,7 @@ const createPathPolygon = (
   );
   setFigureColor(pathElement, params, fill);
   pathElement.setAttribute("stroke-width", STROKE_WIDTH.toString());
-  pathElement.setAttribute("figure-type-polygon", "true");
+  pathElement.setAttribute("figure-type", "polygon");
   return pathElement;
 };
 
@@ -568,6 +568,7 @@ const createPartialPath = (
   setFigureColor(pathElement, params, fill);
   pathElement.setAttribute("stroke-width", STROKE_WIDTH.toString());
   pathElement.setAttribute("opacity", opacity.toString());
+  pathElement.setAttribute("figure-type", "rect");
   return pathElement;
 };
 

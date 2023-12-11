@@ -1,26 +1,4 @@
-export const styleTransformPolygon = (svgElement: SVGElement) => {
-  svgElement.childNodes.forEach((element) => {
-    if ((element as SVGElement).hasAttribute("origin")) return;
-    const randomNumber = Math.floor(Math.random() * 360);
-
-    const styleElement = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "style",
-    );
-
-    styleElement.textContent = `
-      .rot-${randomNumber} {
-          transform: rotate(${randomNumber}deg);
-      }
-    `;
-
-    svgElement.appendChild(styleElement);
-    (element as SVGElement).classList.add(`rot-${randomNumber}`);
-    rotatePath(element as SVGElement, randomNumber * -1);
-  });
-};
-
-export const styleTransformRect = (svgElement: SVGElement) => {
+export const styleTransform = (svgElement: SVGElement) => {
   svgElement.childNodes.forEach((element) => {
     const elementSvg = element as SVGElement;
     if (elementSvg.hasAttribute("origin") || !elementSvg.hasAttribute("d"))
@@ -40,9 +18,9 @@ export const styleTransformRect = (svgElement: SVGElement) => {
 
     svgElement.appendChild(styleElement);
     elementSvg.classList.add(`rot-${randomNumber}`);
-    if (elementSvg.hasAttribute("figure-type-polygon")) {
+    if (elementSvg.getAttribute("figure-type") === "polygon") {
       rotatePath(elementSvg, randomNumber * -1);
-    } else {
+    } else if (elementSvg.getAttribute("figure-type") === "rect") {
       rotatePathRect(elementSvg, randomNumber * -1);
     }
   });
