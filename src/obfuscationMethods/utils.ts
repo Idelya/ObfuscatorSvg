@@ -1,3 +1,5 @@
+import { Point } from "./point";
+
 export const shuffle = (array: any[]) => {
   let currentIndex = array.length;
   let randomIndex = 0;
@@ -38,4 +40,21 @@ export const getRandomInt = (min: number, max: number) => {
 
 export const ceilTo1 = (value: number) => {
   return value > 1 ? 1 : value;
+};
+
+export const getRandomPointInsidePolygon = (a: Point, b: Point, c: Point) => {
+  // Random barycentric coefficients
+  const r1 = Math.random();
+  const r2 = Math.random();
+
+  // Barycentric coefficients
+  const l1 = 1 - Math.sqrt(r1);
+  const l2 = (1 - r2) * Math.sqrt(r1);
+  const l3 = r2 * Math.sqrt(r1);
+
+  // Coordinates of the point inside the triangle
+  const x = l1 * a.x + l2 * b.x + l3 * c.x;
+  const y = l1 * a.y + l2 * b.y + l3 * c.y;
+
+  return { x, y };
 };
