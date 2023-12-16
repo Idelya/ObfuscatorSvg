@@ -58,3 +58,25 @@ export const getRandomPointInsidePolygon = (a: Point, b: Point, c: Point) => {
 
   return { x, y };
 };
+
+export const generateRandomString = (length: number) => {
+  const alphabeticCharacters =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const allCharacters =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let randomString = "";
+
+  for (let i = 0; i < length; i++) {
+    if (i === 0) {
+      const randomIndex = Math.floor(
+        Math.random() * alphabeticCharacters.length,
+      );
+      randomString += alphabeticCharacters.charAt(randomIndex);
+    } else {
+      const randomIndex = Math.floor(Math.random() * allCharacters.length);
+      randomString += allCharacters.charAt(randomIndex);
+    }
+  }
+
+  return randomString;
+};

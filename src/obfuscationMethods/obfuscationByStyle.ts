@@ -1,31 +1,9 @@
-export const styleTransformPolygon = (svgElement: SVGElement) => {
+import { generateRandomString } from "./utils";
+
+export const styleTransform = (svgElement: SVGElement) => {
   svgElement.childNodes.forEach((element) => {
-    if ((element as SVGElement).hasAttribute("origin")) return;
-    const randomNumber = Math.floor(Math.random() * 360);
-
-    const styleElement = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "style",
-    );
-
-    styleElement.textContent = `
-      .rot-${randomNumber} {
-          transform: rotate(${randomNumber}deg);
-      }
-    `;
-
-    svgElement.appendChild(styleElement);
-    (element as SVGElement).classList.add(`rot-${randomNumber}`);
-    rotatePath(element as SVGElement, randomNumber * -1);
-  });
-};
-
-export const styleTransformRect = (svgElement: SVGElement) => {
-  svgElement.childNodes.forEach((element) => {
-    if (
-      (element as SVGElement).hasAttribute("origin") ||
-      !(element as SVGElement).hasAttribute("d")
-    )
+    const elementSvg = element as SVGElement;
+    if (elementSvg.hasAttribute("origin") || !elementSvg.hasAttribute("d"))
       return;
     const randomNumber = Math.floor(Math.random() * 360);
 
@@ -34,37 +12,25 @@ export const styleTransformRect = (svgElement: SVGElement) => {
       "style",
     );
 
+    const className = `${generateRandomString(
+      5,
+    )}${randomNumber}${generateRandomString(3)}`;
+
     styleElement.textContent = `
-      .rot-${randomNumber} {
+      .${className} {
           transform: rotate(${randomNumber}deg);
       }
     `;
 
     svgElement.appendChild(styleElement);
-    (element as SVGElement).classList.add(`rot-${randomNumber}`);
-    rotatePathRect(element as SVGElement, randomNumber * -1);
-  });
-};
-
-export const styleTransformCircle = (svgElement: SVGElement) => {
-  svgElement.childNodes.forEach((element) => {
-    if ((element as SVGElement).hasAttribute("origin")) return;
-    const randomNumber = Math.floor(Math.random() * 360);
-
-    const styleElement = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "style",
-    );
-
-    styleElement.textContent = `
-      .rot-${randomNumber} {
-          transform: rotate(${randomNumber}deg);
-      }
-    `;
-
-    svgElement.appendChild(styleElement);
-    (element as SVGElement).classList.add(`rot-${randomNumber}`);
-    rotatePathCircle(element as SVGElement, randomNumber * -1);
+    elementSvg.classList.add(`${className}`);
+    if (elementSvg.getAttribute("figure-type") === "polygon") {
+      rotatePathPolygon(elementSvg, randomNumber * -1);
+    } else if (elementSvg.getAttribute("figure-type") === "rect") {
+      rotatePathRect(elementSvg, randomNumber * -1);
+    } else if (elementSvg.getAttribute("figure-type") === "circle") {
+      rotatePathCircle(elementSvg, randomNumber * -1);
+    }
   });
 };
 
@@ -92,7 +58,7 @@ const rotatePathRect = (elem: SVGElement, angle: number) => {
   elem.setAttribute("d", pathCommands.join(" "));
 };
 
-const rotatePath = (elem: SVGElement, angle: number) => {
+const rotatePathPolygon = (elem: SVGElement, angle: number) => {
   const pathData = elem.getAttribute("d");
   if (!pathData) return;
 

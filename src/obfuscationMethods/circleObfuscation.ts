@@ -140,6 +140,7 @@ const createPartialCircleSector = (
   setFigureColor(pathElement, params, params.originalFill);
   pathElement.setAttribute("stroke-width", STROKE_WIDTH.toString());
   pathElement.setAttribute("opacity", opacity.toString());
+  pathElement.setAttribute("figure-type", "circle");
   return pathElement;
 };
 

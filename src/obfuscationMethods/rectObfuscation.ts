@@ -439,17 +439,54 @@ const createTriangle = (
   point3: Point,
   params: RectObfuscationParams,
 ) => {
-  const triangle = document.createElementNS(
+  if (params.elementTag === "original") {
+    const triangle = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "polygon",
+    );
+    triangle.setAttribute(
+      "points",
+      `${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y}`,
+    );
+    setFigureColor(triangle, params, params.originalFill);
+    triangle.setAttribute("stroke-width", STROKE_WIDTH.toString());
+    return triangle;
+  } else {
+    return createPathPolygon(
+      params.originalFill,
+      point1,
+      point2,
+      point3,
+      params,
+    );
+  }
+};
+
+const createPathPolygon = (
+  fill: string,
+  point1: Point,
+  point2: Point,
+  point3: Point,
+  params: ObfuscationParams,
+) => {
+  const pathElement = document.createElementNS(
     "http://www.w3.org/2000/svg",
-    "polygon",
+    "path",
   );
-  triangle.setAttribute(
-    "points",
-    `${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y}`,
+  if (params.addIrrelevantAttributes) {
+    const fakeWidth = getRandomInt(1, point1.x);
+    const fakeHeight = getRandomInt(1, point1.y);
+    pathElement.setAttribute("widht", fakeWidth.toString());
+    pathElement.setAttribute("heigth", fakeHeight.toString());
+  }
+  pathElement.setAttribute(
+    "d",
+    `M${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y} Z`,
   );
-  setFigureColor(triangle, params, params.originalFill);
-  triangle.setAttribute("stroke-width", STROKE_WIDTH.toString());
-  return triangle;
+  setFigureColor(pathElement, params, fill);
+  pathElement.setAttribute("stroke-width", STROKE_WIDTH.toString());
+  pathElement.setAttribute("figure-type", "polygon");
+  return pathElement;
 };
 
 const createCircle = (
@@ -458,16 +495,45 @@ const createCircle = (
   cy: number,
   params: RectObfuscationParams,
 ) => {
-  const circle = document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "circle",
-  );
-  circle.setAttribute("cx", cx.toString());
-  circle.setAttribute("cy", cy.toString());
-  circle.setAttribute("r", r.toString());
-  setFigureColor(circle, params, params.originalFill);
-  circle.setAttribute("stroke-width", STROKE_WIDTH.toString());
-  return circle;
+  if (params.elementTag === "original") {
+    const circle = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "circle",
+    );
+    circle.setAttribute("cx", cx.toString());
+    circle.setAttribute("cy", cy.toString());
+    circle.setAttribute("r", r.toString());
+    setFigureColor(circle, params, params.originalFill);
+    circle.setAttribute("stroke-width", STROKE_WIDTH.toString());
+    return circle;
+  } else {
+    const pathElement = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path",
+    );
+    pathElement.setAttribute("d", getSectorPath(r * 2, cx, cy, 270, 90));
+    setFigureColor(pathElement, params, params.originalFill);
+    pathElement.setAttribute("stroke-width", STROKE_WIDTH.toString());
+    pathElement.setAttribute("figure-type", "circle");
+    return pathElement;
+  }
+};
+
+const getSectorPath = (
+  outerDiameter: number,
+  cx: number,
+  cy: number,
+  angleStart: number,
+  angleEnd: number,
+) => {
+  const degreesToRadiansRatio = Math.PI / 180;
+  const cr = outerDiameter / 2;
+  const cx1 = Math.cos(degreesToRadiansRatio * angleEnd) * cr + cx;
+  const cy1 = -Math.sin(degreesToRadiansRatio * angleEnd) * cr + cy;
+  const cx2 = Math.cos(degreesToRadiansRatio * angleStart) * cr + cx;
+  const cy2 = -Math.sin(degreesToRadiansRatio * angleStart) * cr + cy;
+
+  return `M${cx} ${cy} ${cx1} ${cy1} A${cr} ${cr} 0 0 1 ${cx2} ${cy2}Z`;
 };
 
 const createCompletedPath = (
@@ -531,6 +597,7 @@ const createPartialPath = (
   setFigureColor(pathElement, params, fill);
   pathElement.setAttribute("stroke-width", STROKE_WIDTH.toString());
   pathElement.setAttribute("opacity", opacity.toString());
+  pathElement.setAttribute("figure-type", "rect");
   return pathElement;
 };
 
