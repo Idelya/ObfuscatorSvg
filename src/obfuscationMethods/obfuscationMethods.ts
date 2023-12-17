@@ -29,7 +29,6 @@ const replaceFigure = (
   svgElement: SVGElement,
   params: ObfuscationParams,
   obfuscation: (element: SVGElement, params: ObfuscationParams) => SVGElement[],
-  transform?: (element: SVGElement) => void,
 ) => {
   const dividedSvg = document.createElementNS(
     "http://www.w3.org/2000/svg",
