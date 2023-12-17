@@ -1,4 +1,4 @@
-import { FormLabel, Box, Button } from "@mui/material";
+import { FormLabel, Box, Button, FormControlLabel, Checkbox } from "@mui/material";
 import { useFormik } from "formik";
 import { DeobfuscateParams } from "../../deobfuscateMethods/deobfuscateParams";
 import { deobfuscate } from "../../deobfuscateMethods/deobfuscate";
@@ -19,7 +19,9 @@ const onChange = (
 
 function DeobfuscatorForm({ generatedSvg, onDeobfuscate }: DecoderFormProps) {
   const formik = useFormik({
-    initialValues: {} as DeobfuscateParams,
+    initialValues: {
+      removeUnnecessaryAttributes: false,
+    } as DeobfuscateParams,
     onSubmit: (values) => {
       onChange(generatedSvg, values, onDeobfuscate);
     },
@@ -32,6 +34,18 @@ function DeobfuscatorForm({ generatedSvg, onDeobfuscate }: DecoderFormProps) {
           <FormLabel component="legend">
             Set parametrs of deobfuscation
           </FormLabel>
+          <br />
+          <FormControlLabel
+            control={<Checkbox />}
+            name="removeUnnecessaryAttributes"
+            label="Remove unnecessary attributes"
+            onChange={() =>
+              formik.setFieldValue(
+                "removeUnnecessaryAttributes",
+                !formik.values.removeUnnecessaryAttributes,
+              )
+            }
+          />
           <br />
           <Button type="submit" variant="contained">
             Deobfuscate
