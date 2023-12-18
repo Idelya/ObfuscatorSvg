@@ -4,9 +4,11 @@ export const deobfuscate = (svgElement: string, params: DeobfuscateParams) => {
   const resultSvg = new DOMParser().parseFromString(svgElement, "image/svg+xml")
     .documentElement as unknown as SVGElement;
 
-  if (params.removeUnnecessaryAttributes) {
-    removeUnnecessaryAttributes(resultSvg);
-  }
+  resultSvg.childNodes.forEach((node) => {
+    if (params.removeUnnecessaryAttributes) {
+      removeUnnecessaryAttributes(node as SVGElement);
+    }
+  });
 
   const svgAsStr = new XMLSerializer().serializeToString(resultSvg);
   return svgAsStr;

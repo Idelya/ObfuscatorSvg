@@ -1,4 +1,10 @@
-import { FormLabel, Box, Button, FormControlLabel, Checkbox } from "@mui/material";
+import {
+  FormLabel,
+  Box,
+  Button,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 import { useFormik } from "formik";
 import { DeobfuscateParams } from "../../deobfuscateMethods/deobfuscateParams";
 import { deobfuscate } from "../../deobfuscateMethods/deobfuscate";

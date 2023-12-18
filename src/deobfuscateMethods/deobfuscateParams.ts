@@ -1,3 +1,3 @@
 export interface DeobfuscateParams {
-  removeUnnecessaryttributes: boolean;
+  removeUnnecessaryAttributes: boolean;
 }
