@@ -1,4 +1,5 @@
 import { DeobfuscateParams } from "./deobfuscateParams";
+import { tryConcatenateRect } from "./rectDeobfuscation";
 
 export const deobfuscate = (svgElement: string, params: DeobfuscateParams) => {
   const resultSvg = new DOMParser().parseFromString(svgElement, "image/svg+xml")
@@ -15,6 +16,13 @@ export const deobfuscate = (svgElement: string, params: DeobfuscateParams) => {
     if (params.removeStyles) {
       removeStyles(group);
     }
+
+    const rectCombination = tryConcatenateRect(group);
+    if (rectCombination.succeded) {
+      group.outerHTML = rectCombination.resultSvg!.outerHTML;
+    } else {
+      // TODO: same for circle and polygon
+    }
   });
 
   const svgAsStr = new XMLSerializer().serializeToString(resultSvg);
@@ -23,8 +31,13 @@ export const deobfuscate = (svgElement: string, params: DeobfuscateParams) => {
 
 const removeUnnecessaryAttributes = (svg: SVGElement) => {
   if (svg && svg.tagName !== "style") {
-    svg.removeAttribute("width");
-    svg.removeAttribute("height");
+    if (svg.tagName === "rect") {
+      svg.removeAttribute("widht");
+      svg.removeAttribute("heigth");
+    } else {
+      svg.removeAttribute("width");
+      svg.removeAttribute("height");
+    }
     if (svg.hasChildNodes()) {
       svg.childNodes.forEach((node) =>
         removeUnnecessaryAttributes(node as SVGElement),
@@ -71,8 +84,5 @@ const removeUnnecessaryElements = (groupSvg: SVGGElement) => {
   }
 
   hiddenElements.forEach((e) => groupSvg.removeChild(e));
-
-  console.log("zostały", groupSvg.childNodes);
-
   return groupSvg;
 };

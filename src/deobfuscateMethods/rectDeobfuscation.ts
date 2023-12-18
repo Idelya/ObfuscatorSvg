@@ -1,3 +1,5 @@
+import { ConcatenationResult } from "./concatenationResult";
+
 interface RectDimensions {
   x: number;
   y: number;
@@ -5,20 +7,19 @@ interface RectDimensions {
   height: number;
 }
 
-export const combineRects = (groupSvg: SVGGElement) => {
-  // assume there are no additional
-  // no transformation applied
+export const tryConcatenateRect = (groupSvg: SVGGElement) => {
+  const rectsConcatenationResult = getDimensionsFromRects(groupSvg);
+  if (rectsConcatenationResult.succeded) {
+    return rectsConcatenationResult;
+  }
+  //const pathDimensions = getDimensionsFromPaths(groupSvg);
 
-  const rectDimensions = getDimensionsFromRects(groupSvg);
-  const pathDimensions = getDimensionsFromPaths(groupSvg);
-  const resultDimensions: RectDimensions = {
-    x: Math.max(rectDimensions.x, pathDimensions.x),
-    y: Math.max(rectDimensions.y, pathDimensions.y),
-    width: Math.max(rectDimensions.width, pathDimensions.width),
-    height: Math.max(rectDimensions.height, pathDimensions.height),
+  const result: ConcatenationResult = {
+    resultSvg: null,
+    succeded: false,
   };
 
-  console.log(resultDimensions);
+  return result;
 };
 
 const getDimensionsFromRects = (groupSvg: SVGGElement) => {
@@ -26,38 +27,49 @@ const getDimensionsFromRects = (groupSvg: SVGGElement) => {
     groupSvg.querySelectorAll("rect"),
   );
 
-  const dimensions: RectDimensions = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  };
+  if (groupSvg.children.length !== rectElements.length) {
+    return { succeded: false, resultSvg: null };
+  }
+
+  const rectSvg = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "rect",
+  );
 
   if (rectElements.length > 0) {
-    dimensions.x = rectElements.reduce((minXCoord, svgRect) => {
+    const x = rectElements.reduce((minXCoord, svgRect) => {
       const rectX = svgRect.x.baseVal.value;
       return rectX < minXCoord ? rectX : minXCoord;
     }, rectElements[0].x.baseVal.value);
+    rectSvg.setAttribute("x", x.toString());
 
-    dimensions.y = rectElements.reduce((minYCoord, svgRect) => {
+    const y = rectElements.reduce((minYCoord, svgRect) => {
       const rectY = svgRect.y.baseVal.value;
       return rectY < minYCoord ? rectY : minYCoord;
     }, rectElements[0].y.baseVal.value);
+    rectSvg.setAttribute("y", y.toString());
 
     const maxX = rectElements.reduce((maxXCoord, svgRect) => {
       const rectX = svgRect.x.baseVal.value + svgRect.width.baseVal.value;
       return rectX > maxXCoord ? rectX : maxXCoord;
     }, rectElements[0].x.baseVal.value + rectElements[0].width.baseVal.value);
-    dimensions.width = maxX - dimensions.x;
+    const width = maxX - x;
+    rectSvg.setAttribute("width", width.toString());
 
     const maxY = rectElements.reduce((maxYCoord, svgRect) => {
       const rectY = svgRect.y.baseVal.value + svgRect.height.baseVal.value;
       return rectY > maxYCoord ? rectY : maxYCoord;
     }, rectElements[0].y.baseVal.value + rectElements[0].height.baseVal.value);
-    dimensions.height = maxY - dimensions.y;
+    const height = maxY - y;
+    rectSvg.setAttribute("height", height.toString());
+
+    rectSvg.setAttribute("fill", rectElements[0].getAttribute("fill")!);
   }
 
-  return dimensions;
+  return {
+    succeded: true,
+    resultSvg: rectSvg,
+  };
 };
 
 const getDimensionsFromPaths = (groupSvg: SVGGElement) => {
