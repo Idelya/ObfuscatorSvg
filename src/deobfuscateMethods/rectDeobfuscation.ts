@@ -9,8 +9,6 @@ export const combineRects = (groupSvg: SVGGElement) => {
   // assume there are no additional
   // no transformation applied
 
-  removeHiddenElements(groupSvg);
-
   const rectDimensions = getDimensionsFromRects(groupSvg);
   const pathDimensions = getDimensionsFromPaths(groupSvg);
   const resultDimensions: RectDimensions = {
@@ -21,32 +19,6 @@ export const combineRects = (groupSvg: SVGGElement) => {
   };
 
   console.log(resultDimensions);
-};
-
-const removeHiddenElements = (groupSvg: SVGGElement) => {
-  const hiddenElements: ChildNode[] = [];
-  for (let i = 0; i < groupSvg.childNodes.length; i++) {
-    const elem = groupSvg.childNodes[i] as SVGElement;
-    if (!elem) {
-      continue;
-    }
-
-    if (
-      (elem.hasAttribute("opacity") && elem.getAttribute("opacity") === "0") ||
-      elem.classList.contains("red") ||
-      (elem.hasAttribute("fill") &&
-        elem.getAttribute("fill")?.length === 9 &&
-        elem.getAttribute("fill")?.endsWith("00"))
-    ) {
-      hiddenElements.push(groupSvg.childNodes[i]);
-    }
-  }
-
-  hiddenElements.forEach((e) => groupSvg.removeChild(e));
-
-  console.log("zostały", groupSvg.childNodes);
-
-  return groupSvg;
 };
 
 const getDimensionsFromRects = (groupSvg: SVGGElement) => {
