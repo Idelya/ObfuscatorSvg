@@ -31,9 +31,6 @@ function GeneratorSvg({ onSubmit, svg }: GeneratorSvgProps) {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
-          <Typography variant="h4" sx={{ marginBottom: "16px" }}>
-            Generate svg
-          </Typography>
           <SvgList onSave={handleSave} />
         </Grid>
         <Grid
