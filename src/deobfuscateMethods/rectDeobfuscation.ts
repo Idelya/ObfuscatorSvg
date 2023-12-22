@@ -1,25 +1,14 @@
 import { ConcatenationResult } from "./concatenationResult";
 
-interface RectDimensions {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
 export const tryConcatenateRect = (groupSvg: SVGGElement) => {
-  const rectsConcatenationResult = getDimensionsFromRects(groupSvg);
+  const rectsConcatenationResult: ConcatenationResult =
+    getDimensionsFromRects(groupSvg);
   if (rectsConcatenationResult.succeded) {
     return rectsConcatenationResult;
   }
-  //const pathDimensions = getDimensionsFromPaths(groupSvg);
-
-  const result: ConcatenationResult = {
-    resultSvg: null,
-    succeded: false,
-  };
-
-  return result;
+  const pathsConcatenationResult: ConcatenationResult =
+    getDimensionsFromPaths(groupSvg);
+  return pathsConcatenationResult;
 };
 
 const getDimensionsFromRects = (groupSvg: SVGGElement) => {
@@ -64,6 +53,7 @@ const getDimensionsFromRects = (groupSvg: SVGGElement) => {
     rectSvg.setAttribute("height", height.toString());
 
     rectSvg.setAttribute("fill", rectElements[0].getAttribute("fill")!);
+    rectSvg.setAttribute("stroke", rectElements[0].getAttribute("stroke")!);
   }
 
   return {
@@ -73,19 +63,23 @@ const getDimensionsFromRects = (groupSvg: SVGGElement) => {
 };
 
 const getDimensionsFromPaths = (groupSvg: SVGGElement) => {
-  const pathRectElements: SVGPathElement[] = Array.from(
+  let pathRectElements: SVGPathElement[] = Array.from(
     groupSvg.querySelectorAll("path"),
   );
 
-  const dimensions: RectDimensions = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  };
+  pathRectElements = pathRectElements.filter((p) => p.hasAttribute("d"));
+
+  if (groupSvg.children.length !== pathRectElements.length) {
+    return { succeded: false, resultSvg: null };
+  }
+
+  const rectSvg = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "rect",
+  );
 
   if (pathRectElements.length > 0) {
-    dimensions.x = pathRectElements.reduce((minXCoord, svgPath) => {
+    const x = pathRectElements.reduce((minXCoord, svgPath) => {
       const xCoordinates: number[] =
         svgPath
           .getAttribute("d")!
@@ -100,9 +94,10 @@ const getDimensionsFromPaths = (groupSvg: SVGGElement) => {
       }
 
       return minXCoord;
-    }, dimensions.x);
+    }, 0);
+    rectSvg.setAttribute("x", x.toString());
 
-    dimensions.y = pathRectElements.reduce((minYCoord, svgPath) => {
+    const y = pathRectElements.reduce((minYCoord, svgPath) => {
       const yCoordinates: number[] =
         svgPath
           .getAttribute("d")!
@@ -117,7 +112,8 @@ const getDimensionsFromPaths = (groupSvg: SVGGElement) => {
       }
 
       return minYCoord;
-    }, dimensions.y);
+    }, 0);
+    rectSvg.setAttribute("y", y.toString());
 
     const maxX = pathRectElements.reduce((maxXCoord, svgPath) => {
       const xCoordinates: number[] =
@@ -134,8 +130,8 @@ const getDimensionsFromPaths = (groupSvg: SVGGElement) => {
       }
 
       return maxXCoord;
-    }, dimensions.width);
-    dimensions.width = maxX - dimensions.x;
+    }, 0);
+    rectSvg.setAttribute("width", (maxX - x).toString());
 
     const maxY = pathRectElements.reduce((maxYCoord, svgPath) => {
       const yCoordinates: number[] =
@@ -152,9 +148,15 @@ const getDimensionsFromPaths = (groupSvg: SVGGElement) => {
       }
 
       return maxYCoord;
-    }, dimensions.height);
-    dimensions.height = maxY - dimensions.y;
+    }, 0);
+    rectSvg.setAttribute("height", (maxY - y).toString());
+
+    rectSvg.setAttribute("fill", pathRectElements[0].getAttribute("fill")!);
+    rectSvg.setAttribute("stroke", pathRectElements[0].getAttribute("stroke")!);
   }
 
-  return dimensions;
+  return {
+    succeded: true,
+    resultSvg: rectSvg,
+  };
 };
