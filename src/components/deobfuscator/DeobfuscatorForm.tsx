@@ -74,6 +74,18 @@ function DeobfuscatorForm({ generatedSvg, onDeobfuscate }: DecoderFormProps) {
             }
           />
           <br />
+          <FormControlLabel
+            control={<Checkbox />}
+            name="concatenateElements"
+            label="Concatenate Elements"
+            onChange={() =>
+              formik.setFieldValue(
+                "concatenateElements",
+                !formik.values.concatenateElements,
+              )
+            }
+          />
+          <br />
           <Button type="submit" variant="contained">
             Deobfuscate
           </Button>

@@ -1,4 +1,6 @@
+import { tryConcatenateCircle } from "./circleDeobfuscation";
 import { DeobfuscateParams } from "./deobfuscateParams";
+import { tryConcatenatePolygon } from "./polygonDeobfuscation";
 import { tryConcatenateRect } from "./rectDeobfuscation";
 
 export const deobfuscate = (svgElement: string, params: DeobfuscateParams) => {
@@ -17,11 +19,8 @@ export const deobfuscate = (svgElement: string, params: DeobfuscateParams) => {
       removeStyles(group);
     }
 
-    const rectCombination = tryConcatenateRect(group);
-    if (rectCombination.succeded) {
-      group.outerHTML = rectCombination.resultSvg!.outerHTML;
-    } else {
-      // TODO: same for circle and polygon
+    if (params.concatenateElements) {
+      concatenateElements(group);
     }
   });
 
@@ -85,4 +84,24 @@ const removeUnnecessaryElements = (groupSvg: SVGGElement) => {
 
   hiddenElements.forEach((e) => groupSvg.removeChild(e));
   return groupSvg;
+};
+
+const concatenateElements = (group: SVGGElement) => {
+  // rectangle
+  const concatenatedRect = tryConcatenateRect(group);
+  if (concatenatedRect.succeded) {
+    group.outerHTML = concatenatedRect.resultSvg!.outerHTML;
+    return;
+  }
+  // polygon
+  const concatenatedPolygon = tryConcatenatePolygon(group);
+  if (concatenatedPolygon.succeded) {
+    group.outerHTML = concatenatedPolygon.resultSvg!.outerHTML;
+    return;
+  }
+  // circle
+  const concatenatedCircle = tryConcatenateCircle(group);
+  if (concatenatedCircle.succeded) {
+    group.outerHTML = concatenatedCircle.resultSvg!.outerHTML;
+  }
 };
