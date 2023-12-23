@@ -30,13 +30,12 @@ export const deobfuscate = (svgElement: string, params: DeobfuscateParams) => {
 
 const removeUnnecessaryAttributes = (svg: SVGElement) => {
   if (svg && svg.tagName !== "style") {
-    if (svg.tagName === "rect" || svg.tagName === "polygon") {
-      svg.removeAttribute("widht");
-      svg.removeAttribute("heigth");
-    } else {
+    if (svg.tagName !== "rect" && svg.tagName !== "polygon") {
       svg.removeAttribute("width");
       svg.removeAttribute("height");
     }
+    svg.removeAttribute("widht");
+    svg.removeAttribute("heigth");
     if (svg.hasChildNodes()) {
       svg.childNodes.forEach((node) =>
         removeUnnecessaryAttributes(node as SVGElement),

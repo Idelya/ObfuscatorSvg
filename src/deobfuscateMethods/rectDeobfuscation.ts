@@ -54,6 +54,10 @@ const getDimensionsFromRects = (groupSvg: SVGGElement) => {
 
     rectSvg.setAttribute("fill", rectElements[0].getAttribute("fill")!);
     rectSvg.setAttribute("stroke", rectElements[0].getAttribute("stroke")!);
+    rectSvg.setAttribute(
+      "stroke-width",
+      rectElements[0].getAttribute("stroke-width")!,
+    );
   }
 
   return {
@@ -157,6 +161,10 @@ const getDimensionsFromPaths = (groupSvg: SVGGElement) => {
 
     rectSvg.setAttribute("fill", pathRectElements[0].getAttribute("fill")!);
     rectSvg.setAttribute("stroke", pathRectElements[0].getAttribute("stroke")!);
+    rectSvg.setAttribute(
+      "stroke-width",
+      pathRectElements[0].getAttribute("stroke-width")!,
+    );
   }
 
   return {
