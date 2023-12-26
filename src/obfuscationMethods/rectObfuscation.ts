@@ -99,30 +99,73 @@ const getDividedRects = (params: RectObfuscationParams) => {
       divisionStrength: params.divisionStrength - 1,
     });
   } else {
-    createCompletedRect({
-      ...params,
-      width: params.width / 2,
-      height: params.height / 2,
-    }).forEach((r: SVGElement) => params.elements.push(r));
-    createCompletedRect({
-      ...params,
-      x: params.x + params.width / 2,
-      width: params.width / 2,
-      height: params.height / 2,
-    }).forEach((r) => params.elements.push(r));
-    createCompletedRect({
-      ...params,
-      y: params.y + params.height / 2,
-      width: params.width / 2,
-      height: params.height / 2,
-    }).forEach((r) => params.elements.push(r));
-    createCompletedRect({
-      ...params,
-      x: params.x + params.width / 2,
-      y: params.y + params.height / 2,
-      width: params.width / 2,
-      height: params.height / 2,
-    }).forEach((r) => params.elements.push(r));
+    const changeToGlass = () =>
+      params.glassEnabled && Math.random() < GLASS_METHOD_PROBABILITY;
+
+    // top left
+    if (changeToGlass()) {
+      buildRectGlass({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+      });
+    } else {
+      createCompletedRect({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+      }).forEach((r: SVGElement) => params.elements.push(r));
+    }
+
+    if (changeToGlass()) {
+      buildRectGlass({
+        ...params,
+        x: params.x + params.width / 2,
+        width: params.width / 2,
+        height: params.height / 2,
+      });
+    } else {
+      createCompletedRect({
+        ...params,
+        x: params.x + params.width / 2,
+        width: params.width / 2,
+        height: params.height / 2,
+      }).forEach((r) => params.elements.push(r));
+    }
+
+    if (changeToGlass()) {
+      buildRectGlass({
+        ...params,
+        y: params.y + params.height / 2,
+        width: params.width / 2,
+        height: params.height / 2,
+      });
+    } else {
+      createCompletedRect({
+        ...params,
+        y: params.y + params.height / 2,
+        width: params.width / 2,
+        height: params.height / 2,
+      }).forEach((r) => params.elements.push(r));
+    }
+
+    if (changeToGlass()) {
+      buildRectGlass({
+        ...params,
+        x: params.x + params.width / 2,
+        y: params.y + params.height / 2,
+        width: params.width / 2,
+        height: params.height / 2,
+      });
+    } else {
+      createCompletedRect({
+        ...params,
+        x: params.x + params.width / 2,
+        y: params.y + params.height / 2,
+        width: params.width / 2,
+        height: params.height / 2,
+      }).forEach((r) => params.elements.push(r));
+    }
   }
 };
 
