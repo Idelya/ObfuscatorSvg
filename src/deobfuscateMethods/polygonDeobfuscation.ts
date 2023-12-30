@@ -33,32 +33,33 @@ const getSvgFromPolygons = (groupSvg: SVGGElement) => {
       const points = svgPolygon
         .getAttribute("points")!
         .split(" ")
-        [index]!.split(",");
-      const pointX = parseFloat(points[0]);
-      const pointY = parseFloat(points[1]);
+        .map(convertToPoint)
+        .sort((a, b) => a[0] - b[0])[index];
+      const pointX = points[0];
+      const pointY = points[1];
       return { x: pointX, y: pointY };
     };
 
     const topCoordinates = polygonElements.reduce(
       (topCoords, svgPolygon) => {
-        const elementCoords = getCoordinatesFromPolygon(svgPolygon, 0);
+        const elementCoords = getCoordinatesFromPolygon(svgPolygon, 1);
         if (elementCoords.y < topCoords.y) {
           return elementCoords;
         }
         return topCoords;
       },
-      getCoordinatesFromPolygon(polygonElements[0], 0),
+      getCoordinatesFromPolygon(polygonElements[0], 1),
     );
 
     const leftCoordinates = polygonElements.reduce(
       (topCoords, svgPolygon) => {
-        const elementCoords = getCoordinatesFromPolygon(svgPolygon, 1);
+        const elementCoords = getCoordinatesFromPolygon(svgPolygon, 0);
         if (elementCoords.x < topCoords.x) {
           return elementCoords;
         }
         return topCoords;
       },
-      getCoordinatesFromPolygon(polygonElements[0], 1),
+      getCoordinatesFromPolygon(polygonElements[0], 0),
     );
 
     const rightCoordinates = polygonElements.reduce(
@@ -122,33 +123,34 @@ const getSvgFromPaths = (groupSvg: SVGGElement) => {
       const points = svgPolygon
         .getAttribute("d")!
         .split(" ")
-        [index]!.split(",")
-        .map((v) => v.replace("M", ""));
-      const pointX = parseFloat(points[0]);
-      const pointY = parseFloat(points[1]);
+        .map((v) => v.replace("M", ""))
+        .map(convertToPoint)
+        .sort((a, b) => a[0] - b[0])[index];
+      const pointX = points[0];
+      const pointY = points[1];
       return { x: pointX, y: pointY };
     };
 
     const topCoordinates = pathElements.reduce(
       (topCoords, svgPolygon) => {
-        const elementCoords = getCoordinatesFromPolygon(svgPolygon, 0);
+        const elementCoords = getCoordinatesFromPolygon(svgPolygon, 1);
         if (elementCoords.y < topCoords.y) {
           return elementCoords;
         }
         return topCoords;
       },
-      getCoordinatesFromPolygon(pathElements[0], 0),
+      getCoordinatesFromPolygon(pathElements[0], 1),
     );
 
     const leftCoordinates = pathElements.reduce(
       (topCoords, svgPolygon) => {
-        const elementCoords = getCoordinatesFromPolygon(svgPolygon, 1);
+        const elementCoords = getCoordinatesFromPolygon(svgPolygon, 0);
         if (elementCoords.x < topCoords.x) {
           return elementCoords;
         }
         return topCoords;
       },
-      getCoordinatesFromPolygon(pathElements[0], 1),
+      getCoordinatesFromPolygon(pathElements[0], 0),
     );
 
     const rightCoordinates = pathElements.reduce(
@@ -179,4 +181,9 @@ const getSvgFromPaths = (groupSvg: SVGGElement) => {
     succeded: true,
     resultSvg: polygonSvg,
   };
+};
+
+const convertToPoint = (pointStr: string): number[] => {
+  const [x, y] = pointStr.split(",").map(Number);
+  return [x, y];
 };

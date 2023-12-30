@@ -52,22 +52,7 @@ const replacePolygonsWithPolygon = (
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .map(([point, _]) => point);
 
-  console.log(polygonPoints);
-
-  const convertToPoint = (pointStr: string): number[] => {
-    const [x, y] = pointStr.split(",").map(Number);
-    return [x, y];
-  };
-
-  const sortedPoints = polygonPoints
-    .map(convertToPoint)
-    .sort((a, b) => a[1] - b[1]);
-
-  const joinedPoints: string = sortedPoints
-    .map((point) => point.join(","))
-    .join(" ");
-
-  polygonSvg.setAttribute("points", joinedPoints);
+  polygonSvg.setAttribute("points", polygonPoints.join(" "));
 
   polygonSvg.setAttribute("fill", polygons[0].getAttribute("fill")!);
   polygonSvg.setAttribute("stroke", polygons[0].getAttribute("stroke")!);
