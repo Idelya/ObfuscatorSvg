@@ -1,3 +1,5 @@
+import { Point } from "../obfuscationMethods/point";
+
 export const revertGlass = (groupSvg: SVGGElement) => {
   revertGlassFromPolygons(groupSvg);
   revertGlassFromPaths(groupSvg);
@@ -244,11 +246,23 @@ const revertGlassFromPaths = (groupSvg: SVGGElement) => {
   const pointPathMapping = getPointPathMapping(pathElements);
 
   const rectGlassPaths = Object.entries(pointPathMapping)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .map(([_, polygonPaths]) => polygonPaths)
     .filter(isRectPathGlass);
 
   rectGlassPaths.forEach((pathPolygons) =>
     replacePathsWithRect(pathPolygons, groupSvg),
+  );
+
+  const polygonGlassPaths = Object.entries(pointPathMapping)
+    .filter(([startingPoint, polygons]) =>
+      isPolygonPathGlass(startingPoint, polygons),
+    )
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .map(([_, polygons]) => polygons);
+
+  polygonGlassPaths.forEach((polygons) =>
+    replacePathsWithPolygon(polygons, groupSvg),
   );
 };
 
@@ -345,12 +359,76 @@ const replacePathsWithRect = (
   groupSvg.appendChild(pathSvg);
 };
 
+const replacePathsWithPolygon = (
+  polygons: SVGPathElement[],
+  groupSvg: SVGGElement,
+) => {
+  polygons.forEach((polygon) => {
+    groupSvg.removeChild(polygon);
+  });
+
+  const pathSvg = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "path",
+  );
+
+  const points = Object.entries(getPointPathMapping(polygons))
+    .filter(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      ([_, polygons]) => polygons.length === 2,
+    )
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .map(([point, _]) => point);
+
+  pathSvg.setAttribute("d", `M${points[0]} ${points[1]} ${points[2]} Z`);
+
+  pathSvg.setAttribute("fill", polygons[0].getAttribute("fill")!);
+  pathSvg.setAttribute("stroke", polygons[0].getAttribute("stroke")!);
+  pathSvg.setAttribute(
+    "stroke-width",
+    polygons[0].getAttribute("stroke-width")!,
+  );
+
+  groupSvg.appendChild(pathSvg);
+};
+
 const isRectPathGlass = (pathPolygons: SVGPathElement[]) => {
   if (pathPolygons.length !== 4) {
     return false;
   }
 
   const innerPointPathMapping: { [key: string]: number } = {};
+  for (let i = 0; i < pathPolygons.length; i++) {
+    const polygonPoints = getPointsFromPathPolygon(pathPolygons[i]);
+    polygonPoints.forEach((p) => {
+      if (!(p in innerPointPathMapping)) {
+        innerPointPathMapping[p] = 0;
+      }
+      innerPointPathMapping[p] = innerPointPathMapping[p] + 1;
+    });
+  }
+
+  const areOddsPoints =
+    Object.entries(innerPointPathMapping).filter(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      ([_, count]) => count % 2 !== 0,
+    ).length > 0;
+  if (areOddsPoints) {
+    return false;
+  }
+  return true;
+};
+
+const isPolygonPathGlass = (
+  startingPoint: string,
+  pathPolygons: SVGPathElement[],
+) => {
+  if (pathPolygons.length !== 3) {
+    return false;
+  }
+
+  const innerPointPathMapping: { [key: string]: number } = {};
+  innerPointPathMapping[startingPoint] = 1;
   for (let i = 0; i < pathPolygons.length; i++) {
     const polygonPoints = getPointsFromPathPolygon(pathPolygons[i]);
     polygonPoints.forEach((p) => {
@@ -393,5 +471,6 @@ const getPointsFromPathPolygon = (svgPolygon: SVGPathElement) => {
     .getAttribute("d")!
     .replace("Z", "")
     .replace("M", "")
-    .split(" ");
+    .split(" ")
+    .filter((str) => str.length > 0);
 };
