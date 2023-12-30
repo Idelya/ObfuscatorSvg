@@ -11,12 +11,72 @@ const revertGlassFromPolygons = (groupSvg: SVGGElement) => {
   const pointPolygonMapping = getPointPolygonMapping(polygonElements);
 
   const rectGlassPolygons = Object.entries(pointPolygonMapping)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .map(([_, polygons]) => polygons)
     .filter(isRectGlass);
 
   rectGlassPolygons.forEach((polygons) =>
     replacePolygonsWithRect(polygons, groupSvg),
   );
+
+  const polygonGlassPolygons = Object.entries(pointPolygonMapping)
+    .filter(([startingPoint, polygons]) =>
+      isPolygonGlass(startingPoint, polygons),
+    )
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .map(([_, polygons]) => polygons);
+
+  polygonGlassPolygons.forEach((polygons) =>
+    replacePolygonsWithPolygon(polygons, groupSvg),
+  );
+};
+
+const replacePolygonsWithPolygon = (
+  polygons: SVGPolygonElement[],
+  groupSvg: SVGGElement,
+) => {
+  polygons.forEach((polygon) => {
+    groupSvg.removeChild(polygon);
+  });
+
+  const polygonSvg = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "polygon",
+  );
+
+  const polygonPoints = Object.entries(getPointPolygonMapping(polygons))
+    .filter(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      ([_, polygons]) => polygons.length === 2,
+    )
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .map(([point, _]) => point);
+
+  console.log(polygonPoints);
+
+  const convertToPoint = (pointStr: string): number[] => {
+    const [x, y] = pointStr.split(",").map(Number);
+    return [x, y];
+  };
+
+  const sortedPoints = polygonPoints
+    .map(convertToPoint)
+    .sort((a, b) => a[1] - b[1]);
+
+  const joinedPoints: string = sortedPoints
+    .map((point) => point.join(","))
+    .join(" ");
+
+  polygonSvg.setAttribute("points", joinedPoints);
+
+  polygonSvg.setAttribute("fill", polygons[0].getAttribute("fill")!);
+  polygonSvg.setAttribute("stroke", polygons[0].getAttribute("stroke")!);
+  polygonSvg.setAttribute(
+    "stroke-width",
+    polygons[0].getAttribute("stroke-width")!,
+  );
+
+  groupSvg.appendChild(polygonSvg);
 };
 
 const replacePolygonsWithRect = (
@@ -113,6 +173,37 @@ const isRectGlass = (polygons: SVGPolygonElement[]) => {
   }
 
   const innerPointPolygonMapping: { [key: string]: number } = {};
+  for (let i = 0; i < polygons.length; i++) {
+    const polygonPoints = getPointsFromPolygon(polygons[i]);
+    polygonPoints.forEach((p) => {
+      if (!(p in innerPointPolygonMapping)) {
+        innerPointPolygonMapping[p] = 0;
+      }
+      innerPointPolygonMapping[p] = innerPointPolygonMapping[p] + 1;
+    });
+  }
+
+  const areOddsPoints =
+    Object.entries(innerPointPolygonMapping).filter(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      ([_, count]) => count % 2 !== 0,
+    ).length > 0;
+  if (areOddsPoints) {
+    return false;
+  }
+  return true;
+};
+
+const isPolygonGlass = (
+  startingPoint: string,
+  polygons: SVGPolygonElement[],
+) => {
+  if (polygons.length !== 3) {
+    return false;
+  }
+
+  const innerPointPolygonMapping: { [key: string]: number } = {};
+  innerPointPolygonMapping[startingPoint] = 1;
   for (let i = 0; i < polygons.length; i++) {
     const polygonPoints = getPointsFromPolygon(polygons[i]);
     polygonPoints.forEach((p) => {
@@ -252,8 +343,6 @@ const replacePathsWithRect = (
   const y = topLeftCoordinates.y;
   const width = downRightCoordinates.x - topLeftCoordinates.x;
   const height = downRightCoordinates.y - topLeftCoordinates.y;
-  console.log("down: ", downRightCoordinates);
-  console.log("top: ", topLeftCoordinates);
   pathSvg.setAttribute(
     "d",
     `M ${x} ${y} L ${x + width} ${y} L ${x + width} ${y + height} L ${x} ${
