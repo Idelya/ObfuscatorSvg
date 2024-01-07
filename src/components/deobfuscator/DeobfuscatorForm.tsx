@@ -53,6 +53,48 @@ function DeobfuscatorForm({ generatedSvg, onDeobfuscate }: DecoderFormProps) {
             }
           />
           <br />
+          <FormControlLabel
+            control={<Checkbox />}
+            name="removeUnnecessaryElements"
+            label="Remove unnecessary elements"
+            onChange={() =>
+              formik.setFieldValue(
+                "removeUnnecessaryElements",
+                !formik.values.removeUnnecessaryElements,
+              )
+            }
+          />
+          <br />
+          <FormControlLabel
+            control={<Checkbox />}
+            name="removeStyles"
+            label="Remove styles"
+            onChange={() =>
+              formik.setFieldValue("removeStyles", !formik.values.removeStyles)
+            }
+          />
+          <br />
+          <FormControlLabel
+            control={<Checkbox />}
+            name="revertGlass"
+            label="Revert Glass"
+            onChange={() =>
+              formik.setFieldValue("revertGlass", !formik.values.revertGlass)
+            }
+          />
+          <br />
+          <FormControlLabel
+            control={<Checkbox />}
+            name="concatenateElements"
+            label="Concatenate Elements"
+            onChange={() =>
+              formik.setFieldValue(
+                "concatenateElements",
+                !formik.values.concatenateElements,
+              )
+            }
+          />
+          <br />
           <Button type="submit" variant="contained">
             Deobfuscate
           </Button>
