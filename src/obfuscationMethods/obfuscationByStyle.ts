@@ -43,7 +43,9 @@ export const rotatePathRect = (elem: SVGElement, angle: number) => {
     const command = pathCommands[i];
 
     if (command === "M" || command === "L") {
-      const points = pathCommands[i + 1].split(" ").filter((point) => !!point);
+      const points = pathCommands[i + 1]
+        .split(/\s|,\s*/)
+        .filter((point) => !!point);
 
       let coordinates = "";
       for (let j = 0; j < points.length; j += 2) {
@@ -90,7 +92,9 @@ export const rotatePathCircle = (pathElement: SVGElement, angle: number) => {
     const command = pathCommands[i];
 
     if (command === "M") {
-      const points = pathCommands[i + 1].split(" ").filter((point) => !!point);
+      const points = pathCommands[i + 1]
+        .split(/\s|,\s*/)
+        .filter((point) => !!point);
 
       let coordinates = "";
       for (let j = 0; j < points.length; j += 2) {

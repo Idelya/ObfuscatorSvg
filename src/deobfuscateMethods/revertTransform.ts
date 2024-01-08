@@ -11,15 +11,12 @@ export const revertTransform = (groupSvg: SVGGElement) => {
     if (!elementSvg.hasAttribute("d")) return;
 
     const rotationDegree = getRotationDegree(elementSvg as SVGElement);
-    console.log(rotationDegree);
     if (rotationDegree === null) return null;
 
     clessesToDelete.push(elementSvg.getAttribute("class"));
     elementSvg.removeAttribute("class");
 
-    console.log(elementSvg.getAttribute("d"));
     const commands = (elementSvg.getAttribute("d") || "").split(/\s+/);
-    console.log(rotationDegree);
     if (commands[0] === "M" && commands[3] === "A" && commands[11] === "Z") {
       rotatePathCircle(elementSvg, rotationDegree);
     } else if (
