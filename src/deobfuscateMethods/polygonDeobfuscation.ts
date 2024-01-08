@@ -101,7 +101,7 @@ const getSvgFromPaths = (groupSvg: SVGGElement) => {
   );
 
   const polygonPathPattern =
-    /^M\d+(\.\d+)?,\d+(\.\d+)? \d+(\.\d+)?,\d+(\.\d+)? \d+(\.\d+)?,\d+(\.\d+)? Z$/;
+    /^M(\s)?(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)\s(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)\s(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)\sZ$/;
   pathElements = pathElements
     .filter((p) => p.hasAttribute("d"))
     .filter((p) => polygonPathPattern.test(p.getAttribute("d")!));
@@ -123,7 +123,8 @@ const getSvgFromPaths = (groupSvg: SVGGElement) => {
       const points = svgPolygon
         .getAttribute("d")!
         .split(" ")
-        .map((v) => v.replace("M", ""))
+        .map((v) => v.replace("M", "").replace("Z", ""))
+        .filter((str) => str && str.length > 0)
         .map(convertToPoint)
         .sort((a, b) => a[0] - b[0])[index];
       const pointX = points[0];

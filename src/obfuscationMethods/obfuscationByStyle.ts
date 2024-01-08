@@ -58,7 +58,6 @@ export const rotatePathRect = (elem: SVGElement, angle: number) => {
   elem.setAttribute("d", pathCommands.join(" "));
 };
 
-
 export const rotatePathPolygon = (elem: SVGElement, angle: number) => {
   const pathData = elem.getAttribute("d");
   if (!pathData) return;
@@ -81,7 +80,6 @@ export const rotatePathPolygon = (elem: SVGElement, angle: number) => {
   }
   elem.setAttribute("d", pathCommands.join(" "));
 };
-
 
 export const rotatePathCircle = (pathElement: SVGElement, angle: number) => {
   const pathData = pathElement.getAttribute("d");
@@ -121,5 +119,5 @@ function rotatePoint([x, y]: [number, number], angle: number) {
   const radians = (angle * Math.PI) / 180;
   const newX = x * Math.cos(radians) - y * Math.sin(radians);
   const newY = x * Math.sin(radians) + y * Math.cos(radians);
-  return [newX, newY];
+  return [newX.toFixed(10), newY.toFixed(10)];
 }
