@@ -24,6 +24,10 @@ export const deobfuscate = (svgElement: string, params: DeobfuscateParams) => {
       revertGlass(group);
     }
 
+    if (params.revertMosaic) {
+      //revertMosaic(group);
+    }
+
     if (params.concatenateElements) {
       concatenateElements(group);
     }

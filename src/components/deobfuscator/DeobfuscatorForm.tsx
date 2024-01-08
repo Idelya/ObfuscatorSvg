@@ -85,6 +85,15 @@ function DeobfuscatorForm({ generatedSvg, onDeobfuscate }: DecoderFormProps) {
           <br />
           <FormControlLabel
             control={<Checkbox />}
+            name="revertMosaic"
+            label="Revert Mosaic"
+            onChange={() =>
+              formik.setFieldValue("revertMosaic", !formik.values.revertMosaic)
+            }
+          />
+          <br />
+          <FormControlLabel
+            control={<Checkbox />}
             name="concatenateElements"
             label="Concatenate Elements"
             onChange={() =>
