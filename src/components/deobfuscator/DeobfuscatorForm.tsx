@@ -27,6 +27,7 @@ function DeobfuscatorForm({ generatedSvg, onDeobfuscate }: DecoderFormProps) {
   const formik = useFormik({
     initialValues: {
       removeUnnecessaryAttributes: false,
+      revertTransform: false,
     } as DeobfuscateParams,
     onSubmit: (values) => {
       onChange(generatedSvg, values, onDeobfuscate);
@@ -80,6 +81,18 @@ function DeobfuscatorForm({ generatedSvg, onDeobfuscate }: DecoderFormProps) {
             label="Revert Glass"
             onChange={() =>
               formik.setFieldValue("revertGlass", !formik.values.revertGlass)
+            }
+          />
+          <br />
+          <FormControlLabel
+            control={<Checkbox />}
+            name="revertTransform"
+            label="Revert Transform"
+            onChange={() =>
+              formik.setFieldValue(
+                "revertTransform",
+                !formik.values.revertTransform,
+              )
             }
           />
           <br />

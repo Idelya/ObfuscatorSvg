@@ -34,7 +34,7 @@ export const styleTransform = (svgElement: SVGElement) => {
   });
 };
 
-const rotatePathRect = (elem: SVGElement, angle: number) => {
+export const rotatePathRect = (elem: SVGElement, angle: number) => {
   const pathData = elem.getAttribute("d");
   if (!pathData) return;
 
@@ -58,7 +58,8 @@ const rotatePathRect = (elem: SVGElement, angle: number) => {
   elem.setAttribute("d", pathCommands.join(" "));
 };
 
-const rotatePathPolygon = (elem: SVGElement, angle: number) => {
+
+export const rotatePathPolygon = (elem: SVGElement, angle: number) => {
   const pathData = elem.getAttribute("d");
   if (!pathData) return;
 
@@ -81,7 +82,8 @@ const rotatePathPolygon = (elem: SVGElement, angle: number) => {
   elem.setAttribute("d", pathCommands.join(" "));
 };
 
-const rotatePathCircle = (pathElement: SVGElement, angle: number) => {
+
+export const rotatePathCircle = (pathElement: SVGElement, angle: number) => {
   const pathData = pathElement.getAttribute("d");
   if (!pathData) return;
   const pathCommands = pathData.split(/([MAZ])/).filter(Boolean);

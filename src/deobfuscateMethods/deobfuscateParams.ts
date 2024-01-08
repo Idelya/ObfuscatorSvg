@@ -4,4 +4,5 @@ export interface DeobfuscateParams {
   removeStyles: boolean;
   concatenateElements: boolean;
   revertGlass: boolean;
+  revertTransform: boolean;
 }
