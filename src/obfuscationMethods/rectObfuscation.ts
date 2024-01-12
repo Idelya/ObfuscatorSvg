@@ -69,35 +69,56 @@ const getDividedRectangleElements = (params: RectObfuscationParams) => {
 };
 
 const getDividedRects = (params: RectObfuscationParams) => {
+  const isLeftBorder = params.x === params.initX;
+  const isRightBorder =
+    params.x + params.width === params.initX + params.initWidth;
+  const isTopBorder = params.y === params.initY;
+  const isBottomBorder =
+    params.y + params.height === params.initY + params.initHeight;
+
+  const isFirstDivision =
+    isLeftBorder && isRightBorder && isTopBorder && isBottomBorder;
+
   if (params.divisionStrength > 1) {
-    getDividedRects({
-      ...params,
-      width: params.width / 2,
-      height: params.height / 2,
-      divisionStrength: params.divisionStrength - 1,
-    });
-    getDividedRects({
-      ...params,
-      width: params.width / 2,
-      height: params.height / 2,
-      x: params.x + params.width / 2,
-      divisionStrength: params.divisionStrength - 1,
-    });
-    getDividedRects({
-      ...params,
-      width: params.width / 2,
-      height: params.height / 2,
-      y: params.y + params.height / 2,
-      divisionStrength: params.divisionStrength - 1,
-    });
-    getDividedRects({
-      ...params,
-      width: params.width / 2,
-      height: params.height / 2,
-      x: params.x + params.width / 2,
-      y: params.y + params.height / 2,
-      divisionStrength: params.divisionStrength - 1,
-    });
+    const isMosaic =
+      params.mosaicEnabled &&
+      MAX_DIVISION_STRENGTH + 1 - params.divisionStrength >
+        Math.random() * MAX_DIVISION_STRENGTH * 3;
+
+    if (isMosaic && !isFirstDivision) {
+      const isBorder =
+        isLeftBorder || isRightBorder || isTopBorder || isBottomBorder;
+      buildRectFromFigures(params, isBorder);
+    } else {
+      getDividedRects({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+        divisionStrength: params.divisionStrength - 1,
+      });
+      getDividedRects({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+        x: params.x + params.width / 2,
+        divisionStrength: params.divisionStrength - 1,
+      });
+      getDividedRects({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+        y: params.y + params.height / 2,
+        divisionStrength: params.divisionStrength - 1,
+      });
+      getDividedRects({
+        ...params,
+        width: params.width / 2,
+        height: params.height / 2,
+        x: params.x + params.width / 2,
+        y: params.y + params.height / 2,
+        divisionStrength: params.divisionStrength - 1,
+      });
+    }
   } else {
     const changeToGlass = () =>
       params.glassEnabled && Math.random() < GLASS_METHOD_PROBABILITY;
