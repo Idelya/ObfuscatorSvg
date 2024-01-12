@@ -1,6 +1,7 @@
 import { tryConcatenateCircle } from "./circleDeobfuscation";
 import { DeobfuscateParams } from "./deobfuscateParams";
 import { revertGlass } from "./glassDeobfuscation";
+import { revertMosaic } from "./mosaicDeobfusaction";
 import { tryConcatenatePolygon } from "./polygonDeobfuscation";
 import { tryConcatenateRect } from "./rectDeobfuscation";
 
@@ -22,6 +23,10 @@ export const deobfuscate = (svgElement: string, params: DeobfuscateParams) => {
 
     if (params.revertGlass) {
       revertGlass(group);
+    }
+
+    if (params.revertMosaic) {
+      revertMosaic(group);
     }
 
     if (params.concatenateElements) {
