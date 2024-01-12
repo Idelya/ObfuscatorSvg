@@ -19,16 +19,16 @@ export const deobfuscate = (svgElement: string, params: DeobfuscateParams) => {
       removeUnnecessaryAttributes(group);
     }
 
-    if (params.revertGlass) {
-      revertGlass(group);
-    }
-
     if (params.revertTransform) {
       revertTransform(group);
     }
 
     if (params.removeStyles) {
       removeStyles(group);
+    }
+
+    if (params.revertGlass) {
+      revertGlass(group);
     }
 
     if (params.revertMosaic) {
