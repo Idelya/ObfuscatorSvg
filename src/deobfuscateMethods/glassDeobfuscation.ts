@@ -285,9 +285,10 @@ const replacePathsWithRect = (
   ) => {
     const points = svgPolygon
       .getAttribute("d")!
+      .replace("M", "")
       .split(" ")
-      [index]!.split(",")
-      .map((v) => v.replace("M", ""));
+      .filter((s) => s.length > 0)
+      [index]!.split(",");
     const pointX = parseFloat(points[0]);
     const pointY = parseFloat(points[1]);
     return { x: pointX, y: pointY };
@@ -340,6 +341,7 @@ const replacePathsWithRect = (
   );
   const x = topLeftCoordinates.x;
   const y = topLeftCoordinates.y;
+
   const width = downRightCoordinates.x - topLeftCoordinates.x;
   const height = downRightCoordinates.y - topLeftCoordinates.y;
   pathSvg.setAttribute(
@@ -401,10 +403,25 @@ const isRectPathGlass = (pathPolygons: SVGPathElement[]) => {
   for (let i = 0; i < pathPolygons.length; i++) {
     const polygonPoints = getPointsFromPathPolygon(pathPolygons[i]);
     polygonPoints.forEach((p) => {
-      if (!(p in innerPointPathMapping)) {
+      const existings = Object.entries(innerPointPathMapping)
+        .filter((key) => {
+          const x = key[0].split(",")[0];
+          const y = key[0].split(",")[1];
+          const px = p.split(",")[0];
+          const py = p.split(",")[1];
+          return (
+            Math.abs(parseFloat(x) - parseFloat(px)) < TRESHOLD &&
+            Math.abs(parseFloat(y) - parseFloat(py)) < TRESHOLD
+          );
+        })
+        .map((x) => x[0]);
+      if (existings.length === 0) {
+        existings.push(p);
         innerPointPathMapping[p] = 0;
       }
-      innerPointPathMapping[p] = innerPointPathMapping[p] + 1;
+
+      innerPointPathMapping[existings[0]] =
+        innerPointPathMapping[existings[0]] + 1;
     });
   }
 
