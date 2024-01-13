@@ -77,8 +77,6 @@ const getDimensionsFromPaths = (groupSvg: SVGGElement) => {
     .filter((p) => p.hasAttribute("d"))
     .filter((p) => rectPathPattern.test(p.getAttribute("d")!));
 
-  console.log("here:", pathRectElements);
-
   if (groupSvg.children.length !== pathRectElements.length) {
     return { succeded: false, resultSvg: null };
   }

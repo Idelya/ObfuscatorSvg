@@ -91,8 +91,6 @@ const revertMosaicFromPaths = (groupSvg: SVGGElement) => {
       .split(" ")
       .map(parseFloat);
 
-    console.log(coords);
-
     const cx = coords[0];
     const cy = coords[1];
     const r = coords[4];

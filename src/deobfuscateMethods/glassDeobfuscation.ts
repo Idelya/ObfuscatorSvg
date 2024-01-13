@@ -1,4 +1,4 @@
-import { Point } from "../obfuscationMethods/point";
+const TRESHOLD = 0.00000001;
 
 export const revertGlass = (groupSvg: SVGGElement) => {
   revertGlassFromPolygons(groupSvg);
@@ -238,7 +238,7 @@ const revertGlassFromPaths = (groupSvg: SVGGElement) => {
   );
 
   const polygonPathPattern =
-    /^M\d+(\.\d+)?,\d+(\.\d+)? \d+(\.\d+)?,\d+(\.\d+)? \d+(\.\d+)?,\d+(\.\d+)? Z$/;
+    /^M\s*-?\d+(\.\d+)?,-?\d+(\.\d+)? -?\d+(\.\d+)?,-?\d+(\.\d+)? -?\d+(\.\d+)?,-?\d+(\.\d+)?\s*Z$/;
   pathElements = pathElements
     .filter((p) => p.hasAttribute("d"))
     .filter((p) => polygonPathPattern.test(p.getAttribute("d")!));
@@ -432,13 +432,26 @@ const isPolygonPathGlass = (
   for (let i = 0; i < pathPolygons.length; i++) {
     const polygonPoints = getPointsFromPathPolygon(pathPolygons[i]);
     polygonPoints.forEach((p) => {
-      if (!(p in innerPointPathMapping)) {
+      const existings = Object.entries(innerPointPathMapping)
+        .filter((key) => {
+          const x = key[0].split(",")[0];
+          const y = key[0].split(",")[1];
+          const px = p.split(",")[0];
+          const py = p.split(",")[1];
+          return (
+            Math.abs(parseFloat(x) - parseFloat(px)) < TRESHOLD &&
+            Math.abs(parseFloat(y) - parseFloat(py)) < TRESHOLD
+          );
+        })
+        .map((x) => x[0]);
+      if (existings.length === 0) {
+        existings.push(p);
         innerPointPathMapping[p] = 0;
       }
-      innerPointPathMapping[p] = innerPointPathMapping[p] + 1;
+      innerPointPathMapping[existings[0]] =
+        innerPointPathMapping[existings[0]] + 1;
     });
   }
-
   const areOddsPoints =
     Object.entries(innerPointPathMapping).filter(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -456,10 +469,23 @@ const getPointPathMapping = (pathPolygonElements: SVGPathElement[]) => {
   for (let i = 0; i < pathPolygonElements.length; i++) {
     const points = getPointsFromPathPolygon(pathPolygonElements[i]);
     points.forEach((p) => {
-      if (!(p in pointPathMapping)) {
+      const existings = Object.entries(pointPathMapping)
+        .filter((key) => {
+          const x = key[0].split(",")[0];
+          const y = key[0].split(",")[1];
+          const px = p.split(",")[0];
+          const py = p.split(",")[1];
+          return (
+            Math.abs(parseFloat(x) - parseFloat(px)) < TRESHOLD &&
+            Math.abs(parseFloat(y) - parseFloat(py)) < TRESHOLD
+          );
+        })
+        .map((x) => x[0]);
+      if (existings.length === 0) {
+        existings.push(p);
         pointPathMapping[p] = [];
       }
-      pointPathMapping[p].push(pathPolygonElements[i]);
+      pointPathMapping[existings[0]].push(pathPolygonElements[i]);
     });
   }
 
