@@ -7,13 +7,13 @@ export const tryConcatenateCircle = (groupSvg: SVGGElement) => {
 };
 
 function extractTwoLastNumbers(inputString: string) {
-  const pattern = /([\d.]+)\s+([\d.]+)Z/;
+  const pattern = /(-?[\d.]+)\s*[,\s]*(-?[\d.]+)\s?Z/;
 
   const match = inputString.match(pattern);
 
   if (match) {
-    const lastNumber1 = parseFloat(parseFloat(match[1]).toFixed(5));
-    const lastNumber2 = parseFloat(parseFloat(match[2]).toFixed(5));
+    const lastNumber1 = parseFloat(parseFloat(match[1]).toFixed(2));
+    const lastNumber2 = parseFloat(parseFloat(match[2]).toFixed(2));
 
     return [lastNumber1, lastNumber2];
   } else {
@@ -22,13 +22,14 @@ function extractTwoLastNumbers(inputString: string) {
 }
 
 function extractThirdAndFourthNumbers(inputString: string) {
-  const pattern = /M(\d+(\.\d+)?)\s(\d+(\.\d+)?)\s(\d+(\.\d+)?)\s(\d+(\.\d+)?)/;
+  const pattern =
+    /M\s?(-?\d+(\.\d+)?)\s*[,\s]*(-?\d+(\.\d+)?)\s(-?\d+(\.\d+)?)\s*[,\s]*(-?\d+(\.\d+)?)/;
 
   const match = inputString.match(pattern);
 
   if (match) {
-    const thirdNumber = parseFloat(parseFloat(match[5]).toFixed(5));
-    const fourthNumber = parseFloat(parseFloat(match[7]).toFixed(5));
+    const thirdNumber = parseFloat(parseFloat(match[5]).toFixed(2));
+    const fourthNumber = parseFloat(parseFloat(match[7]).toFixed(2));
 
     return [thirdNumber, fourthNumber];
   } else {
@@ -56,7 +57,7 @@ function replaceLastTwoNumbersWithXY(
   newX: number,
   newY: number,
 ) {
-  const pattern = /(\d+(\.\d+)?)\s(\d+(\.\d+)?)Z$/;
+  const pattern = /(\d+(\.\d+)?)\s*[,\s]*(\d+(\.\d+)?)\s?Z$/;
 
   const replacedString = inputString.replace(pattern, `${newX} ${newY}Z`);
 
@@ -152,7 +153,7 @@ const getSvgFromPaths = (groupSvg: SVGGElement): ConcatenationResult => {
     return { succeded: false, resultSvg: null };
   }
 
-  const aPattern = /A(\d+(\.\d+)?)\s(\d+(\.\d+)?)/;
+  const aPattern = /A\s?(\d+(\.\d+)?)\s*[,\s]*(\d+(\.\d+)?)/;
 
   const dAttr = startElement.getAttribute("d");
   if (!dAttr) return { succeded: false, resultSvg: null };
@@ -167,7 +168,7 @@ const getSvgFromPaths = (groupSvg: SVGGElement): ConcatenationResult => {
   circleSvg.setAttribute("cy", cy.toString());
   circleSvg.setAttribute("r", cy.toString());
 
-  moveAttributes(startElement, circleSvg, ["d"]);
+  moveAttributes(startElement, circleSvg, ["d", "opacity"]);
 
   return {
     succeded: true,

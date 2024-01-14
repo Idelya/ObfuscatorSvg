@@ -14,8 +14,8 @@ const revertGlassFromCircle = (groupSvg: SVGGElement) => {
   const pathCircleElements = pathElements
     .filter((p) => p.hasAttribute("d"))
     .filter((p) => p.getAttribute("d")!.includes("A"));
-  const mPattern = /M(\d+(\.\d+)?)\s(\d+(\.\d+)?)/;
-  const aPattern = /A(\d+(\.\d+)?)\s(\d+(\.\d+)?)/;
+  const mPattern = /M\s?(\d+(\.\d+)?)\s*[,\s]*(\d+(\.\d+)?)/;
+  const aPattern = /A\s?(\d+(\.\d+)?)\s*[,\s]*(\d+(\.\d+)?)/;
   pathCircleElements.forEach((element) => {
     const dAttr = element.getAttribute("d");
     if (!dAttr) return;
@@ -25,8 +25,7 @@ const revertGlassFromCircle = (groupSvg: SVGGElement) => {
 
     const cx = parseFloat(match[1]);
     const cy = parseFloat(match[3]);
-
-    const replacedString = dAttr.replace(mPattern, `M${cx} ${cy}`);
+    const replacedString = dAttr.replace(mPattern, `M ${cx} ${cy}`);
     element.setAttribute("d", replacedString);
   });
 };
