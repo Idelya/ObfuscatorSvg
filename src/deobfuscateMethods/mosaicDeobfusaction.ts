@@ -68,7 +68,7 @@ const isPolygonIntersectingRect = (
 
 const revertMosaicFromPaths = (groupSvg: SVGGElement) => {
   const circlePathPattern =
-    /^M\s*\d+(\.\d+)?\s+\d+(\.\d+)?\s+\d+(\.\d+)?\s+\d+(\.\d+)?\s+A\d+(\.\d+)?\s+\d+(\.\d+)?\s+\d+(\.\d+)?\s+\d+(\.\d+)?\s+\d+(\.\d+)?\s+\d+(\.\d+)?\s+\d+(\.\d+)?\s*Z$/;
+    /^M\s*-?\d+(\.\d+)?[,\s]+-?\d+(\.\d+)?\s+-?\d+(\.\d+)?[,\s]+-?\d+(\.\d+)?\s+A\s*-?\d+(\.\d+)?\s+-?\d+(\.\d+)?\s+-?\d+(\.\d+)?\s+-?\d+(\.\d+)?\s+-?\d+(\.\d+)?\s+-?\d+(\.\d+)?\s+-?\d+(\.\d+)?\s*Z$/;
 
   const allPaths = groupSvg.getElementsByTagName("path");
   const circles = Array.from(allPaths).filter((p) =>
@@ -84,14 +84,24 @@ const revertMosaicFromPaths = (groupSvg: SVGGElement) => {
     const circle = circles[i];
 
     const d = circle.getAttribute("d")!;
-    const coords = d
-      .replace("M", "")
-      .replace("A", "")
-      .replace("Z", "")
-      .split(" ")
-      .map(parseFloat);
-
-    console.log(coords);
+    let coords: number[] = [];
+    if (d.indexOf(",") > -1) {
+      coords = d
+        .replace("M", "")
+        .replace("A", "")
+        .replace("Z", "")
+        .replace(",", " ")
+        .split(" ")
+        .filter((s) => s.length > 0)
+        .map(parseFloat);
+    } else {
+      coords = d
+        .replace("M", "")
+        .replace("A", "")
+        .replace("Z", "")
+        .split(" ")
+        .map(parseFloat);
+    }
 
     const cx = coords[0];
     const cy = coords[1];

@@ -4,6 +4,7 @@ import { revertGlass } from "./glassDeobfuscation";
 import { revertMosaic } from "./mosaicDeobfusaction";
 import { tryConcatenatePolygon } from "./polygonDeobfuscation";
 import { tryConcatenateRect } from "./rectDeobfuscation";
+import { revertTransform } from "./revertTransform";
 
 export const deobfuscate = (svgElement: string, params: DeobfuscateParams) => {
   const resultSvg = new DOMParser().parseFromString(svgElement, "image/svg+xml")
@@ -17,6 +18,11 @@ export const deobfuscate = (svgElement: string, params: DeobfuscateParams) => {
     if (params.removeUnnecessaryAttributes) {
       removeUnnecessaryAttributes(group);
     }
+
+    if (params.revertTransform) {
+      revertTransform(group);
+    }
+
     if (params.removeStyles) {
       removeStyles(group);
     }

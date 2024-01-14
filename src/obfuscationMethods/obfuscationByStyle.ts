@@ -34,7 +34,7 @@ export const styleTransform = (svgElement: SVGElement) => {
   });
 };
 
-const rotatePathRect = (elem: SVGElement, angle: number) => {
+export const rotatePathRect = (elem: SVGElement, angle: number) => {
   const pathData = elem.getAttribute("d");
   if (!pathData) return;
 
@@ -43,7 +43,9 @@ const rotatePathRect = (elem: SVGElement, angle: number) => {
     const command = pathCommands[i];
 
     if (command === "M" || command === "L") {
-      const points = pathCommands[i + 1].split(" ").filter((point) => !!point);
+      const points = pathCommands[i + 1]
+        .split(/\s|,\s*/)
+        .filter((point) => !!point);
 
       let coordinates = "";
       for (let j = 0; j < points.length; j += 2) {
@@ -58,7 +60,7 @@ const rotatePathRect = (elem: SVGElement, angle: number) => {
   elem.setAttribute("d", pathCommands.join(" "));
 };
 
-const rotatePathPolygon = (elem: SVGElement, angle: number) => {
+export const rotatePathPolygon = (elem: SVGElement, angle: number) => {
   const pathData = elem.getAttribute("d");
   if (!pathData) return;
 
@@ -81,7 +83,7 @@ const rotatePathPolygon = (elem: SVGElement, angle: number) => {
   elem.setAttribute("d", pathCommands.join(" "));
 };
 
-const rotatePathCircle = (pathElement: SVGElement, angle: number) => {
+export const rotatePathCircle = (pathElement: SVGElement, angle: number) => {
   const pathData = pathElement.getAttribute("d");
   if (!pathData) return;
   const pathCommands = pathData.split(/([MAZ])/).filter(Boolean);
@@ -90,7 +92,9 @@ const rotatePathCircle = (pathElement: SVGElement, angle: number) => {
     const command = pathCommands[i];
 
     if (command === "M") {
-      const points = pathCommands[i + 1].split(" ").filter((point) => !!point);
+      const points = pathCommands[i + 1]
+        .split(/\s|,\s*/)
+        .filter((point) => !!point);
 
       let coordinates = "";
       for (let j = 0; j < points.length; j += 2) {
@@ -119,5 +123,5 @@ function rotatePoint([x, y]: [number, number], angle: number) {
   const radians = (angle * Math.PI) / 180;
   const newX = x * Math.cos(radians) - y * Math.sin(radians);
   const newY = x * Math.sin(radians) + y * Math.cos(radians);
-  return [newX, newY];
+  return [newX.toFixed(10), newY.toFixed(10)];
 }

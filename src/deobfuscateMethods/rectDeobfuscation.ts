@@ -71,8 +71,17 @@ const getDimensionsFromPaths = (groupSvg: SVGGElement) => {
     groupSvg.querySelectorAll("path"),
   );
 
+  pathRectElements
+    .filter((p) => p.getAttribute("d")!.indexOf("-1e-10") >= 0)
+    .forEach((pathElement) =>
+      pathElement.setAttribute(
+        "d",
+        pathElement.getAttribute("d")!.replace(/-1e-10/g, "0"),
+      ),
+    );
+
   const rectPathPattern =
-    /^M \d+(\.\d+)? \d+(\.\d+)? L \d+(\.\d+)? \d+(\.\d+)? L \d+(\.\d+)? \d+(\.\d+)? L \d+(\.\d+)? \d+(\.\d+)? Z$/;
+    /^M\s*(-?\d+(\.\d+)?)[,\s](-?\d+(\.\d+)?)\s+L\s+(-?\d+(\.\d+)?)[,\s](-?\d+(\.\d+)?)\s+L\s+(-?\d+(\.\d+)?)[,\s](-?\d+(\.\d+)?)\s+L\s+(-?\d+(\.\d+)?)[,\s](-?\d+(\.\d+)?)\s+Z$/;
   pathRectElements = pathRectElements
     .filter((p) => p.hasAttribute("d"))
     .filter((p) => rectPathPattern.test(p.getAttribute("d")!));
