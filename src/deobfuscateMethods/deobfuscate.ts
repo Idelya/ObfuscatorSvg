@@ -116,6 +116,7 @@ const concatenateElements = (group: SVGGElement) => {
   }
   // circle
   const concatenatedCircle = tryConcatenateCircle(group);
+
   if (concatenatedCircle.succeded) {
     group.outerHTML = concatenatedCircle.resultSvg!.outerHTML;
   }
