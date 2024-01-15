@@ -3,6 +3,31 @@ const TRESHOLD = 0.00000001;
 export const revertGlass = (groupSvg: SVGGElement) => {
   revertGlassFromPolygons(groupSvg);
   revertGlassFromPaths(groupSvg);
+  revertGlassFromCircle(groupSvg);
+};
+
+const revertGlassFromCircle = (groupSvg: SVGGElement) => {
+  const pathElements: SVGPathElement[] = Array.from(
+    groupSvg.querySelectorAll("path"),
+  );
+
+  const pathCircleElements = pathElements
+    .filter((p) => p.hasAttribute("d"))
+    .filter((p) => p.getAttribute("d")!.includes("A"));
+  const mPattern = /M\s?(\d+(\.\d+)?)\s*[,\s]*(\d+(\.\d+)?)/;
+  const aPattern = /A\s?(\d+(\.\d+)?)\s*[,\s]*(\d+(\.\d+)?)/;
+  pathCircleElements.forEach((element) => {
+    const dAttr = element.getAttribute("d");
+    if (!dAttr) return;
+    const match = dAttr.match(aPattern);
+
+    if (!match) return;
+
+    const cx = parseFloat(match[1]);
+    const cy = parseFloat(match[3]);
+    const replacedString = dAttr.replace(mPattern, `M ${cx} ${cy}`);
+    element.setAttribute("d", replacedString);
+  });
 };
 
 const revertGlassFromPolygons = (groupSvg: SVGGElement) => {
