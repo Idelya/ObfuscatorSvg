@@ -1,5 +1,14 @@
 # React + TypeScript + Vite
+## Installation
 
+- Install node v20.8.0
+- Install npm v10.1.0
+- Run `npm install` to install packages
+- Run `npm run dev` ro run project
+
+Go to http://localhost:5173/ to see application
+
+## About Template
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
